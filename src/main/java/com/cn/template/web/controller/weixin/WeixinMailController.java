@@ -1,5 +1,6 @@
 package com.cn.template.web.controller.weixin;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -20,8 +21,8 @@ import com.cn.template.entity.mail.EmailContent;
 import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.xutil.Constants;
-import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.web.Servlets;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -60,32 +61,29 @@ public class WeixinMailController {
 	 * @return
 	 */
 	@RequestMapping(value="/{openid}",method = RequestMethod.GET)
-	public String list(@PathVariable("openid") Long openid,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
-			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+	public String list(@PathVariable("openid") String openid,Model model,
 			ServletRequest request) {
-		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		
+		model.addAttribute("openid", openid);
 	
-		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, searchParams, pageNumber, pageSize, sortType);
-
-		model.addAttribute("emailContents", emailContents);
-		model.addAttribute("sortType", sortType);
-		model.addAttribute("sortTypes", sortTypes);
-		// 将搜索条件编码成字符串，用于排序，分页的URL
-		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
 		return "wxmail/mail_list";
 	}
 	
-	@RequestMapping(value="/jsonValue")
+	@RequestMapping(value="/jsonValue/{openid}/{page}")
 	@ResponseBody
-	public Map<String,String[]> getValue(){
-		Map<String,String[]> map=Maps.newHashMap();
-		String[] aa=new String[10];
-		for(int i=0;i<aa.length;i++){
-			aa[i]="<li><a href=\"#\">新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼</a><span>羽Libra &emsp;&emsp; 2014年5月28日</span></li>";
+	public Map<String,Object> getValue(@PathVariable("openid") String openid,
+			@PathVariable(value = "page") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType){
+		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
+		Map<String,Object> map=Maps.newHashMap();
+		List<String> mailTitles=Lists.newArrayList();
+		for(EmailContent emailContent:emailContents.getContent()){
+			mailTitles.add("<li><a href=\"#\">"+emailContent.getSubject()+"</a><span>"+emailContent.getFromName()+" &emsp;&emsp; "+emailContent.getReceiveDate()+"</span></li>");
 		}
-		map.put("html", aa);
+		map.put("html", mailTitles);
+		map.put("page", pageNumber+1);
 		return map;
 	}
 }

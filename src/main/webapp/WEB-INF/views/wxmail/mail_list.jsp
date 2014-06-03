@@ -34,7 +34,7 @@
     <style type="text/css">
     	.data-list {
             width: 100%;
-            text-align: right;
+            text-align: left;
         }
 
         .data-list li {
@@ -81,72 +81,33 @@
 
 <div class="ui-refresh">
     <ul class="data-list">
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        <li>
-            <a href="#">
-               新华网深圳3月23日电（记者 赵瑞西）23日，深圳市南山区西里医院的大楼
-            </a>
-            <span>羽Libra &emsp;&emsp; 2014年5月28日</span>
-        </li>
-        
+    	  
     </ul>
     <div class="ui-refresh-down"></div>      <!--setup方式带有class为ui-refresh-down或ui-refresh-up的元素必须加上，用于放refresh按钮-->
 </div>
 
 <script type="text/javascript">
     (function () {
+    	var page=1;
+    	$.getJSON('${ctx}/wxmail/jsonValue/${openid}/'+page,function(data){
+    		$.each(data.html,function(index,item){
+    			$('.data-list').append(item);
+    		});
+    		page=data.page;
+    	});
+    	
         /*组件初始化js begin*/
         $('.ui-refresh').refresh({
             load: function (dir, type) {
                 var me = this;
-                $.getJSON('${ctx}/wxmail/jsonValue', function (data) {
+                $.getJSON('${ctx}/wxmail/jsonValue/${openid}/'+page, function (data) {
                     var $list = $('.data-list'),
                             html = (function (data) {
                                 var liArr = [];
                                 $.each(data.html, function () {
                                     liArr.push(this);
                                 });
+                                page=data.page;
                                 return liArr.join('');
                             })(data);
 
@@ -157,6 +118,8 @@
         });
         /*组件初始化js end*/
     })();
+    
+
 </script>
 
 </body>

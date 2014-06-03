@@ -52,6 +52,7 @@ import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 
@@ -122,6 +123,23 @@ public class EmailContentService {
 		return (List<EmailContent>) emailContentDao.findAll();
 	}
 
+	
+	/**
+	 * 获取邮件内容记录[分页、排序]
+	 * @param openid
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param sortType
+	 * @return
+	 */
+	public Page<EmailContent> getUserEmailContent(String openid,int pageNumber, int pageSize,String sortType){
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+		Map<String, SearchFilter> filters = Maps.newHashMap();
+		filters.put("openid", new SearchFilter("openid", Operator.EQ, openid));
+		Specification<EmailContent> spec = DynamicSpecifications.bySearchFilter(filters.values(), EmailContent.class);
+		return emailContentDao.findAll(spec, pageRequest);
+	}
+	
 	/**
 	 * 获取邮件内容记录[查询、分页、排序].
 	 * @param openid
@@ -131,7 +149,7 @@ public class EmailContentService {
 	 * @param sortType
 	 * @return
 	 */
-	public Page<EmailContent> getUserEmailContent(Long openid, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public Page<EmailContent> getUserEmailContent(String openid, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<EmailContent> spec = buildSpecification(openid, searchParams);
@@ -162,7 +180,7 @@ public class EmailContentService {
 	 * @param searchParams
 	 * @return
 	 */
-	private Specification<EmailContent> buildSpecification(Long openid, Map<String, Object> searchParams) {
+	private Specification<EmailContent> buildSpecification(String openid, Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		filters.put("openid", new SearchFilter("openid", Operator.EQ, openid));
 		Specification<EmailContent> spec = DynamicSpecifications.bySearchFilter(filters.values(), EmailContent.class);
