@@ -31,6 +31,9 @@ public class EmailContent extends IdEntity {
 	/** 员工标识号 */
 	private String openid;
 	
+	/** 邮件 */
+	private String email;
+	
 	/** 邮件主题 */
 	private String subject;
 	
@@ -65,7 +68,7 @@ public class EmailContent extends IdEntity {
 	private Date receiveDate;
 	
 	/** 邮件的Message-ID  */
-	private String messageId;
+	private Integer messageId;
 
 	/** 邮件内容Text */
 	private String bodyText;
@@ -85,6 +88,14 @@ public class EmailContent extends IdEntity {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getSubject() {
@@ -184,11 +195,11 @@ public class EmailContent extends IdEntity {
 		this.receiveDate = receiveDate;
 	}
 
-	public String getMessageId() {
+	public Integer getMessageId() {
 		return messageId;
 	}
 
-	public void setMessageId(String messageId) {
+	public void setMessageId(Integer messageId) {
 		this.messageId = messageId;
 	}
 

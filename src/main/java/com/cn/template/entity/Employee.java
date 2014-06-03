@@ -25,6 +25,9 @@ public class Employee extends IdEntity {
 	/** 邮箱 */
 	private String email;
 	
+	/** 邮箱密码 */
+	private String emailPassword;
+	
 	/** 是否认证 */
 	private Whether whether;
 	
@@ -54,6 +57,14 @@ public class Employee extends IdEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getEmailPassword() {
+		return emailPassword;
+	}
+
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
+	}
 
 	@Enumerated(EnumType.ORDINAL)
 	public Whether getWhether() {
@@ -71,5 +82,5 @@ public class Employee extends IdEntity {
 	public void setOpenid(String openid) {
 		this.openid = openid;
 	}
-	
+
 }

@@ -22,8 +22,9 @@
 	<link href="${ctx}/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<!-- DATE RANGE PICKER -->
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/bootstrap-daterangepicker/daterangepicker-bs3.css" />
-	<!-- FONTS -->
+	<!-- FONTS Google字体 速度巨慢，先注释！！
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+	 -->
 </head>
 <body id="not-found-bg">
 	<div class="overlay"></div>
@@ -70,7 +71,7 @@
 	<!-- JAVASCRIPTS -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	<!-- JQUERY -->
-	<script src="${ctx}/static/js/jquery/jquery-2.0.3.min.js"></script>
+	<script src="${ctx}/static/js/jquery/jquery-2.1.1.min.js"></script>
 	<!-- JQUERY UI-->
 	<script src="${ctx}/static/js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<!-- BOOTSTRAP -->

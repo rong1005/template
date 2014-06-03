@@ -74,13 +74,16 @@ public class DownLoadMail {
 			//搜索发件人为 lzr@ggec.gd 和主题为"测试邮件"的邮件(模糊搜索)  
 	        SearchTerm st = new AndTerm(new FromStringTerm("lzr@ggec.gd"),new SubjectTerm("测试邮件")); 
 	        
+	        boolean b=true;
 	        //循环解析获得的邮件
 	        for (Message message : folder.search(st)) { 
 	        	logger.info("邮件主题:{}",message.getSubject());
 	        	if(message.getFlags().contains(Flags.Flag.SEEN)){
 	        		logger.info("邮件已读");
+	        		b=true;
 	        	}else{
 	        		logger.info("邮件未读");
+	        		b=false;
 	        	}
 	        	Map<String,Object> map=Maps.newHashMap();
 	        	map.put("TEXT", "");
@@ -95,6 +98,7 @@ public class DownLoadMail {
 	        		if(fileType.equals(AttachmentType.ATTACHMEN.ordinal())){
 	        			
 	        		}else{
+	        			logger.info("文件名：{}",attachment.get("fileName").toString());
 	        			int site = html.indexOf("cid:"+attachment.get("fileName").toString());
 	        			logger.info("位置1：{}",site);
 	        			logger.info("位置2：{}",html.indexOf(">", site));
@@ -103,7 +107,14 @@ public class DownLoadMail {
 	        			
 	        		}
 	        	}
-	        	
+
+	        	//在读取邮件进行解析时，邮件服务器会将该邮件标记为已读，不便于两个客户端之间的处理，
+	        	//所以，要将原来是“未读”的邮件重新标记为未读
+	        	if(!b){
+	        		logger.info("设置邮件 {} 为“未读”",message.getSubject());
+	        		message.setFlag(Flags.Flag.SEEN, false);
+	        	}
+
 	        	logger.info("HTML : {}",html);
 	        }
 

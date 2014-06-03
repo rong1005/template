@@ -24,8 +24,9 @@
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/frontend_theme/js/colorbox/colorbox.min.css" />
 	<!-- CAROUSEL -->
     <link href="${ctx}/static/frontend_theme/css/carousel.css" rel="stylesheet">
-	<!-- FONTS -->
+	<!-- FONTS 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
+	 -->
 </head>
 <body>
 	<!-- PAGE -->

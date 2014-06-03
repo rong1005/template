@@ -1,9 +1,12 @@
 package com.cn.template.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.cn.template.entity.Employee;
+import com.cn.template.xutil.enums.Whether;
 
 /**
  * 用户信息的数据访问接口.
@@ -25,5 +28,12 @@ public interface EmployeeDao extends PagingAndSortingRepository<Employee, Long>,
 	 * @return
 	 */
 	public Employee findByCode(String code);
+	
+	/**
+	 * 根据认证情况查询员工信息.
+	 * @param whether
+	 * @return
+	 */
+	public List<Employee> findByWhether(Whether whether);
 	
 }

@@ -24,9 +24,10 @@
 	
 	<link href="${ctx}/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	
-	<!-- FONTS -->
+	<!-- FONTS Google字体 速度巨慢，先注释！！
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
-	
+	 -->
+	 
 	<!-- 弹出框 -->
 	<link href="${ctx}/static/js/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" />
   	<link href="${ctx}/static/js/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" />

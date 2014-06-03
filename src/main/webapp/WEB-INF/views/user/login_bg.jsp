@@ -27,8 +27,9 @@
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
 	<!-- ANIMATE -->
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/css/animatecss/animate.min.css" />
-	<!-- FONTS -->
+	<!-- FONTS 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+	-->
 </head>
 <body class="login">	
 	<!-- PAGE -->
@@ -214,7 +215,7 @@
 	<!-- JAVASCRIPTS -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	<!-- JQUERY -->
-	<script src="${ctx}/static/js/jquery/jquery-2.0.3.min.js"></script>
+	<script src="${ctx}/static/js/jquery/jquery-2.1.1.min.js"></script>
 	<!-- JQUERY UI-->
 	<script src="${ctx}/static/js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<!-- BOOTSTRAP -->
