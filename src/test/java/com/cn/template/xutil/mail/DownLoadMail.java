@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -75,8 +76,26 @@ public class DownLoadMail {
 	        SearchTerm st = new AndTerm(new FromStringTerm("lzr@ggec.gd"),new SubjectTerm("测试邮件")); 
 	        
 	        boolean b=true;
+	        
+	        //197的邮件主题出现乱码，其他邮件不会，乱码的情况：各位，今天下班前把办公区5S搞好，明天信息=?gb2312?B?u6/P7sS/0enK1bvhyOu7+re/sum/tKGj?=
+	        //按照一般处理MimeUtility.decodeText("=?gb2312?B?u6/P7sS/0enK1bvhyOu7+re/sum/tKGj?=")  注意大小写 
+	        
+	        Message message = folder.getMessage(197);
+	        String subject = message.getSubject();
+			logger.info("前subject :{}",subject);
+			if(subject.toLowerCase().indexOf("=?gb")>0){
+				
+				String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
+				text =MimeUtility.decodeText(text);
+				
+				logger.info("text :{}",text);
+				subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
+				logger.info("转换subject :{}",subject);
+			}
+			logger.info("后subject :{}",subject);
+	        
 	        //循环解析获得的邮件
-	        for (Message message : folder.search(st)) { 
+	        /*for (Message message : folder.search(st)) { 
 	        	logger.info("邮件主题:{}",message.getSubject());
 	        	if(message.getFlags().contains(Flags.Flag.SEEN)){
 	        		logger.info("邮件已读");
@@ -116,7 +135,7 @@ public class DownLoadMail {
 	        	}
 
 	        	logger.info("HTML : {}",html);
-	        }
+	        }*/
 
 		} catch (Exception e) {
 			e.printStackTrace();

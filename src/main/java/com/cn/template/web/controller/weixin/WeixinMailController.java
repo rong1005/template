@@ -21,6 +21,7 @@ import com.cn.template.entity.mail.EmailContent;
 import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.xutil.Constants;
+import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -60,13 +61,9 @@ public class WeixinMailController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{openid}",method = RequestMethod.GET)
-	public String list(@PathVariable("openid") String openid,Model model,
-			ServletRequest request) {
-		
-		model.addAttribute("openid", openid);
-	
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String list(Model model,ServletRequest request) {
+		logger.info("Utils.getCurrentUser().getSession() --> openid :{}",Utils.getCurrentUser().getSession().getAttribute("openid"));
 		return "wxmail/mail_list";
 	}
 	
@@ -76,11 +73,12 @@ public class WeixinMailController {
 			@PathVariable(value = "page") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType){
+		
 		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
 		Map<String,Object> map=Maps.newHashMap();
 		List<String> mailTitles=Lists.newArrayList();
 		for(EmailContent emailContent:emailContents.getContent()){
-			mailTitles.add("<li><a href=\"#\">"+emailContent.getSubject()+"</a><span>"+emailContent.getFromName()+" &emsp;&emsp; "+emailContent.getReceiveDate()+"</span></li>");
+			mailTitles.add("<li><a href=\""+Constants.CONTEXT_PATH+"/html/email/"+emailContent.getUrl()+"\">"+emailContent.getSubject()+"</a><span>"+emailContent.getFromName()+" &emsp;&emsp; "+emailContent.getReceiveDate()+"</span></li>");
 		}
 		map.put("html", mailTitles);
 		map.put("page", pageNumber+1);

@@ -32,5 +32,9 @@ public class WeixinConstants {
 	
 	/** 生成二维码 */
 	public static final String CREATE_QRCODE_URL="https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s";
+	
+	/** 通过code换取网页授权access_token */
+	public static final String GET_OAUTH2_URL="https://api.weixin.qq.com/sns/oauth2/access_token?appid="+APPID+"&secret="+SECRET+"&code=%s&grant_type=authorization_code";
+	
 
 }

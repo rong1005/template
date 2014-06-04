@@ -112,16 +112,16 @@ public class NewsMessageService {
 		Map<String,Object> map=Maps.newHashMap();
 		map.put("contextPath", contextPath);
 		map.put("message", newsMessage);
-		FreeMarkerConfigurationFactory freeMarkerConfigurationFactory=new FreeMarkerConfigurationFactory();
+		/*FreeMarkerConfigurationFactory freeMarkerConfigurationFactory=new FreeMarkerConfigurationFactory();
 		freeMarkerConfigurationFactory.setTemplateLoaderPath("classpath:/freemarker");
 		
 		Configuration configuration=freeMarkerConfigurationFactory.createConfiguration();
-		Template template=configuration.getTemplate("newsMessageContent.ftl", "utf-8");
+		Template template=configuration.getTemplate("newsMessageContent.ftl", "utf-8");*/
 		
 		File file = new File(Constants.WEBROOT+fileUrl);
 		OutputStreamWriter out=new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file), 16 * 1024), "UTF-8");
 		//将FreeMark解析的内容写入文件.
-		out.write(FreeMarkerTemplateUtils.processTemplateIntoString(template, map));
+		out.write(Utils.ftlAnalyze("newsMessageContent.ftl", map));
 		newsMessage.setUrl(fileUrl);
 		saveNewsMessage(newsMessage);
 		if (null != out) {

@@ -34,6 +34,12 @@ public class EmailContent extends IdEntity {
 	/** 邮件 */
 	private String email;
 	
+	/** 访问路径 */
+	private String url;
+	
+	/** 原文内容访问路径 */
+	private String originalUrl;
+	
 	/** 邮件主题 */
 	private String subject;
 	
@@ -76,6 +82,9 @@ public class EmailContent extends IdEntity {
 	/** 邮件内容HTML */
 	private String bodyHtml;
 	
+	/** 原文的邮件内容 */
+	private String originalBodyHtml;
+	
 	/** 邮件状态 */
 	private Status status;
 	
@@ -96,6 +105,14 @@ public class EmailContent extends IdEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getSubject() {
@@ -237,4 +254,21 @@ public class EmailContent extends IdEntity {
 		this.attachments = attachments;
 	}
 
+	public String getOriginalUrl() {
+		return originalUrl;
+	}
+
+	public void setOriginalUrl(String originalUrl) {
+		this.originalUrl = originalUrl;
+	}
+
+	public String getOriginalBodyHtml() {
+		return originalBodyHtml;
+	}
+
+	public void setOriginalBodyHtml(String originalBodyHtml) {
+		this.originalBodyHtml = originalBodyHtml;
+	}
+
+	
 }

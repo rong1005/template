@@ -66,10 +66,10 @@
 </head>
 <body>
 <div id="J_toolbar1">
-    <a href="../../#toolbar">返回</a>
+    <!-- <a href="">收件</a> -->
     <h2>收件箱</h2>
-    <span class="btn_1"><span>百科</span></span>
-    <span class="btn_1">知道</span>
+    <!-- <span class="btn_1"><span>百科</span></span>
+    <span class="btn_1">知道</span> -->
 </div>
 <script>
         // 全setup方式调用

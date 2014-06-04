@@ -5,7 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Calendar;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,6 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
-import javax.mail.search.ComparisonTerm;
-import javax.mail.search.SearchTerm;
-import javax.mail.search.SentDateTerm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +52,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
+
+import freemarker.ext.beans.BeansWrapper;
 
 /**
  * 邮件内容管理的业务逻辑.
@@ -234,6 +233,15 @@ public class EmailContentService {
 			EmailContent emailContent = initEmailContent(openid, email, message);
 			getMailContent(emailContent, message);
 			
+			//截取邮件中body的内容
+			emailContent.setBodyHtml(cutHtmlBody(emailContent.getBodyHtml()));
+			//替换邮件中的图片路径（由代号 cid 更换为路径）
+			emailContent.setBodyHtml(replaceAttachPath(emailContent.getBodyHtml(), emailContent.getAttachments()));
+			
+			//将邮件内容静态化，保存访问路径
+			saveHtml(emailContent,Constants.WEBROOT+"/html/email/");
+			
+			
 			logger.info("邮件内容信息：{}",emailContent.getSubject());
 			emailContentDao.save(emailContent);
 		}
@@ -248,6 +256,34 @@ public class EmailContentService {
 	}
 	
 	/**
+	 * 截取html中对应的body内容
+	 * @param html
+	 * @return
+	 */
+	private String cutHtmlBody(String html){
+		return html.substring(html.indexOf(">", html.indexOf("<body"))+1,html.indexOf("</body>"));
+	}
+	
+	/**
+	 * 替换邮件中的图片路径（由代号 cid 更换为路径）
+	 * @param html
+	 * @return
+	 */
+	private String replaceAttachPath(String html,List<EmailAttachment> attachments){
+		if(attachments!=null&&!attachments.isEmpty()){
+			for(EmailAttachment emailAttachment : attachments){
+        		if(emailAttachment.getAttachmentType().equals(AttachmentType.ATTACHMEN)){
+        			
+        		}else{
+        			int site = html.indexOf("cid:"+emailAttachment.getFileName());
+        			html=html.substring(0,site)+emailAttachment.getUrl()+"\""+html.substring(html.indexOf(">", site));
+        		}
+			}
+		}
+		return html;
+	}
+	
+	/**
 	 * 获得最新的邮件，如果从未获取，则获取前10封邮件.
 	 * @param maxMsgnum
 	 * @param email
@@ -256,7 +292,7 @@ public class EmailContentService {
 	private int minMsgnum(int maxMsgnum,String email){
 		Integer minMsgnum = emailContentDao.findMaxMessageIdByEmail(email);
 		if(minMsgnum==null){
-			minMsgnum=maxMsgnum-10; 
+			minMsgnum=maxMsgnum-100; 
 		}
 		if(minMsgnum<=0){
 			minMsgnum=0;
@@ -265,7 +301,7 @@ public class EmailContentService {
 	}
 	
 	/** 设置邮件的查询条件 :情况 邮件中ReceivedDateTerm 、 SentDateTerm的时间比较是按天进行比较的，不能进行时分秒比较*/
-	private SearchTerm searchTerm(String email){
+	/*private SearchTerm searchTerm(String email){
 		//搜索邮件[初定以时间作为搜索条件，如果从未收取的，默认收取本周的所有邮件；如果收取的，从最近的一次收取时间开始]
 		Date startDate = emailContentDao.findMaxReceiveDateByEmail(email);
 		System.err.println("-------startDate-------------"+startDate);
@@ -281,7 +317,7 @@ public class EmailContentService {
 //		//收信的结束时间
 //		SearchTerm comparisonTermLe = new ReceivedDateTerm(ComparisonTerm.LE, new Date());
 		return new SentDateTerm(ComparisonTerm.EQ, new Date());
-	}
+	}*/
 	
 	
 	/**
@@ -383,7 +419,15 @@ public class EmailContentService {
 		emailContent.setUpdateTime(new Date());
 		emailContent.setOpenid(openid);
 		emailContent.setEmail(email);
-		emailContent.setSubject(message.getSubject());
+		
+		//对获取的邮件主题进行转码
+		String subject = message.getSubject();
+		if(subject.toLowerCase().indexOf("=?gb")>0){
+			String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
+			subject = subject.substring(0,subject.toLowerCase().indexOf("=?gb")) + MimeUtility.decodeText(text);
+		}
+		emailContent.setSubject(subject);
+		
 		emailContent.setSentDate(message.getSentDate());
 		if(getReplySign(message)){
 			//需要回执
@@ -469,19 +513,17 @@ public class EmailContentService {
     				emailAttachment.setContentType(new String(bodyPart.getContentType().getBytes("ISO-8859-1"),"gb2312"));
     				emailAttachment.setFileName(fileName);
     				
-    				
-    				String url = saveFile(bodyPart.getInputStream(),fileName.substring(fileName.lastIndexOf(".")),Constants.WEBROOT+"/html/email/");
-    				
-    				emailAttachment.setUrl(url);
-    				
-    				
     				if(bodyPart.getDisposition()!=null&&(bodyPart.getDisposition().equals(Part.ATTACHMENT)||bodyPart.getDisposition().equals(Part.INLINE))){
-    					logger.info("{} : 这是附件！ 路径：{}",fileName,url);
     					emailAttachment.setAttachmentType(AttachmentType.ATTACHMEN);
     				}else{
-    					logger.info("{} : 这是图片！ 路径：{}",fileName,url);
     					emailAttachment.setAttachmentType(AttachmentType.PICTURE);
     				}
+    				
+    				saveFile(emailAttachment,bodyPart.getInputStream(),fileName.substring(fileName.lastIndexOf(".")),Constants.WEBROOT+"/html/email/",emailAttachment.getAttachmentType());
+    				
+    				
+    				
+    				
     				if(emailContent.getAttachments()==null){
     					List<EmailAttachment> list=Lists.newArrayList();
     					list.add(emailAttachment);
@@ -500,9 +542,10 @@ public class EmailContentService {
 	 * @param inputStream
 	 * @return
 	 */
-	private String saveFile(InputStream inputStream, String suffix, String path) throws Exception {
+	private void saveFile(EmailAttachment emailAttachment,InputStream inputStream, String suffix, String path, AttachmentType attachmentType) throws Exception {
 		String folder = Utils.datef(new Date(), Constants.DATE_FORMAT_SHORT);
-		path = path + folder;
+		String type=attachmentType.toString().toLowerCase();
+		path = path + folder + "/" + type;
 		// 判断文件夹是否存在，如果不存在，则创建.
 		File localFile = new File(path);
 		if (!localFile.exists()) {
@@ -512,7 +555,6 @@ public class EmailContentService {
 		String fileName = new Date().getTime() + suffix;
 
 		File file = new File(path + "/" + fileName);
-		System.err.println("--------------------path fileName---------------------------"+path + "/" + fileName);
 		BufferedOutputStream bos = null;
 		BufferedInputStream bis = null;
 		try {
@@ -530,8 +572,51 @@ public class EmailContentService {
 			bis.close();
 		}
 		
-		System.err.println("--------------------folder fileName---------------------------"+folder + "/" + fileName);
-		return folder + "/" + fileName;
+		emailAttachment.setUrl(type + "/" + fileName);
+		emailAttachment.setFullUrl(folder + "/" + type + "/" + fileName);
+	}
+	
+	
+	/**
+	 * 将邮件的html内容保存为静态的.html文件.
+	 * @param html
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	private void saveHtml(EmailContent emailContent,String path) throws Exception{
+		String folder = Utils.datef(new Date(), Constants.DATE_FORMAT_SHORT);
+		path = path + folder;
+		// 判断文件夹是否存在，如果不存在，则创建.
+		File localFile = new File(path);
+		if (!localFile.exists()) {
+			localFile.mkdirs();
+		}
+		String timeName=new Date().getTime()+"";
+		String fileName = timeName + "_1.html";
+		String originalFileName = timeName + "_2.html";
+		
+		emailContent.setUrl(folder + "/" + fileName);
+		emailContent.setOriginalUrl(folder + "/" +originalFileName);
+		
+		File file = new File(path + "/" + fileName);
+		File originalFile = new File(path + "/" + originalFileName);
+		
+		Map<String,Object> map=Maps.newHashMap();
+		map.put("contextPath", Constants.CONTEXT_PATH);
+		map.put("email", emailContent);
+		map.put("enums", BeansWrapper.getDefaultInstance().getEnumModels());
+		
+		OutputStreamWriter out1=new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file), 16 * 1024), "UTF-8");
+		//HTML内容写入文件.
+		out1.write(Utils.ftlAnalyze("weixinMailContent.ftl", map));
+		
+		OutputStreamWriter out2=new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(originalFile), 16 * 1024), "UTF-8");
+		out2.write(Utils.ftlAnalyze("weixinMailOrginal.ftl", map));
+		
+		out1.close();
+		out2.close();
+		
 	}
 		
 }

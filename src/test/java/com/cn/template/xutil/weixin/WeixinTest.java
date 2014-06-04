@@ -107,7 +107,7 @@ public class WeixinTest extends SpringContextTestCase {
 		}
 	}
 	
-	/** 提起微信用户信息. */
+	/** 提取微信用户信息. */
 	@Test
 	public void getWeixinUser() {
 		try{

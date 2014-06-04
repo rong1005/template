@@ -40,7 +40,7 @@ public class UserCountScanner {
 	/** 被Spring的Scheduler namespace 反射构造成ScheduledMethodRunnable */
 	public void executeBySpringTimerByXml() {
 		times=times+1;
-		//execute("抓取员工邮件",times);
+		execute("抓取员工邮件",times);
 	}
 
 	/**

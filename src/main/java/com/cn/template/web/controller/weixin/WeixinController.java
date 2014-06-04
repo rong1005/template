@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +24,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.cn.template.entity.weixin.WeixinUser;
 import com.cn.template.web.listener.jms.NotifyMessageProducer;
+import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.EventType;
 import com.cn.template.xutil.weixin.AccessTokenUtil;
 import com.cn.template.xutil.weixin.ImageMessage;
 import com.cn.template.xutil.weixin.NewsItem;
 import com.cn.template.xutil.weixin.TextMessage;
 import com.cn.template.xutil.weixin.WeixinConstants;
+import com.google.gson.Gson;
 
 /**
  * 与微信接入业务处理的代理类.
@@ -179,10 +184,36 @@ public class WeixinController {
 	}
 	
 	
-	public static void main(String[] args) throws Exception {
-	    //取得菜单信息.
-	    URL menu_url = new URL(String.format(WeixinConstants.GET_MENU_URL, AccessTokenUtil.getAccessToken(false)));
-	    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(menu_url.openStream()));
-	    logger.info("菜单内容：{}",bufferedReader.readLine());
-	    } 
+	/**
+	 * 网页授权获,重新转跳.
+	 * @return
+	 */
+	@RequestMapping(value="redirect")
+	public String redirect(HttpServletRequest request, HttpServletResponse response){
+		String code = request.getParameter("code");
+		String state = request.getParameter("state");
+		logger.info("code:{} , state:{}",code,state);
+		if(Utils.getCurrentUser()!=null&&Utils.getCurrentUser().getSession()!=null&&Utils.getCurrentUser().getSession().getAttribute("openid")!=null){
+			logger.info("session 中 存在 openid ！");
+		}else{
+			logger.info("session 中 openid 不存在 重新获取");
+			try{
+				if(code!=null&&!code.equals("")){
+					URL get_oauth2_url = new URL(String.format(WeixinConstants.GET_OAUTH2_URL,code));
+					Reader reader = new InputStreamReader(get_oauth2_url.openStream(),"UTF-8");
+					Gson gson = new Gson();
+					Map map = gson.fromJson(reader,Map.class);
+					String openid = map.get("openid").toString();
+					logger.info("openid :{}",openid);
+					//测试------------
+					Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+					//Utils.getCurrentUser().getSession().setAttribute("openid", openid);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return "redirect:/"+state;
+	}
+	
 }

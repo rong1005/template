@@ -33,6 +33,9 @@ public class EmailAttachment extends IdEntity {
 	
 	/** 存放目录 */
 	private String url;
+	
+	/** 完整存放目录 */
+	private String fullUrl;
 
 	@ManyToOne
 	@JoinColumn(name="email_content_id")
@@ -75,6 +78,14 @@ public class EmailAttachment extends IdEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getFullUrl() {
+		return fullUrl;
+	}
+
+	public void setFullUrl(String fullUrl) {
+		this.fullUrl = fullUrl;
 	}
 	
 }
