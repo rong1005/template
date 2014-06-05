@@ -261,7 +261,13 @@ public class EmailContentService {
 	 * @return
 	 */
 	private String cutHtmlBody(String html){
-		return html.substring(html.indexOf(">", html.indexOf("<body"))+1,html.indexOf("</body>"));
+		int stateSite=html.toLowerCase().indexOf(">", html.indexOf("<body"));
+		int endSite=html.toLowerCase().indexOf("</body>");
+		logger.info("html stare->{}，end->{} ",stateSite,endSite);
+		if(endSite<0){
+			logger.info("html :{}",html);
+		}
+		return html.substring(stateSite+1,endSite);
 	}
 	
 	/**
@@ -272,16 +278,42 @@ public class EmailContentService {
 	private String replaceAttachPath(String html,List<EmailAttachment> attachments){
 		if(attachments!=null&&!attachments.isEmpty()){
 			for(EmailAttachment emailAttachment : attachments){
-        		if(emailAttachment.getAttachmentType().equals(AttachmentType.ATTACHMEN)){
-        			
-        		}else{
-        			int site = html.indexOf("cid:"+emailAttachment.getFileName());
-        			html=html.substring(0,site)+emailAttachment.getUrl()+"\""+html.substring(html.indexOf(">", site));
+        		if(emailAttachment.getAttachmentType().equals(AttachmentType.PICTURE)){
+        			if(html.indexOf("cid:"+emailAttachment.getFileName())>0){
+        				html=replaceAttachPath(html, emailAttachment);
+        			}
         		}
 			}
 		}
 		return html;
 	}
+	
+	/**
+	 * 递归处理邮件内图片替换的问题.(同一图片使用多次的情况).
+	 * @param html
+	 * @param emailAttachment
+	 * @return
+	 */
+	private String replaceAttachPath(String html,EmailAttachment emailAttachment){
+		int startSite = html.indexOf("cid:"+emailAttachment.getFileName());
+		int endSite = html.indexOf(">", startSite);
+		logger.info("startSite :{},endSite :{}",startSite,endSite);
+		html=html.substring(0,startSite)+emailAttachment.getUrl()+"\""+html.substring(endSite);
+		while (html.indexOf("cid:"+emailAttachment.getFileName())>0) {
+			html=replaceAttachPath(html, emailAttachment);
+		}
+		return html;
+	}
+	
+	
+	public static void main(String[] args) {
+		String html="<img width=516 height=624 id=\"图片_x0020_2\" src=\"cid:image001.png@01CF7019.75CC72A0\">";
+		int startSite = html.indexOf("cid:image001.png");
+		int endSite = html.indexOf(">", startSite);
+		html=html.substring(0,startSite)+"image001.png"+"\""+html.substring(endSite);
+		logger.info("startSite :{},endSite :{},html:{}",startSite,endSite,html);
+	}
+	
 	
 	/**
 	 * 获得最新的邮件，如果从未获取，则获取前10封邮件.
@@ -422,9 +454,8 @@ public class EmailContentService {
 		
 		//对获取的邮件主题进行转码
 		String subject = message.getSubject();
-		if(subject.toLowerCase().indexOf("=?gb")>0){
-			String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
-			subject = subject.substring(0,subject.toLowerCase().indexOf("=?gb")) + MimeUtility.decodeText(text);
+		if(subject!=null&&subject.toLowerCase().indexOf("=?gb")>0){
+			subject=decodeText(subject);
 		}
 		emailContent.setSubject(subject);
 		
@@ -466,6 +497,22 @@ public class EmailContentService {
 		emailContent.setStatus(Status.NORMAL);
 		return emailContent;
     }
+    
+    /**
+     * 递归解码（如果内容/主题中存在编码内容，则递归转码）.
+     * @param subject
+     * @return
+     * @throws Exception
+     */
+    private String decodeText(String subject) throws Exception{
+		String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
+		text =MimeUtility.decodeText(text);
+		subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
+		while (subject.toLowerCase().indexOf("=?gb")>0) {
+			subject=decodeText(subject);
+		}
+		return subject;
+	}
     
     
 	/**

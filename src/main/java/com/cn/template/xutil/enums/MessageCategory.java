@@ -18,7 +18,9 @@ public enum MessageCategory {
 	/** 新闻资讯 */
 	NEWS_INFORMATION("新闻资讯",4),
 	/** 个人信息 */
-	PERSONAL_INFORMATION("个人信息",5)
+	PERSONAL_INFORMATION("个人信息",5),
+	/** 班车信息 */
+	REGULAR_BUS("班车信息",6)
 	;
 	
 	private String value;

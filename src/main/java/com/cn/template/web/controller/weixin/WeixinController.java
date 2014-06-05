@@ -1,6 +1,5 @@
 package com.cn.template.web.controller.weixin;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,11 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.cn.template.entity.weixin.WeixinUser;
 import com.cn.template.web.listener.jms.NotifyMessageProducer;
 import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.EventType;
-import com.cn.template.xutil.weixin.AccessTokenUtil;
 import com.cn.template.xutil.weixin.ImageMessage;
 import com.cn.template.xutil.weixin.NewsItem;
 import com.cn.template.xutil.weixin.TextMessage;
@@ -186,6 +183,7 @@ public class WeixinController {
 	
 	/**
 	 * 网页授权获,重新转跳.
+	 * 统一进行授权处理，授权通过后，根据传入的“state”进行转跳.
 	 * @return
 	 */
 	@RequestMapping(value="redirect")

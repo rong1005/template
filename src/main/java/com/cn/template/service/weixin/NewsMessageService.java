@@ -97,7 +97,7 @@ public class NewsMessageService {
 	 * 发布图文信息.
 	 * @param id
 	 */
-	public void publishNewsMessage(NewsMessage newsMessage,String contextPath){
+	public void publishNewsMessage(NewsMessage newsMessage){
 		try{
 		
 		String fileUrl=newsMessage.getUrl();
@@ -110,7 +110,7 @@ public class NewsMessageService {
 		}
 		
 		Map<String,Object> map=Maps.newHashMap();
-		map.put("contextPath", contextPath);
+		map.put("contextPath", Constants.CONTEXT_PATH);
 		map.put("message", newsMessage);
 		/*FreeMarkerConfigurationFactory freeMarkerConfigurationFactory=new FreeMarkerConfigurationFactory();
 		freeMarkerConfigurationFactory.setTemplateLoaderPath("classpath:/freemarker");

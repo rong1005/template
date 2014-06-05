@@ -168,6 +168,9 @@ public class NotifyMessageListener implements MessageListener {
 				}else if(StringUtils.equals(MessageCategory.NEWS_INFORMATION.toString(),eventKey)){
 					newsCategorys = newsCategoryService.getNewsCategory(MessageCategory.NEWS_INFORMATION);
 					
+				}else if(StringUtils.equals(MessageCategory.REGULAR_BUS.toString(),eventKey)){
+					newsCategorys = newsCategoryService.getNewsCategory(MessageCategory.REGULAR_BUS);
+					
 				}else if(StringUtils.equals(MessageCategory.PERSONAL_INFORMATION.toString(),eventKey)){
 					StringBuffer sb=new StringBuffer();
 					sb.append("您的个人信息：\n\n");

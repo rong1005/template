@@ -8,6 +8,7 @@
 <c:set var="ePaper" value="<%=MessageCategory.EPAPER %>" />
 <c:set var="majorProduct" value="<%=MessageCategory.MAJOR_PRODUCT %>" />
 <c:set var="newsInformation" value="<%=MessageCategory.NEWS_INFORMATION %>" />
+<c:set var="regularBus" value="<%=MessageCategory.REGULAR_BUS %>" />
 
 <!-- 侧边栏 -->
 <div id="sidebar" class="sidebar">
@@ -61,6 +62,7 @@
 					<li id="${ePaper}"><a class="" href="${ctx}/newsCategory?messageCategory=${ePaper}"><span class="sub-menu-text">${ePaper.value }</span></a></li>
 					<li id="${majorProduct}"><a class="" href="${ctx}/newsCategory?messageCategory=${majorProduct}"><span class="sub-menu-text">${majorProduct.value }</span></a></li>
 					<li id="${newsInformation}"><a class="" href="${ctx}/newsCategory?messageCategory=${newsInformation}"><span class="sub-menu-text">${newsInformation.value }</span></a></li>
+					<li id="${regularBus}"><a class="" href="${ctx}/newsCategory?messageCategory=${regularBus}"><span class="sub-menu-text">${regularBus.value }</span></a></li>
 				</ul>
 			</li>
 			<li id="other-page" class="has-sub">

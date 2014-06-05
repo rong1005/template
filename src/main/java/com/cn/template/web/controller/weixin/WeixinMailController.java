@@ -22,7 +22,6 @@ import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Utils;
-import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -67,11 +66,19 @@ public class WeixinMailController {
 		return "wxmail/mail_list";
 	}
 	
+	/**
+	 * Json 取得更多的邮件信息.
+	 * @param openid
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param sortType
+	 * @return
+	 */
 	@RequestMapping(value="/jsonValue/{openid}/{page}")
 	@ResponseBody
 	public Map<String,Object> getValue(@PathVariable("openid") String openid,
 			@PathVariable(value = "page") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType){
 		
 		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
@@ -84,4 +91,11 @@ public class WeixinMailController {
 		map.put("page", pageNumber+1);
 		return map;
 	}
+	
+	
+	@RequestMapping(value="/demo")
+	public String demo(){
+		return "wxmail/mail_demo";
+	}
+	
 }

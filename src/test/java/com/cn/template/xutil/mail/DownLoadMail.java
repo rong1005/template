@@ -80,17 +80,18 @@ public class DownLoadMail {
 	        //197的邮件主题出现乱码，其他邮件不会，乱码的情况：各位，今天下班前把办公区5S搞好，明天信息=?gb2312?B?u6/P7sS/0enK1bvhyOu7+re/sum/tKGj?=
 	        //按照一般处理MimeUtility.decodeText("=?gb2312?B?u6/P7sS/0enK1bvhyOu7+re/sum/tKGj?=")  注意大小写 
 	        
-	        Message message = folder.getMessage(197);
+	        Message message = folder.getMessage(126);
 	        String subject = message.getSubject();
 			logger.info("前subject :{}",subject);
 			if(subject.toLowerCase().indexOf("=?gb")>0){
 				
-				String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
-				text =MimeUtility.decodeText(text);
-				
-				logger.info("text :{}",text);
-				subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
-				logger.info("转换subject :{}",subject);
+//				String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
+//				text =MimeUtility.decodeText("=?gb2312?B?o6zQu9C7o6E=?=");
+//				
+//				logger.info("text :{}",text);
+//				subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
+//				logger.info("转换subject :{}",subject);
+				subject=decodeText(subject);
 			}
 			logger.info("后subject :{}",subject);
 	        
@@ -142,6 +143,16 @@ public class DownLoadMail {
 		}
 	}
 	
+	
+	public String decodeText(String subject) throws Exception{
+		String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
+		text =MimeUtility.decodeText(text);
+		subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
+		while (subject.toLowerCase().indexOf("=?gb")>0) {
+			subject=decodeText(subject);
+		}
+		return subject;
+	}
 	
 	
 	/**

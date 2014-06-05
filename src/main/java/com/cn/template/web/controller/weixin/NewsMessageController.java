@@ -157,9 +157,8 @@ public class NewsMessageController {
 	 */
 	@RequestMapping(value = "publish/{id}")
 	public String publish(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		String contextPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+""+request.getContextPath();
 		NewsMessage newsMessage = newsMessageService.getNewsMessage(id);
-		newsMessageService.publishNewsMessage(newsMessage,contextPath);
+		newsMessageService.publishNewsMessage(newsMessage);
 		redirectAttributes.addFlashAttribute("message", "发布图文消息成功");
 		return "redirect:/news?newsCategoryId="+newsMessage.getNewsCategory().getId();
 	}
