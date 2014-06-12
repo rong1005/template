@@ -18,6 +18,7 @@ import com.cn.template.entity.IdEntity;
 import com.cn.template.xutil.enums.Status;
 import com.cn.template.xutil.enums.Whether;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 邮件内容信息.
@@ -245,6 +246,7 @@ public class EmailContent extends IdEntity {
 		this.status = status;
 	}
 	
+	@JsonIgnore //不转化为json格式.
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="emailContent")
 	public List<EmailAttachment> getAttachments() {
 		return attachments;

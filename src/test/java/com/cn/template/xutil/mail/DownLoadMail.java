@@ -82,8 +82,26 @@ public class DownLoadMail {
 	        
 	        Message message = folder.getMessage(126);
 	        String subject = message.getSubject();
-			logger.info("前subject :{}",subject);
-			if(subject.toLowerCase().indexOf("=?gb")>0){
+	        
+	        Map<String,Object> map=Maps.newHashMap();
+        	map.put("TEXT", "");
+        	map.put("HTML", "");
+        	map.put("ATTACHMENT", new ArrayList<Map<String,Object>>());
+        	getMailContent(map,message);
+        	
+        	String html=map.get("HTML").toString();
+        	
+        	html=html.replaceAll("\\bsrc=\"cid:image001.jpg.*?\"", "-----------图片路径--------------------------------");
+        	
+        	logger.info("替换图片URL的HTML：{}",html);
+        	
+        	html=HTMLSpirit.delHTMLTag(html);
+        	//除字符串中的空格、回车、换行符、制表符  
+        	html=html.replaceAll("\\s*|\t|\r|\n","");
+        	//去除&nbsp;等符号内容
+        	html=html.replaceAll("&.*?;", "");
+        	logger.info("去除HTML标签的HTML：{}",html);
+//			if(subject.toLowerCase().indexOf("=?gb")>0){
 				
 //				String text = subject.substring(subject.toLowerCase().indexOf("=?gb"));
 //				text =MimeUtility.decodeText("=?gb2312?B?o6zQu9C7o6E=?=");
@@ -91,9 +109,9 @@ public class DownLoadMail {
 //				logger.info("text :{}",text);
 //				subject = subject.toLowerCase().substring(0,subject.toLowerCase().indexOf("=?gb")) +text;
 //				logger.info("转换subject :{}",subject);
-				subject=decodeText(subject);
-			}
-			logger.info("后subject :{}",subject);
+//				subject=decodeText(subject);
+//			}
+//			logger.info("后subject :{}",subject);
 	        
 	        //循环解析获得的邮件
 	        /*for (Message message : folder.search(st)) { 

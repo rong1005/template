@@ -83,11 +83,7 @@ public class WeixinMailController {
 		
 		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
 		Map<String,Object> map=Maps.newHashMap();
-		List<String> mailTitles=Lists.newArrayList();
-		for(EmailContent emailContent:emailContents.getContent()){
-			mailTitles.add("<li><a href=\""+Constants.CONTEXT_PATH+"/html/email/"+emailContent.getUrl()+"\">"+emailContent.getSubject()+"</a><span>"+emailContent.getFromName()+" &emsp;&emsp; "+emailContent.getReceiveDate()+"</span></li>");
-		}
-		map.put("html", mailTitles);
+		map.put("emails", emailContents.getContent());
 		map.put("page", pageNumber+1);
 		return map;
 	}

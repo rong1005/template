@@ -4,123 +4,84 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<title>国光电器股份有限公司</title>
-	<!--demo展示所用css，不用关心 begin-->
-    <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/reset.css" />
-    <!--demo展示所用css end-->
-    <!--组件依赖css begin-->
-    <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/widget/toolbar/toolbar.css" />
-    <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/widget/toolbar/toolbar.default.css" /> <!--皮肤文件，若不使用该皮肤，可以不加载-->
-        <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/widget/refresh/refresh.default.css" />    <!--皮肤文件，若不使用该皮肤，可以不加载-->
-        
-    <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/widget/button/button.css" />
-    <link rel="stylesheet" type="text/css" href="${ctx}/static/js/gmu/assets/widget/button/button.default.css" />
-    <!--组件依赖css end-->
-
-    <!--组件依赖js begin-->
-    <script type="text/javascript" src="${ctx}/static/js/gmu/dist/zepto.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/core/gmu.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/core/event.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/core/widget.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/widget/toolbar/toolbar.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/widget/refresh/refresh.js"></script>
-
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/extend/highlight.js"></script>
-    <script type="text/javascript"  id="test" src="${ctx}/static/js/gmu/src/widget/button/button.js"></script>
-    <script type="text/javascript" src="${ctx}/static/js/gmu/src/widget/refresh/$lite.js"></script>
-    <!--组件依赖js end-->
-    <style type="text/css">
-    	.data-list {
-            width: 100%;
-            text-align: left;
-        }
-
-        .data-list li {
-            border-bottom: 1px solid #e7e7e7;
-            background-color: #fafafa;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 10px 10px 20px;
-            display: block;
-            position: relative;
-        }
-        
-        .data-list li a{
-			text-decoration: none;
-        	display:block;
-        	word-break:keep-all;
-        	white-space:nowrap;
-        	overflow:hidden;
-        	text-overflow:ellipsis;
-        }
-        
-        .data-list li span {
-            font-size: 12px;
-            color: #969696;
-            margin-top: 8px;
-            margin-right: 10px;
-        }
-    </style>
+ <!-- 以UTF-8 的格式解析内容（否则直接打开会是乱码） -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>JQuery Mobile 样例</title>
+  <!-- 页面宽度将被设置到设备屏幕的像素宽度 -->
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <!-- JQuery Mobile 的资源引入 -->
+  <link rel="stylesheet" href="${ctx}/static/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css" />
+  <script src="${ctx}/static/js/jquery/jquery-2.1.1.min.js"></script>
+  <script src="${ctx}/static/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
 </head>
+
 <body>
-<div id="J_toolbar1">
-    <!-- <a href="">收件</a> -->
-    <h2>收件箱</h2>
-    <!-- <span class="btn_1"><span>百科</span></span>
-    <span class="btn_1">知道</span> -->
-</div>
-<script>
-        // 全setup方式调用
-        $('#J_toolbar1').toolbar({
-            fixed: true
-        });
-</script>
+  <!-- 第一个视图页面 -->
+  <div data-role="page" id="first">
+   <div data-role="header" data-position="fixed"> 
+    <a href="#" data-role="button" data-icon="back">返回</a>
+    <h1>收件箱</h1> 
+	<a href="#" onclick="window.location.reload()" data-role="button" data-icon="refresh">刷新</a>
+   </div>
+   <div role="main" class="ui-content">
+     <ul id="list" class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+            <li class="ui-li-has-alt ui-first-child ui-btn" onclick="window.location.href=www.baidu.com">
+            <div class="ui-grid-a">
+            <div class="ui-block-a"><h2>黄晓茵</h2></div>
+			<div class="ui-block-b" style="padding-top:5px; text-align: right; padding-right: 10px;"><span style="font-size:.75em;">2014/06/06 7:58</span></div>
+			</div>
+            <p class="topic"><strong>“国光杯”足球赛球讯</strong></p>
+            <p>昨天（6月5日）赛果：（男子A组）质管&国专联队以5：4胜国际音响事业部创业队（男子B组）J13E&J14W联队以4：1胜J23E车间</p>
+             
+            </li>
+			<li id="getMore" style="text-align: center;" onclick="refresh(2);">
+			点击 加载更多
+			</li>
+        </ul>
 
+    </div>
 
-<div class="ui-refresh">
-    <ul class="data-list">
-    	  
-    </ul>
-    <div class="ui-refresh-down"></div>      <!--setup方式带有class为ui-refresh-down或ui-refresh-up的元素必须加上，用于放refresh按钮-->
-</div>
+  </div>
+	
+  <script>
+  var page=1;
+  jQuery(document).ready(function() {
+	  refresh(page);
+  });
+  
+  function refresh(page){
+	  jQuery.ajax({
+			url: "${ctx}/wxmail/jsonValue/${openid}/"+page,
+			type: "post",
+			dataType: "json",
+			success: function(msg) {
+				$(msg.emails).each(function(i,email){
+					var html='';
+					html=html+'<li class="ui-li-has-alt ui-first-child">';
+					html=html+'<a href="${ctx}/html/email/'+email.url+'" class="ui-btn">';
+					html=html+'<div class="ui-grid-a">';
+					html=html+'<div class="ui-block-a"><h3>'+email.fromName+'</h3></div>';
+					html=html+'<div class="ui-block-b" style="padding-top:5px;"><span style="font-size:.75em;">'+email.sentDate+'</span></div>';
+					html=html+'</div>';
+					html=html+'<p class="topic"><strong>'+email.subject+'</strong></p>';
+					html=html+'<p class="topic">'+email.bodyText+'</p>';
+					html=html+'</a>';
+					html=html+'<a href="#" class="delete ui-btn ui-btn-icon-notext ui-icon-carat-r ui-shadow ui-btn-icon-left"></a>';
+					html=html+'</li>';
+					$("#getMore").before(html);
+				});
+				msg.page=page;
+			},
+			 error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 alert(XMLHttpRequest.status);
+                 alert(XMLHttpRequest.readyState);
+                 alert(textStatus);
+             }
+		});
+  }
 
-<script type="text/javascript">
-    (function () {
-    	var page=1;
-    	$.getJSON('${ctx}/wxmail/jsonValue/${openid}/'+page,function(data){
-    		$.each(data.html,function(index,item){
-    			$('.data-list').append(item);
-    		});
-    		page=data.page;
-    	});
-    	
-        /*组件初始化js begin*/
-        $('.ui-refresh').refresh({
-            load: function (dir, type) {
-                var me = this;
-                $.getJSON('${ctx}/wxmail/jsonValue/${openid}/'+page, function (data) {
-                    var $list = $('.data-list'),
-                            html = (function (data) {
-                                var liArr = [];
-                                $.each(data.html, function () {
-                                    liArr.push(this);
-                                });
-                                page=data.page;
-                                return liArr.join('');
-                            })(data);
-
-                    $list[dir == 'up' ? 'prepend' : 'append'](html);
-                    me.afterDataLoading();    //数据加载完成后改变状态
-                });
-            }
-        });
-        /*组件初始化js end*/
-    })();
-    
-
-</script>
-
+  </script>
 </body>
+
 </html>

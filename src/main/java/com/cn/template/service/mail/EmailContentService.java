@@ -238,6 +238,9 @@ public class EmailContentService {
 			//替换邮件中的图片路径（由代号 cid 更换为路径）
 			emailContent.setBodyHtml(replaceAttachPath(emailContent.getBodyHtml(), emailContent.getAttachments()));
 			
+			//如果text的值为空Html不为空，则将html内容去除HTML标签作为Text保存
+			emailContent.setBodyText(Utils.delHTMLTag(emailContent.getBodyHtml()).replaceAll("\\s*|\t|\r|\n","").replaceAll("&.*?;", ""));
+			
 			//将邮件内容静态化，保存访问路径
 			saveHtml(emailContent,Constants.WEBROOT+"/html/email/");
 			
@@ -295,23 +298,17 @@ public class EmailContentService {
 	 * @return
 	 */
 	private String replaceAttachPath(String html,EmailAttachment emailAttachment){
-		int startSite = html.indexOf("cid:"+emailAttachment.getFileName());
+		//递归处理同一图片多次使用的问题[使用正则表达式后，无需使用]
+		/*int startSite = html.indexOf("cid:"+emailAttachment.getFileName());
 		int endSite = html.indexOf(">", startSite);
 		logger.info("startSite :{},endSite :{}",startSite,endSite);
 		html=html.substring(0,startSite)+emailAttachment.getUrl()+"\""+html.substring(endSite);
 		while (html.indexOf("cid:"+emailAttachment.getFileName())>0) {
 			html=replaceAttachPath(html, emailAttachment);
-		}
+		}*/
+		
+		html=html.replaceAll("\\bsrc=\"cid:"+emailAttachment.getFileName()+".*?\"", "src=\""+emailAttachment.getUrl()+"\"");
 		return html;
-	}
-	
-	
-	public static void main(String[] args) {
-		String html="<img width=516 height=624 id=\"图片_x0020_2\" src=\"cid:image001.png@01CF7019.75CC72A0\">";
-		int startSite = html.indexOf("cid:image001.png");
-		int endSite = html.indexOf(">", startSite);
-		html=html.substring(0,startSite)+"image001.png"+"\""+html.substring(endSite);
-		logger.info("startSite :{},endSite :{},html:{}",startSite,endSite,html);
 	}
 	
 	
@@ -324,7 +321,7 @@ public class EmailContentService {
 	private int minMsgnum(int maxMsgnum,String email){
 		Integer minMsgnum = emailContentDao.findMaxMessageIdByEmail(email);
 		if(minMsgnum==null){
-			minMsgnum=maxMsgnum-100; 
+			minMsgnum=maxMsgnum-11; 
 		}
 		if(minMsgnum<=0){
 			minMsgnum=0;
