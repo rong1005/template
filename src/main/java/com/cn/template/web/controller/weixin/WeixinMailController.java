@@ -61,9 +61,17 @@ public class WeixinMailController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String list(Model model,ServletRequest request) {
-		logger.info("Utils.getCurrentUser().getSession() --> openid :{}",Utils.getCurrentUser().getSession().getAttribute("openid"));
-		return "wxmail/mail_list";
+	public String list(
+			@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType,
+			Model model) {
+		logger.info("Utils.getCurrentUser().getSession() --> openid :{}", Utils.getCurrentUser().getSession().getAttribute("openid"));
+		Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(Utils.getCurrentUser().getSession().getAttribute("openid").toString(), pageNumber, pageSize, sortType);
+		model.addAttribute("emailContents", emailContents);
+
+		return "wxmail/mail-list";
 	}
 	
 	/**
@@ -74,24 +82,15 @@ public class WeixinMailController {
 	 * @param sortType
 	 * @return
 	 */
-	@RequestMapping(value="/jsonValue/{openid}/{page}")
+	@RequestMapping(value="/json-value")
 	@ResponseBody
-	public Map<String,Object> getValue(@PathVariable("openid") String openid,
-			@PathVariable(value = "page") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
+	public Page<EmailContent> getValue(@RequestParam("openid") String openid,
+			@RequestParam(value = "page",defaultValue="1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_5) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType){
 		
-		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
-		Map<String,Object> map=Maps.newHashMap();
-		map.put("emails", emailContents.getContent());
-		map.put("page", pageNumber+1);
-		return map;
+		return emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
 	}
 	
-	
-	@RequestMapping(value="/demo")
-	public String demo(){
-		return "wxmail/mail_demo";
-	}
 	
 }

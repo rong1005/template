@@ -321,7 +321,7 @@ public class EmailContentService {
 	private int minMsgnum(int maxMsgnum,String email){
 		Integer minMsgnum = emailContentDao.findMaxMessageIdByEmail(email);
 		if(minMsgnum==null){
-			minMsgnum=maxMsgnum-11; 
+			minMsgnum=maxMsgnum-21; 
 		}
 		if(minMsgnum<=0){
 			minMsgnum=0;

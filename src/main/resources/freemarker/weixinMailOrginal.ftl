@@ -1,59 +1,44 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>国光电器股份有限公司</title>
-	
-	<link href="${contextPath!""}/static/js/slideby/styles/style.css" rel="stylesheet" type="text/css">
-	<link href="${contextPath!""}/static/js/slideby/styles/framework.css" rel="stylesheet" type="text/css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>${email.subject!""}</title>
+	<!-- JQuery Mobile 的资源引入 -->
+	<link rel="stylesheet" href="${contextPath!""}/static/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css" />
+	<script src="${contextPath!""}/static/js/jquery/jquery-2.1.1.min.js"></script>
+	<script src="${contextPath!""}/static/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
 
-<style type="text/css">
-	#content .container img{
-		max-width: 100%!important;
-	}
-</style>  
+	<style type="text/css">
+		article img{
+			max-width: 100%!important;
+		}
+	</style>  
 </head>
-<body>
 
-<div class="all-elements">
-    <div id="content" class="page-content">
-        <div class="content">
-        	<div class="decoration"></div>
-
-            <div class="container no-bottom">
-            	<div class="section-title">
-                	<h1 style="font-size:20px;">${email.subject!""}</h1>
-					<h2 style="font-size:10px;">${email.fromName!""} &emsp;&emsp; ${email.sentDate?string("yyyy年MM月dd日 HH:mm:ss")} </h2>
-                </div>
-            </div>
-            
-            <div class="decoration"></div>
-
-            <div class="container no-bottom">
-				${email.bodyHtml!""}
-            </div>
-            
-            <div class="decoration"></div>
-            
-            <#if email.attachments?exists>
-            附件下载:<br/>
-            <#list email.attachments as attachment>
-            <#-- 枚举量的获取以及比较：记得传入的 Map 中需要包含 enums-->
-            <#-- 1：${enums["com.cn.template.xutil.enums.AttachmentType"].ATTACHMEN} 2：${attachment.attachmentType}-->
-				附件${attachment_index+1}：${attachment.fileName} <a href="${contextPath!""}/html/email/${attachment.fullUrl}"> 下载 </a>
-			</#list>
- 
-            <div class="decoration"></div>
-            </#if>
-                
-            <div class="content-footer">
-                <a href="#" class="go-up-footer"></a>
-                <div class="clear"></div>
-            </div>
-              
-        </div>                
-    </div>  
-</div>
-
+<body>	
+	<div data-role="page">
+		<div data-role="header" data-position="fixed">
+			<a href="#" data-role="button" data-rel="back" data-direction="reverse">返回</a>
+			<h1>${email.subject!""}</h1>
+			<a href="${contextPath!""}/html/email/${email.originalUrl!""}" data-role="button" data-ajax="false">原文</a>
+		</div>
+		<div role="main" class="ui-content" style="background-color: white;">
+			<article>
+			${email.bodyHtml!""}
+			</article>
+			<#if email.attachments?exists>
+			<div data-role="collapsible" data-collapsed="false">
+				<h4>附件</h4>
+				<ul data-role="listview">
+					<#list email.attachments as attachment>
+					<#-- 枚举量的获取以及比较：记得传入的 Map 中需要包含 enums-->
+            		<#-- 1：${enums["com.cn.template.xutil.enums.AttachmentType"].ATTACHMEN} 2：${attachment.attachmentType}-->
+					<li><a href="${contextPath!""}/html/email/${attachment.fullUrl}" data-ajax="false">附件${attachment_index+1}：${attachment.fileName}</a></li>
+					</#list>
+				</ul>
+			</div>
+			</#if>
+		</div>
+  </div>
 </body>
 </html>

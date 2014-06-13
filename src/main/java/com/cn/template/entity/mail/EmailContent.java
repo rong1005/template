@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -221,6 +222,7 @@ public class EmailContent extends IdEntity {
 		this.messageId = messageId;
 	}
 
+	@JsonIgnore //不转化为json格式.
 	public String getBodyText() {
 		return bodyText;
 	}
@@ -228,7 +230,17 @@ public class EmailContent extends IdEntity {
 	public void setBodyText(String bodyText) {
 		this.bodyText = bodyText;
 	}
+	
+	@Transient //不持久化到数据库
+	public String getShortBodyText(){
+		if(bodyText.length()>50){
+			return bodyText.substring(0,50)+"...";
+		}else{
+			return bodyText;
+		}
+	}
 
+	@JsonIgnore //不转化为json格式.
 	public String getBodyHtml() {
 		return bodyHtml;
 	}
