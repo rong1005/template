@@ -27,9 +27,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/news-category?messageCategory=${newsCategory.messageCategory}">图文消息类别列表</a>
+										<a href="${ctx}/news-category?messageCategory=${newsCategory.messageCategory}">${newsCategory.messageCategory.value}列表</a>
 									</li>
-									<li>创建图文消息类别</li>
+									<li>创建${newsCategory.messageCategory.value}类</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								
@@ -40,7 +40,7 @@
 					
 					<div class="box border green">
 						<div class="box-title">
-							<h4><i class="fa fa-table"></i>创建图文消息类别</h4>
+							<h4><i class="fa fa-table"></i>创建${newsCategory.messageCategory.value}类</h4>
 							<div class="tools hidden-xs">
 								<a href="javascript:;" class="collapse">
 									<i class="fa fa-chevron-up"></i>
@@ -77,7 +77,7 @@
 								</div>
 	
 								<div class="form-group">
-									<label class="col-sm-2 control-label">图文消息类别描述</label> 
+									<label class="col-sm-2 control-label">${newsCategory.messageCategory.value}类描述</label> 
 									<div class="col-sm-10">
 										<textarea rows="3" cols="5" id="description" name="description" class="autosize countable form-control" data-limit="100">${newsCategory.description}</textarea>
 										<p class="help-block">您还可以输入 <span id="counter"></span> 字.</p> 
@@ -116,7 +116,7 @@
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
 			App.setPage("news_category_forms");  //设置当前启动的页面
 			
-			App.setHasSub("projects-manager");//设置一级菜单目录ID
+			App.setHasSub("weixin-manager");//设置一级菜单目录ID
 			App.setSubMenu("${newsCategory.messageCategory}");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件

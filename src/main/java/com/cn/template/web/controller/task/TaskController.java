@@ -68,7 +68,7 @@ public class TaskController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "task/task_list";
+		return "task/task-list";
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class TaskController {
 	public String create(Model model) {
 		model.addAttribute("task", new Task());
 		model.addAttribute("action", "create");
-		return "task/task_form";
+		return "task/task-form";
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class TaskController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("task", taskService.getTask(id));
 		model.addAttribute("action", "update");
-		return "task/task_form";
+		return "task/task-form";
 	}
 
 	/**

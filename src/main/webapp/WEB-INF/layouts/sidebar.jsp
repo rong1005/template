@@ -45,7 +45,6 @@
 				<ul class="sub">
 					<li id="projects-list"><a class="" href="${ctx}/project"><span class="sub-menu-text">项目列表</span></a></li>
 					<li id="tasks-list"><a class="" href="${ctx}/task"><span class="sub-menu-text">任务列表</span></a></li>
-					<li id="demos-list"><a class="" href="${ctx}/demo"><span class="sub-menu-text">例子列表</span></a></li>
 				</ul>
 			</li>
 			<li id="weixin-manager" class="has-sub">

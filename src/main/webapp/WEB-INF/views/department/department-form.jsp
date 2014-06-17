@@ -18,9 +18,6 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="page-header">
-								<!-- STYLER -->
-								
-								<!-- /STYLER -->
 								<!-- BREADCRUMBS -->
 								<ul class="breadcrumb">
 									<li>
@@ -28,7 +25,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">部门管理</a>
+										<a href="${ctx}/department">部门列表</a>
 									</li>
 									<li>创建部门</li>
 								</ul>

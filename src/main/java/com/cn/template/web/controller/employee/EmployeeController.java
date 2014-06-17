@@ -65,7 +65,7 @@ public class EmployeeController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "employee/employee_list";
+		return "employee/employee-list";
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class EmployeeController {
 	public String create(Model model) {
 		model.addAttribute("employee", new Employee());
 		model.addAttribute("action", "create");
-		return "employee/employee_form";
+		return "employee/employee-form";
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class EmployeeController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("employee", employeeService.getEmployee(id));
 		model.addAttribute("action", "update");
-		return "employee/employee_form";
+		return "employee/employee-form";
 	}
 
 	/**

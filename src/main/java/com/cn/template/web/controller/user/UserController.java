@@ -74,7 +74,7 @@ public class UserController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "user/user_list";
+		return "user/user-list";
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class UserController {
 		model.addAttribute("allRole", allRole);
 		model.addAttribute("isExist", isExist(allRole, new ArrayList<Role>()));
 		model.addAttribute("action", "create");
-		return "user/user_form";
+		return "user/user-form";
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class UserController {
 		model.addAttribute("allRole", allRole);
 		model.addAttribute("isExist", isExist(allRole, user.getRoles()));
 		model.addAttribute("action", "update");
-		return "user/user_form";
+		return "user/user-form";
 	}
 
 	/**

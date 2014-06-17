@@ -1,18 +1,12 @@
-<%@page import="com.cn.template.xutil.enums.Whether"%>
-<%@page import="com.cn.template.xutil.enums.RoleType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<c:set var="roleType_admin" value="<%=RoleType.ADMIN %>" />
-<c:set var="roleType_user" value="<%=RoleType.USER %>" />
-<c:set var="default_yes" value="<%=Whether.YES %>" />
-<c:set var="default_not" value="<%=Whether.NOT %>" />
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>角色管理</title>
+	<title>用户管理</title>
 	<!-- UNIFORM 优化表单样式 -->
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
 </head>
@@ -36,9 +30,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">角色管理</a>
+										<a href="${ctx}/user">用户列表</a>
 									</li>
-									<li>创建角色</li>
+									<li>创建用户</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								
@@ -49,7 +43,7 @@
 					
 					<div class="box border green">
 						<div class="box-title">
-							<h4><i class="fa fa-table"></i>创建角色</h4>
+							<h4><i class="fa fa-table"></i>创建用户</h4>
 							<div class="tools hidden-xs">
 								<a href="javascript:;" class="collapse">
 									<i class="fa fa-chevron-up"></i>
@@ -61,36 +55,58 @@
 						</div>
 						
 						<div class="box-body">
-							<form id="inputForm" class="form-horizontal" action="${ctx}/role/${action}" method="post">
-								<input type="hidden" name="id" value="${role.id}"/>
+							<form id="inputForm" class="form-horizontal" action="${ctx}/user/${action}" method="post">
+								<input type="hidden" name="id" value="${user.id}"/>
 								
 								<div class="form-group">
-									<label class="col-sm-2 control-label">角色名称</label>
+									<label class="col-sm-2 control-label">登录账号</label>
 									<div class="col-sm-10">
-										<input type="text" id="role_name" name="name" value="${role.name}" class="form-control" placeholder="名称"/>
+										<input type="text" id="user_loginName" name="loginName" value="${user.loginName}" class="form-control" placeholder="登录账号" <c:if test="${user.id ne null}">readonly="readonly"</c:if>/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">姓名</label>
+									<div class="col-sm-10">
+										<input type="text" id="user_name" name="name" value="${user.name}" class="form-control" placeholder="姓名"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">邮箱地址</label>
+									<div class="col-sm-10">
+										<input type="text" id="user_email" name="email" value="${user.email}" class="form-control" placeholder="邮箱地址"/>
 									</div>
 								</div>
 								
+								<c:if test="${user.id eq null}">
 								<div class="form-group">
-									<label class="col-sm-2 control-label">角色代码</label>
+									<label class="col-sm-2 control-label">创建密码</label>
 									<div class="col-sm-10">
-										<input type="text" id="role_code" name="code" value="${role.code}" class="form-control" placeholder="代码"/>
+										<input type="password" id="user_plainPassword" name="plainPassword" value="${user.plainPassword}" class="form-control" placeholder="创建密码"/>
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">确认密码</label>
+									<div class="col-sm-10">
+										<input type="password" id="user_confirmPassword" name="confirmPassword" class="form-control" placeholder="确认密码"/>
+									</div>
+								</div>
+								</c:if>
+								
+								<c:if test="${user.id ne null}">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">注册日期</label>
+									<div class="col-sm-10">
+										<fmt:formatDate value="${user.registerDate}" pattern="yyyy年MM月dd日  HH时mm分ss秒" />
+									</div>
+								</div>
+								</c:if>
 								
 								<div class="form-group">
-									<label class="col-sm-2 control-label">角色类型</label>
+									<label class="col-sm-2 control-label">角色</label>
 									<div class="col-sm-10">
-										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_admin}">${roleType_admin.value}</label> 
-										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_user}" checked="checked">${roleType_user.value}</label> 
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="col-sm-2 control-label">是否默认角色</label>
-									<div class="col-sm-10">
-										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_yes}">${default_yes.value}</label> 
-										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_not}" checked="checked">${default_not.value}</label> 
+										<c:forEach items="${allRole }" var="role" varStatus="status">
+											<label class="checkbox-inline"> <input type="checkbox" name="roles.id" class="uniform" value="${role.id}" <c:if test="${isExist[role.id] }">checked="checked"</c:if>>${role.name}</label>
+										</c:forEach>
 									</div>
 								</div>
 												  
@@ -122,10 +138,10 @@
 	<script>
 		jQuery(document).ready(function() {
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
-			App.setPage("role_froms");  //设置当前启动的页面
+			App.setPage("user_froms");  //设置当前启动的页面
 			
 			App.setHasSub("other-page");//设置一级菜单目录ID
-			App.setSubMenu("roles-list");//设置二级菜单目录ID
+			App.setSubMenu("users-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 			

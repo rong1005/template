@@ -68,7 +68,7 @@ public class SidebarController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "user/sidebar_list";
+		return "user/sidebar-list";
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class SidebarController {
 		model.addAttribute("sidebar", new Sidebar());
 		model.addAttribute("topSidebars", sidebarService.getTopSidebar());
 		model.addAttribute("action", "create");
-		return "user/sidebar_form";
+		return "user/sidebar-form";
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class SidebarController {
 		model.addAttribute("sidebar", sidebarService.getSidebar(id));
 		model.addAttribute("topSidebars", sidebarService.getTopSidebar());
 		model.addAttribute("action", "update");
-		return "user/sidebar_form";
+		return "user/sidebar-form";
 	}
 
 	/**

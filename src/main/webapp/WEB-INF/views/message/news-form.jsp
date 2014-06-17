@@ -32,7 +32,10 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">图文消息管理</a>
+										<a href="${ctx}/news-category?messageCategory=${newsMessage.newsCategory.messageCategory}">${newsMessage.newsCategory.title}</a>
+									</li>
+									<li>
+										<a href="${ctx}/news?newsCategoryId=${newsMessage.newsCategory.id}">${newsMessage.newsCategory.title}列表</a>
 									</li>
 									<li>创建图文消息</li>
 								</ul>
@@ -150,7 +153,7 @@
 			App.setPage("newsMessage_forms");  //设置当前启动的页面
 			
 			App.setHasSub("weixin-manager");//设置一级菜单目录ID
-			App.setSubMenu("newsMessages-list");//设置二级菜单目录ID
+			App.setSubMenu("${newsMessage.newsCategory.messageCategory}");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 			

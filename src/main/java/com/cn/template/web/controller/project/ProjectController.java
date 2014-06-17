@@ -70,7 +70,7 @@ public class ProjectController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "project/project_list";
+		return "project/project-list";
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class ProjectController {
 	public String create(Model model) {
 		model.addAttribute("project", new Project());
 		model.addAttribute("action", "create");
-		return "project/project_form";
+		return "project/project-form";
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class ProjectController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("project", projectService.getProject(id));
 		model.addAttribute("action", "update");
-		return "project/project_form";
+		return "project/project-form";
 	}
 
 	/**

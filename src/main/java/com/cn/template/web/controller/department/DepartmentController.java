@@ -54,7 +54,7 @@ public class DepartmentController {
 	public String list(@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model) {
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
-		return "department/department_list";
+		return "department/department-list";
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class DepartmentController {
 		model.addAttribute("departmentList", departmentService.getAllDepartment());
 		model.addAttribute("department", new Department());
 		model.addAttribute("action", "create");
-		return "department/department_form";
+		return "department/department-form";
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class DepartmentController {
 		model.addAttribute("departmentList", departmentService.getAllDepartment());
 		model.addAttribute("department", departmentService.getDepartment(id));
 		model.addAttribute("action", "update");
-		return "department/department_form";
+		return "department/department-form";
 	}
 
 	/**

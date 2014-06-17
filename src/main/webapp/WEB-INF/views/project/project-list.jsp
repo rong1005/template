@@ -26,9 +26,8 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">项目管理</a>
+										项目列表
 									</li>
-									<li>项目列表</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								

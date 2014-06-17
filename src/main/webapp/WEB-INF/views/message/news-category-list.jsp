@@ -25,7 +25,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										图文消息类别列表
+										${messageCategory.value }列表
 									</li>
 								</ul>
 							</div>
@@ -48,7 +48,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>图文消息类别列表</h4>
+									<h4><i class="fa fa-table"></i>${messageCategory.value }类列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -72,7 +72,7 @@
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>图文消息类别</th>
+												<th>${messageCategory.value }类</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -96,7 +96,7 @@
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/news-category/create?messageCategory=${messageCategory}">创建图文消息类别</a>
+												<a class="btn btn-info" href="${ctx}/news-category/create?messageCategory=${messageCategory}">创建${messageCategory.value }类</a>
 											</div>
 										</div>
 									</div>

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>用户管理</title>
+	<title>角色管理</title>
 </head>
 <body>
 	<div id="main-content">
@@ -26,9 +26,8 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">用户管理</a>
+										角色列表
 									</li>
-									<li>用户列表</li>
 								</ul>
 								<!-- /BREADCRUMBS -->								
 							</div>
@@ -51,7 +50,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>用户列表</h4>
+									<h4><i class="fa fa-table"></i>角色列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="reload">
 											<i class="fa fa-refresh"></i>
@@ -67,7 +66,7 @@
 								<div class="box-body">
 									<form class="form-inline" action="#">
 										<div class="form-group">
-											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="姓名" />
+											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="名称" />
 										</div>
 										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
 										<tags:sort/>
@@ -78,21 +77,25 @@
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>登录名</th>
-												<th>姓名</th>
-												<th>邮箱</th>
-												<th>注册时间</th>
+												<th>名称</th>
+												<th>代码</th>
+												<th>是否默认</th>
+												<th>类型</th>
 												<th>管理</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${users.content}" var="user">
+										<c:forEach items="${roles.content}" var="role">
 											<tr>
-												<td>${user.loginName}</td>
-												<td>${user.name}</td>
-												<td>${user.email}</td>
-												<td><fmt:formatDate value="${user.registerDate}" pattern="yyyy年MM月dd日" /></td>
-												<td><a href="${ctx}/user/update/${user.id}">修改</a> / <a href="${ctx}/user/delete/${user.id}" onclick="return confirm('是否删除该用户？')">删除</a></td>
+												<td>${role.name}</td>
+												<td>${role.code}</td>
+												<td>${role.defaultRole.value}</td>
+												<td>${role.roleType.value}</td>
+												<td>
+													<a href="${ctx}/role/update/${role.id}">修改</a> / 
+													<a href="${ctx}/role/delete/${role.id}" onclick="return confirm('是否删除该角色？')">删除</a> / 
+													<a href="${ctx}/role/sidebar/${role.id}">管理菜单</a>
+												</td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -100,11 +103,11 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<tags:pagination page="${users}" paginationSize="5"/>
+												<tags:pagination page="${roles}" paginationSize="5"/>
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info in-loading" href="${ctx}/user/create">创建用户</a>
+												<a class="btn btn-info in-loading" href="${ctx}/role/create">创建角色</a>
 											</div>
 										</div>
 									</div>
@@ -139,7 +142,7 @@
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
 			App.setHasSub("other-page");//设置一级菜单目录ID
-			App.setSubMenu("users-list");//设置二级菜单目录ID
+			App.setSubMenu("roles-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});

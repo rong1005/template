@@ -30,7 +30,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">角色管理</a>
+										<a href="${ctx}/role">角色列表</a>
 									</li>
 									<li>角色菜单</li>
 								</ul>

@@ -26,9 +26,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">图文消息管理</a>
+										<a href="${ctx}/news-category?messageCategory=${newsCategory.messageCategory}">${newsCategory.title}</a>
 									</li>
-									<li>图文消息列表</li>
+									<li>${newsCategory.title}列表</li>
 								</ul>
 								
 							</div>
@@ -51,7 +51,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>图文消息列表</h4>
+									<h4><i class="fa fa-table"></i>${newsCategory.title}内容列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -85,7 +85,7 @@
 												<td>${newsMessage.title}</td>
 												<td>
 													<a href="${ctx}/news/update/${newsMessage.id}">修改</a> / 
-													<a href="${ctx}/news/delete/${newsMessage.id}?newsCategoryId=${newsCategoryId }" onclick="return confirm('是否删除该图文消息？')">删除</a> / 
+													<a href="${ctx}/news/delete/${newsMessage.id}?newsCategoryId=${newsCategory.id }" onclick="return confirm('是否删除该图文消息？')">删除</a> / 
 													<a href="${ctx}/news/publish/${newsMessage.id}">发布</a> / 
 													<a href="${ctx}/static/js/slideby/preview/index.html?url=${ctx}${newsMessage.url}" target="_blank">预览</a>
 												</td>
@@ -100,7 +100,7 @@
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/news/create?newsCategoryId=${newsCategoryId}">创建图文消息</a>
+												<a class="btn btn-info" href="${ctx}/news/create?newsCategoryId=${newsCategory.id}">创建图文消息</a>
 											</div>
 										</div>
 									</div>
@@ -135,7 +135,7 @@
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
 			App.setHasSub("weixin-manager");//设置一级菜单目录ID
-			App.setSubMenu("newsMessages-list");//设置二级菜单目录ID
+			App.setSubMenu("${newsCategory.messageCategory}");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});

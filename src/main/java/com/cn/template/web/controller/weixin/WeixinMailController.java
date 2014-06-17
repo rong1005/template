@@ -1,9 +1,6 @@
 package com.cn.template.web.controller.weixin;
 
-import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,11 +18,10 @@ import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Utils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * 与微信接入业务处理的代理类.
+ * 微信邮件业务处理的代理类.
  * @author Libra
  *
  */

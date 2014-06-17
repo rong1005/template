@@ -25,9 +25,7 @@
 										<i class="fa fa-home"></i>
 										<a href="${ctx}/workbench">主页</a>
 									</li>
-									<li>
-										<li>微信订阅者列表</li>
-									</li>
+									<li>微信订阅者列表</li>
 								</ul>
 								
 							</div>
