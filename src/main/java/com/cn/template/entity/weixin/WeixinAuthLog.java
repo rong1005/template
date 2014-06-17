@@ -25,6 +25,12 @@ public class WeixinAuthLog extends IdEntity {
 	/** 工号 */
 	private String code;
 	
+	/** 邮箱 */
+	private String email;
+	
+	/** 邮箱密码 */
+	private String emailPassword;
+	
 	/** 获取的二维码ticket */
 	private String ticket;
 	
@@ -89,6 +95,21 @@ public class WeixinAuthLog extends IdEntity {
 	public void setSceneId(Long sceneId) {
 		this.sceneId = sceneId;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmailPassword() {
+		return emailPassword;
+	}
+
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
+	}
 	
 }

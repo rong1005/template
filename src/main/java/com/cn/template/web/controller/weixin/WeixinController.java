@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,12 +44,13 @@ public class WeixinController {
 	
 	private static Logger logger = LoggerFactory.getLogger(WeixinController.class);
 	
+	/** JMS消息的生产者（将消息加入JMS消息列表） */
 	@Autowired
 	private NotifyMessageProducer notifyMessageProducer;
 	
 	
 	/**
-     * 检查TOKEN，接入微信，验证称为微信开发者的方法.
+     * 检查TOKEN，接入微信，验证成为微信开发者的方法.(在调整服务器时使用).
      *
      * @param signature
      * @param timestamp
@@ -59,8 +61,7 @@ public class WeixinController {
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public void checkToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	System.out.println("验证----------");
-		// http://localhost:8080/gzdfbz/weinxin?signature=9ec3cd1a021d5ffe45324a9fd3aefdfaa77fb1b7&timestamp=2&nonce=3&echostr=4
+    	logger.info("微信开发者接入认证:{}",new Date());
 		String signature = request.getParameter("signature");
 		String timestamp = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
@@ -81,13 +82,16 @@ public class WeixinController {
     }
 
     /**
-     * 接收微信消息.
+     * 接收微信触发的消息，如用户输入的内容、关注、取消关注等等.
+     * 简单的内容，用户触发后直接回复；
+     * 如消息需要通过后台查询获取的，先回复""空值，微信接收到空值不进行处理；
+     * 将需要处理的消息加入JMS消息处理列表，异步处理完后，将消息通过客服接口返回给用户.
      * @param request
      * @param response
      */
 	@RequestMapping(method = RequestMethod.POST)
 	public void reply(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("接收信息----------");
+		logger.info("收到消息:{}",new Date());
 		
 		String contextPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+""+request.getContextPath();
 		 Document doc = null;
@@ -104,9 +108,9 @@ public class WeixinController {
 	            String msgType = root.element("MsgType").getTextTrim();
 	            
 	            //System.out.println("toUserName={"+toUserName+"}" );
-	            System.out.println("fromUserName={"+fromUserName+"}" );
+	            //System.out.println("fromUserName={"+fromUserName+"}" );
 	            //System.out.println("CreateTime={"+root.element("CreateTime").getTextTrim()+"}" );
-	            System.out.println("msgType={"+msgType+"}" );
+	            //System.out.println("msgType={"+msgType+"}" );
 	            //System.out.println("Content={"+root.element("Content").getTextTrim()+"}" );
 	            //System.out.println("MsgId={"+root.element("MsgId").getTextTrim()+"}" );
 	            
@@ -147,7 +151,7 @@ public class WeixinController {
 	            }else if(StringUtils.equals(msgType, "event")){
 	            	 String event = root.element("Event").getTextTrim();
 	            	 if(StringUtils.equals(event, "subscribe")){
-	            		 System.out.println("用户："+fromUserName+" 订阅");
+	            		 logger.info("用户：{} 订阅",fromUserName);
 	            		 TextMessage message = new TextMessage();
 		                 message.setToUserName(toUserName);
 		                 message.setFromUserName(fromUserName);
@@ -156,7 +160,7 @@ public class WeixinController {
 		                 notifyMessageProducer.sendQueue(event, fromUserName);
 		                 message.print(out);
 	            	 }else if(StringUtils.equals(event, "unsubscribe")){
-	            		 System.out.println("用户："+fromUserName+" 退阅");
+	            		 logger.info("用户：{} 取消订阅",fromUserName);
 	            		 out.print("");
 	            		 notifyMessageProducer.sendQueue(event, fromUserName);
 	            	 }else if (StringUtils.equals(event, "CLICK")){
@@ -204,8 +208,8 @@ public class WeixinController {
 					String openid = map.get("openid").toString();
 					logger.info("openid :{}",openid);
 					//测试------------
-					Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
-					//Utils.getCurrentUser().getSession().setAttribute("openid", openid);
+					//Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+					Utils.getCurrentUser().getSession().setAttribute("openid", openid);
 				}
 			}catch(Exception e){
 				e.printStackTrace();

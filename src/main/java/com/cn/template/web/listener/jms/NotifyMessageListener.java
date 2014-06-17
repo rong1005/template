@@ -83,12 +83,11 @@ public class NotifyMessageListener implements MessageListener {
 			String event = mapMessage.getString("event");
 			String openid = mapMessage.getString("openid");
 			// 打印消息详情
-			logger.info("EventType:{}, OpenID:{}",event, openid);
-
-			System.out.println("打印JMS信息: "+event+" : "+openid);
-			
+			logger.info("打印JMS信息 --> 事件：{}，标识：{} ",event,openid);
+			//根据微信的唯一标识，查询微信订阅者信息.
 			WeixinUser weixinUser = weixinUserService.getWeixinUser(openid);
 			if(StringUtils.equals(EventType.SUBSCRIBE.getValue(), event)){
+				//触发订阅事件
 				if(weixinUser!=null){
 					logger.info("订阅者更新！");
 					weixinUser.setSubscribe(Whether.YES.ordinal());
@@ -105,7 +104,8 @@ public class NotifyMessageListener implements MessageListener {
 					}
 				}
 			}else if(StringUtils.equals(EventType.UNSUBSCRIBE.getValue(), event)){
-				logger.info("{}取消订阅！",weixinUser.getNickname());
+				//触发取消订阅事件
+				logger.info("{} ：取消订阅！",weixinUser.getNickname());
 				weixinUser.setSubscribe(Whether.NOT.ordinal());
 				weixinUser.setUpdateTime(new Date());
 				weixinUserService.saveWeixinUser(weixinUser);
@@ -128,6 +128,8 @@ public class NotifyMessageListener implements MessageListener {
 							}else{
 								employee.setWhether(Whether.YES);
 								employee.setOpenid(openid);
+								employee.setEmail(weixinAuthLog.getEmail());
+								employee.setEmailPassword(weixinAuthLog.getEmailPassword());
 								employeeService.saveEmployee(employee);
 								msg="恭喜你，你已经通过了认证，可以使用属于国光员工的专属功能！";
 							}
@@ -197,7 +199,7 @@ public class NotifyMessageListener implements MessageListener {
 					Utils.contentPublish(String.format(WeixinConstants.SENT_CUSTOM_MESSAGE_URL, AccessTokenUtil.getAccessToken(false)), messages);
 					
 				}else if(StringUtils.equals("AUTHENTIFICATION_OF_USER",eventKey)){
-					String content="请输入[认证#姓名#工号]进行认证,输入时无需中括号[],信息用#号隔开!";
+					String content="请输入[认证#姓名#工号#邮箱#邮箱密码]进行认证,输入时无需中括号[],信息用#号隔开!\n\n注意:邮箱只支持公司的内部邮箱";
 					Map<String,Object> map=Maps.newHashMap();
 					map.put("openid", openid);
 					map.put("content", content);
@@ -252,12 +254,25 @@ public class NotifyMessageListener implements MessageListener {
 	            			bool=false;
 	            			msg="您的微信号已经认证过，请不要重复认证！如果认证有问题，请直接与我们联系。";
 	            		}
-	            		if(bool&&values.length>=3){
-	            			logger.info("姓名：{}，工号：{}",values[1],values[2]);
+	            		if(bool&&values.length>=5){
+	            			logger.info("姓名：{}，工号：{}，邮箱:{}，邮箱密码:{} ",values[1],values[2],values[3],values[4]);
+	            			String email=values[3].toString();
+	            			if(!email.endsWith("@ggec.gd")){
+	            				bool=false;
+	            				msg="您输入的邮箱并非公司内部邮箱，请使用公司内部邮箱并重新输入！";
+	            			}
+	            			
+	            			if(bool){
 	            			Employee employee = employeeService.findByCode(values[2]);
+	            			
+	            			if(employee==null){
+	            				bool=false;
+	            				msg="您输入的工号不存在，请确认您的工号是否正确。";
+	            			}else{
 	            			if(employee.getWhether().equals(Whether.YES)){
 	            				bool=false;
 	            				msg="您输入的工号已经认证，请不要重复认证！如果认证有问题，请直接与我们联系。";
+	            			}
 	            			}
 	            			
 	            			if(bool){
@@ -277,6 +292,8 @@ public class NotifyMessageListener implements MessageListener {
 	            			authLog.setContent(content);
 	            			authLog.setName(values[1]);
 	            			authLog.setCode(values[2]);
+	            			authLog.setEmail(values[3]);
+	            			authLog.setEmailPassword(values[4]);
 	            			authLog.setTicket(map.get("ticket").toString());
 	            			authLog.setExpireSeconds(Double.parseDouble(map.get("expire_seconds").toString()));
 	            			authLog.setSceneId(time);
@@ -286,15 +303,15 @@ public class NotifyMessageListener implements MessageListener {
 	            			
 	            			JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
 	            			// 设定mail server
-	            			senderImpl.setHost("smtp.163.com");
+	            			senderImpl.setHost("mail.ggec.gd");
 
 	            			// 建立邮件消息,发送简单邮件和html邮件的区别
 	            			MimeMessage mailMessage = senderImpl.createMimeMessage();
 	            			MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,"UTF-8");
 
-	            			// 设置收件人，寄件人
-	            			messageHelper.setTo(employee.getEmail());
-	            			messageHelper.setFrom("rong_1005@163.com");
+	            			// 设置收件人，寄件人 [自己给自己发送一份带验证消息的邮件]
+	            			messageHelper.setTo(values[3]);
+	            			messageHelper.setFrom(values[3]);
 	            			messageHelper.setSubject("员工微信认证！");
 	            			
 	            			Map<String,Object> templateMap=Maps.newHashMap();
@@ -306,8 +323,8 @@ public class NotifyMessageListener implements MessageListener {
 	            			// true 表示启动HTML格式的邮件
 	            			messageHelper.setText(messages,true);
 
-	            			senderImpl.setUsername("rong_1005@163.com"); // 根据自己的情况,设置username
-	            			senderImpl.setPassword("248858868"); // 根据自己的情况, 设置password
+	            			senderImpl.setUsername(values[3]); // 根据自己的情况,设置username
+	            			senderImpl.setPassword(values[4]); // 根据自己的情况, 设置password
 	            			Properties prop = new Properties();
 	            			prop.put("mail.smtp.auth", "true"); // 将这个参数设为true，让服务器进行认证,认证用户名和密码是否正确
 	            			prop.put("mail.smtp.timeout", "25000");
@@ -316,6 +333,7 @@ public class NotifyMessageListener implements MessageListener {
 	            			senderImpl.send(mailMessage);
 	            			
 	            			msg="您的认证信息已经发送到您的邮箱，请注意查收。认证信息在30分钟后失效。";
+	            			}
 	            			}
 	            		}
 	            		

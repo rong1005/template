@@ -63,6 +63,7 @@ public class WeixinMailController {
 			Model model) {
 		logger.info("Utils.getCurrentUser().getSession() --> openid :{}", Utils.getCurrentUser().getSession().getAttribute("openid"));
 		Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+		
 		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(Utils.getCurrentUser().getSession().getAttribute("openid").toString(), pageNumber, pageSize, sortType);
 		model.addAttribute("emailContents", emailContents);
 

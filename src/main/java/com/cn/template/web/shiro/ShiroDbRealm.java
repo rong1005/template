@@ -64,7 +64,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		User user = userService.findUserByLoginName(shiroUser.loginName);
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		
+		//许可（资源）
 		List<String> permissions=Lists.newArrayList();
+		//角色
 		List<String> roles=Lists.newArrayList();
 		for(Role role : user.getRoles()){
 			roles.add(role.getCode());

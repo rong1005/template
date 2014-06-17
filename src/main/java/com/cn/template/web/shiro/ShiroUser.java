@@ -11,9 +11,16 @@ import com.google.common.base.Objects;
 public class ShiroUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	/** 员工编号 */
 	public Long id;
+	
+	/** 登录名 */
 	public String loginName;
+	
+	/** 员工姓名 */
 	public String name;
+	
+	/** 员工照片 */
 	public String photo;
 
 	public ShiroUser(Long id, String loginName, String name,String photo) {
