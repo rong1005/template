@@ -318,6 +318,20 @@ java.lang.ClassNotFoundException: org.apache.commons.codec.DecoderException
 		</dependency>
 		<!-- /文件上传 -->
 
+		<!-- WebService -->
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-java2wsdl</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		
+		<dependency>
+  			<groupId>org.apache.axis2</groupId>
+  			<artifactId>axis2-adb</artifactId>
+  			<version>1.6.2</version>
+		</dependency>
+		<!-- /WebService -->
+		
 		<!-- TEST begin -->
 		<dependency>
 			<groupId>junit</groupId>

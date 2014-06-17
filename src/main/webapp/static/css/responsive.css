@@ -23,13 +23,13 @@
     height: 45px;
     width: 100%;
   }
-  .navbar .navbar-brand img {
+  /* .navbar .navbar-brand img {
     left: 10px;
-  }
+  } */
   .navbar .navbar-brand a.switcher {
     position: absolute;
     left: auto;
-    right: 70px;
+    right: 10px;
   }
   .navbar .navbar-brand a.switcher i {
     font-size: 14px;
@@ -80,7 +80,7 @@
     padding: 10.5px;
   }
   /* SIDEBAR */
-  .sidebar {
+  /* .sidebar {
     box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
     right: -250px;
     position: absolute;
@@ -112,11 +112,12 @@
   }
   .slidebar #content {
     border-right: 1px solid #cdd2d2;
-  }
-  .sidebar-collapse {
+  } */
+  
+  /* .sidebar-collapse {
     right: 20px;
     left: auto;
-  }
+  } */
   /* DATE RANGE */
   .date-range.pull-right {
     display: block;
@@ -239,6 +240,10 @@
   }
   .not-found .error-500 {
     right: 30%;
+  }
+  
+  table .min_hidden {
+    display: none;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 800px) {

@@ -145,13 +145,18 @@ var App = function () {
 		var width = $(window).width();
 		if ( width < 768 ) {
 			is_mobile = true;
+			if(!$('#sidebar').hasClass('mini-menu')){
+				jQuery('#sidebar').addClass("mini-menu");
+			}
 			//Hide the sidebar completely
 			jQuery('#main-content').addClass("margin-left-0");
 		}
 		else {
 			is_mobile = false;
 			//Show the sidebar completely
+			if(!(is_mini_menu)){
 			jQuery('#main-content').removeClass("margin-left-0");
+			}
 			var menu = $('.sidebar');
 			if (menu.parent('.slimScrollDiv').size() === 1) { // destroy existing instance before resizing
 				menu.slimScroll({
@@ -182,6 +187,7 @@ var App = function () {
 		//Handle sidebar collapse on user interaction
 		jQuery('.sidebar-collapse').click(function () {
 			//Handle mobile sidebar toggle
+			checkLayout();
 			if(is_mobile && !(is_mini_menu)){
 				//If sidebar is collapsed
 				if(collapsed){
@@ -209,6 +215,7 @@ var App = function () {
 				}
 			}
 			else { //Handle regular sidebar toggle
+				
 				var iconElem = document.getElementById("sidebar-collapse").querySelector('[class*="fa-"]');
 				var iconLeft = iconElem.getAttribute("data-icon1");
 				var iconRight = iconElem.getAttribute("data-icon2");
@@ -217,7 +224,10 @@ var App = function () {
 					/* For Navbar */
 					jQuery('.navbar-brand').removeClass("mini-menu");
 					/* For sidebar */
-					jQuery('#sidebar').removeClass("mini-menu");
+					if(!is_mobile){
+						jQuery('#sidebar').removeClass("mini-menu");
+						jQuery('#main-content').removeClass("margin-left-0");
+					}
 					jQuery('#main-content').removeClass("margin-left-50");
 					jQuery('.sidebar-collapse i').removeClass(iconRight);
 					jQuery('.sidebar-collapse i').addClass(iconLeft);

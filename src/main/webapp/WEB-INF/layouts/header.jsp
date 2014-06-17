@@ -30,28 +30,28 @@
 			<!-- NAVBAR LEFT -->
 			<ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
 				<li class="dropdown">
-					<a href="#" class="team-status-toggle dropdown-toggle tip-bottom" data-toggle="tooltip" title="Toggle Team View">
+					<a href="#" class="team-status-toggle dropdown-toggle tip-bottom" data-toggle="tooltip">
 						<i class="fa fa-users"></i>
-						<span class="name">Team Status</span>
+						<span class="name">团队</span>
 						<i class="fa fa-angle-down"></i>
 					</a>
 				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-cog"></i>
-						<span class="name">Skins</span>
+						<span class="name">主题</span>
 						<i class="fa fa-angle-down"></i>
 					</a>
 					<ul class="dropdown-menu skins">
 						<li class="dropdown-title">
-							<span><i class="fa fa-leaf"></i> Theme Skins</span>
+							<span><i class="fa fa-leaf"></i>主题</span>
 						</li>
-						<li><a href="#" data-skin="default">Subtle (default)</a></li>
-						<li><a href="#" data-skin="night">Night</a></li>
-						<li><a href="#" data-skin="earth">Earth</a></li>
-						<li><a href="#" data-skin="utopia">Utopia</a></li>
-						<li><a href="#" data-skin="nature">Nature</a></li>
-						<li><a href="#" data-skin="graphite">Graphite</a></li>
+						<li><a href="#" data-skin="default">默认</a></li>
+						<li><a href="#" data-skin="night">黑夜</a></li>
+						<li><a href="#" data-skin="earth">大地</a></li>
+						<li><a href="#" data-skin="utopia">乌托邦</a></li>
+						<li><a href="#" data-skin="nature">自然</a></li>
+						<li><a href="#" data-skin="graphite">石墨</a></li>
 					 </ul>
 				</li>
 			</ul>

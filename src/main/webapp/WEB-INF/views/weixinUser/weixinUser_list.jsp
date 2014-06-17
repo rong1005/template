@@ -78,13 +78,13 @@
 												<th>头像</th>
 												<th>微信订阅者</th>
 												<th>性别</th>
-												<th>标识</th>
-												<th>语言</th>
-												<th>国家</th>
+												<!-- <th class="min_hidden">标识</th> -->
+												<th class="min_hidden">语言</th>
+												<th class="min_hidden">国家</th>
 												<th>省份</th>
 												<th>城市</th>
 												<th>是否订阅</th>
-												<th>订阅时间</th>
+												<th class="min_hidden">订阅时间</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -93,13 +93,13 @@
 												<td style="width: 30px;"><img alt="" style="border-radius:5px;" width="30" height="30" src="${weixinUser.headimgurl}" /></td>
 												<td style="line-height: 30px;">${weixinUser.nickname}</td>
 												<td style="line-height: 30px;">${weixinUser.sexValue}</td>
-												<td style="line-height: 30px;">${weixinUser.openid}</td>
-												<td style="line-height: 30px;">${weixinUser.language}</td>
-												<td style="line-height: 30px;">${weixinUser.country}</td>
+												<%-- <td class="min_hidden" style="line-height: 30px;">${weixinUser.openid}</td> --%>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.language}</td>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.country}</td>
 												<td style="line-height: 30px;">${weixinUser.province}</td>
 												<td style="line-height: 30px;">${weixinUser.city}</td>
 												<td style="line-height: 30px;">${weixinUser.subscribeValue}</td>
-												<td style="line-height: 30px;">${weixinUser.subscribe_time}</td>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.subscribe_time}</td>
 											</tr>
 										</c:forEach>
 										</tbody>
