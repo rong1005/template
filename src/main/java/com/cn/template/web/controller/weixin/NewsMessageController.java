@@ -74,7 +74,7 @@ public class NewsMessageController {
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 		model.addAttribute("newsCategoryId", newsCategoryId);
 
-		return "message/news_list";
+		return "message/news-list";
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class NewsMessageController {
 		newsMessage.setNewsCategory(newsCategoryService.getNewsCategory(newsCategoryId));
 		model.addAttribute("newsMessage", newsMessage);
 		model.addAttribute("action", "create");
-		return "message/news_form";
+		return "message/news-form";
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class NewsMessageController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("newsMessage", newsMessageService.getNewsMessage(id));
 		model.addAttribute("action", "update");
-		return "message/news_form";
+		return "message/news-form";
 	}
 
 	/**

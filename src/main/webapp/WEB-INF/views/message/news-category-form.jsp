@@ -24,10 +24,10 @@
 								<ul class="breadcrumb">
 									<li>
 										<i class="fa fa-home"></i>
-										<a href="index.html">主页</a>
+										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">图文消息类别管理</a>
+										<a href="${ctx}/news-category?messageCategory=${newsCategory.messageCategory}">图文消息类别列表</a>
 									</li>
 									<li>创建图文消息类别</li>
 								</ul>
@@ -52,7 +52,7 @@
 						</div>
 						
 						<div class="box-body">
-							<form id="inputForm" class="form-horizontal" action="${ctx}/newsCategory/${action}" method="post">
+							<form id="inputForm" class="form-horizontal" action="${ctx}/news-category/${action}" method="post">
 								<input type="hidden" name="id" value="${newsCategory.id}"/>
 								<input type="hidden" name="messageCategory" value="${newsCategory.messageCategory}"/>
 								<div class="form-group">

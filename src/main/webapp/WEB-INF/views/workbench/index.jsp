@@ -24,7 +24,7 @@
 								<ul class="breadcrumb">
 									<li>
 										<i class="fa fa-home"></i>
-										<a href="index.html">主页</a>
+										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>我的工作台</li>
 								</ul>

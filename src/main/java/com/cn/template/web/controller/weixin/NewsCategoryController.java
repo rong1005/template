@@ -29,7 +29,7 @@ import com.google.common.collect.Maps;
  * @author Libra
  */
 @Controller
-@RequestMapping(value = "/newsCategory")
+@RequestMapping(value = "/news-category")
 public class NewsCategoryController {
 
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
@@ -70,7 +70,7 @@ public class NewsCategoryController {
 		
 		model.addAttribute("messageCategory", messageCategory);
 
-		return "message/news_category_list";
+		return "message/news-category-list";
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class NewsCategoryController {
 		newsCategory.setMessageCategory(messageCategory);
 		model.addAttribute("newsCategory", newsCategory);
 		model.addAttribute("action", "create");
-		return "message/news_category_form";
+		return "message/news-category-form";
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class NewsCategoryController {
 	public String create(@Valid NewsCategory newNewsCategory,RedirectAttributes redirectAttributes) {
 		newsCategoryService.saveNewsCategory(newNewsCategory);
 		redirectAttributes.addFlashAttribute("message", "创建图文消息类别成功");
-		return "redirect:/newsCategory?messageCategory="+newNewsCategory.getMessageCategory();
+		return "redirect:/news-category?messageCategory="+newNewsCategory.getMessageCategory();
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class NewsCategoryController {
 		model.addAttribute("newsCategory",newsCategory);
 		model.addAttribute("messageCategory", newsCategory.getMessageCategory());
 		model.addAttribute("action", "update");
-		return "message/news_category_form";
+		return "message/news-category-form";
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class NewsCategoryController {
 	public String update(@Valid @ModelAttribute("newsCategory") NewsCategory newsCategory, RedirectAttributes redirectAttributes) {
 		newsCategoryService.saveNewsCategory(newsCategory);
 		redirectAttributes.addFlashAttribute("message", "更新图文消息类别成功");
-		return "redirect:/newsCategory?messageCategory="+newsCategory.getMessageCategory();
+		return "redirect:/news-category?messageCategory="+newsCategory.getMessageCategory();
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class NewsCategoryController {
 	public String delete(@PathVariable("id") Long id, @RequestParam(value = "messageCategory") MessageCategory messageCategory, RedirectAttributes redirectAttributes) {
 		newsCategoryService.deleteNewsCategory(id);
 		redirectAttributes.addFlashAttribute("message", "删除图文消息类别成功");
-		return "redirect:/newsCategory?messageCategory="+messageCategory;
+		return "redirect:/news-category?messageCategory="+messageCategory;
 	}
 
 	/**

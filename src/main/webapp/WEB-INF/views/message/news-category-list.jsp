@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>图文消息管理</title>
+	<title>图文消息类别管理</title>
 </head>
 <body>
 
@@ -14,7 +14,6 @@
 			<div class="row">
 				<!-- 页面内容-->
 				<div id="content" class="col-lg-12">
-			
 					<!-- PAGE HEADER-->
 					<div class="row">
 						<div class="col-sm-12">
@@ -23,14 +22,12 @@
 								<ul class="breadcrumb">
 									<li>
 										<i class="fa fa-home"></i>
-										<a href="index.html">主页</a>
+										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">图文消息管理</a>
+										图文消息类别列表
 									</li>
-									<li>图文消息列表</li>
 								</ul>
-								
 							</div>
 						</div>
 					</div>
@@ -51,7 +48,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>图文消息列表</h4>
+									<h4><i class="fa fa-table"></i>图文消息类别列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -64,7 +61,7 @@
 								<div class="box-body">
 									<form class="form-inline" action="#">
 										<div class="form-group">
-											<input type="text" name="search_LIKE_title" class="form-control" value="${param.search_LIKE_title}" placeholder="标题" />
+											<input type="text" name="search_LIKE_title" class="form-control" value="${param.search_LIKE_title}" placeholder="名称" />
 										</div>
 										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
 										<tags:sort/>
@@ -75,19 +72,18 @@
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>图文消息</th>
+												<th>图文消息类别</th>
 												<th>管理</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${newsMessages.content}" var="newsMessage">
+										<c:forEach items="${newsCategorys.content}" var="newsCategory">
 											<tr>
-												<td>${newsMessage.title}</td>
+												<td>${newsCategory.title}</td>
 												<td>
-													<a href="${ctx}/news/update/${newsMessage.id}">修改</a> / 
-													<a href="${ctx}/news/delete/${newsMessage.id}?newsCategoryId=${newsCategoryId }" onclick="return confirm('是否删除该图文消息？')">删除</a> / 
-													<a href="${ctx}/news/publish/${newsMessage.id}">发布</a> / 
-													<a href="${ctx}/static/js/slideby/preview/index.html?url=${ctx}${newsMessage.url}" target="_blank">预览</a>
+													<a href="${ctx}/news-category/update/${newsCategory.id}?messageCategory=${messageCategory}">修改</a> / 
+													<a href="${ctx}/news-category/delete/${newsCategory.id}?messageCategory=${messageCategory}" onclick="return confirm('是否删除该图文消息类别？')">删除</a> / 
+													<a href="${ctx}/news?newsCategoryId=${newsCategory.id}">文章管理</a>
 												</td>
 											</tr>
 										</c:forEach>
@@ -96,11 +92,11 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<tags:pagination page="${newsMessages}" paginationSize="5"/>
+												<tags:pagination page="${newsCategorys}" paginationSize="5"/>
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/news/create?newsCategoryId=${newsCategoryId}">创建图文消息</a>
+												<a class="btn btn-info" href="${ctx}/news-category/create?messageCategory=${messageCategory}">创建图文消息类别</a>
 											</div>
 										</div>
 									</div>
@@ -135,7 +131,7 @@
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
 			App.setHasSub("weixin-manager");//设置一级菜单目录ID
-			App.setSubMenu("newsMessages-list");//设置二级菜单目录ID
+			App.setSubMenu("${messageCategory}");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});

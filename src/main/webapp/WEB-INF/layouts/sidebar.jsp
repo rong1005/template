@@ -57,12 +57,12 @@
 					<li id="wxmenus-list"><a class="" href="${ctx}/wxmenu"><span class="sub-menu-text">菜单列表</span></a></li>
 					<li id="wxusers-list"><a class="" href="${ctx}/wxuser"><span class="sub-menu-text">订阅者列表</span></a></li>
 					<%-- <li id="newsMessages-list"><a class="" href="${ctx}/news"><span class="sub-menu-text">图文消息列表</span></a></li> --%>
-					<li id="${companyProfile}"><a class="" href="${ctx}/newsCategory?messageCategory=${companyProfile}"><span class="sub-menu-text">${companyProfile.value}</span></a></li>
-					<li id="${technicalMonograph}"><a class="" href="${ctx}/newsCategory?messageCategory=${technicalMonograph}"><span class="sub-menu-text">${technicalMonograph.value }</span></a></li>
-					<li id="${ePaper}"><a class="" href="${ctx}/newsCategory?messageCategory=${ePaper}"><span class="sub-menu-text">${ePaper.value }</span></a></li>
-					<li id="${majorProduct}"><a class="" href="${ctx}/newsCategory?messageCategory=${majorProduct}"><span class="sub-menu-text">${majorProduct.value }</span></a></li>
-					<li id="${newsInformation}"><a class="" href="${ctx}/newsCategory?messageCategory=${newsInformation}"><span class="sub-menu-text">${newsInformation.value }</span></a></li>
-					<li id="${regularBus}"><a class="" href="${ctx}/newsCategory?messageCategory=${regularBus}"><span class="sub-menu-text">${regularBus.value }</span></a></li>
+					<li id="${companyProfile}"><a class="" href="${ctx}/news-category?messageCategory=${companyProfile}"><span class="sub-menu-text">${companyProfile.value}</span></a></li>
+					<li id="${technicalMonograph}"><a class="" href="${ctx}/news-category?messageCategory=${technicalMonograph}"><span class="sub-menu-text">${technicalMonograph.value }</span></a></li>
+					<li id="${ePaper}"><a class="" href="${ctx}/news-category?messageCategory=${ePaper}"><span class="sub-menu-text">${ePaper.value }</span></a></li>
+					<li id="${majorProduct}"><a class="" href="${ctx}/news-category?messageCategory=${majorProduct}"><span class="sub-menu-text">${majorProduct.value }</span></a></li>
+					<li id="${newsInformation}"><a class="" href="${ctx}/news-category?messageCategory=${newsInformation}"><span class="sub-menu-text">${newsInformation.value }</span></a></li>
+					<li id="${regularBus}"><a class="" href="${ctx}/news-category?messageCategory=${regularBus}"><span class="sub-menu-text">${regularBus.value }</span></a></li>
 				</ul>
 			</li>
 			<li id="other-page" class="has-sub">
