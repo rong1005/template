@@ -35,7 +35,7 @@ import com.google.common.collect.Maps;
  * @author Libra
  */
 @Controller
-@RequestMapping(value = "/weixinMenu")
+@RequestMapping(value = "/wxmenu")
 public class WeixinMenuController {
 
 	private static Logger logger=LoggerFactory.getLogger(WeixinMenuController.class);
@@ -74,7 +74,7 @@ public class WeixinMenuController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "weixinMenu/weixinMenu_list";
+		return "wxmenu/wxmenu-list";
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class WeixinMenuController {
 	public String create(Model model) {
 		model.addAttribute("weixinMenu", new WeixinMenu());
 		model.addAttribute("action", "create");
-		return "weixinMenu/weixinMenu_form";
+		return "wxmenu/wxmenu-form";
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class WeixinMenuController {
 	public String create(@Valid WeixinMenu newWeixinMenu, RedirectAttributes redirectAttributes) {
 		weixinMenuService.saveWeixinMenu(newWeixinMenu);
 		redirectAttributes.addFlashAttribute("message", "创建微信菜单成功");
-		return "redirect:/weixinMenu/";
+		return "redirect:/wxmenu/";
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class WeixinMenuController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("weixinMenu", weixinMenuService.getWeixinMenu(id));
 		model.addAttribute("action", "update");
-		return "weixinMenu/weixinMenu_form";
+		return "wxmenu/wxmenu-form";
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class WeixinMenuController {
 	public String update(@Valid @ModelAttribute("weixinMenu") WeixinMenu weixinMenu, RedirectAttributes redirectAttributes) {
 		weixinMenuService.saveWeixinMenu(weixinMenu);
 		redirectAttributes.addFlashAttribute("message", "更新微信菜单成功");
-		return "redirect:/weixinMenu/";
+		return "redirect:/wxmenu/";
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class WeixinMenuController {
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		weixinMenuService.deleteWeixinMenu(id);
 		redirectAttributes.addFlashAttribute("message", "删除微信菜单成功");
-		return "redirect:/weixinMenu/";
+		return "redirect:/wxmenu/";
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class WeixinMenuController {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("message", "微信菜单发布失败");
 		}
-		return "redirect:/weixinMenu/";
+		return "redirect:/wxmenu/";
 	}
 
 	/**

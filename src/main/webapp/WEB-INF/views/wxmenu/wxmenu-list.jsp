@@ -14,7 +14,6 @@
 			<div class="row">
 				<!-- 页面内容-->
 				<div id="content" class="col-lg-12">
-			
 					<!-- PAGE HEADER-->
 					<div class="row">
 						<div class="col-sm-12">
@@ -23,14 +22,12 @@
 								<ul class="breadcrumb">
 									<li>
 										<i class="fa fa-home"></i>
-										<a href="index.html">主页</a>
+										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">菜单管理</a>
+										菜单列表
 									</li>
-									<li>菜单列表</li>
 								</ul>
-								
 							</div>
 						</div>
 					</div>
@@ -83,7 +80,7 @@
 										<c:forEach items="${weixinMenus.content}" var="menu">
 											<tr>
 												<td>${menu.name}</td>
-												<td><a href="${ctx}/weixinMenu/update/${menu.id}">修改</a> / <a href="${ctx}/weixinMenu/publish/${menu.id}">发布</a> / <a href="${ctx}/weixinMenu/delete/${menu.id}" onclick="return confirm('是否删除该菜单？')">删除</a></td>
+												<td><a href="${ctx}/wxmenu/update/${menu.id}">修改</a> / <a href="${ctx}/wxmenu/publish/${menu.id}">发布</a> / <a href="${ctx}/wxmenu/delete/${menu.id}" onclick="return confirm('是否删除该菜单？')">删除</a></td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -95,7 +92,7 @@
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/weixinMenu/create">创建菜单</a>
+												<a class="btn btn-info" href="${ctx}/wxmenu/create">创建菜单</a>
 											</div>
 										</div>
 									</div>
@@ -130,7 +127,7 @@
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
 			App.setHasSub("weixin-manager");//设置一级菜单目录ID
-			App.setSubMenu("weixinMenus-list");//设置二级菜单目录ID
+			App.setSubMenu("wxmenus-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});

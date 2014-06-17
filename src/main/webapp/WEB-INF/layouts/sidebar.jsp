@@ -54,7 +54,7 @@
 				<span class="arrow"></span>
 				</a>
 				<ul class="sub">
-					<li id="weixinMenus-list"><a class="" href="${ctx}/weixinMenu"><span class="sub-menu-text">菜单列表</span></a></li>
+					<li id="wxmenus-list"><a class="" href="${ctx}/wxmenu"><span class="sub-menu-text">菜单列表</span></a></li>
 					<li id="wxusers-list"><a class="" href="${ctx}/wxuser"><span class="sub-menu-text">订阅者列表</span></a></li>
 					<%-- <li id="newsMessages-list"><a class="" href="${ctx}/news"><span class="sub-menu-text">图文消息列表</span></a></li> --%>
 					<li id="${companyProfile}"><a class="" href="${ctx}/newsCategory?messageCategory=${companyProfile}"><span class="sub-menu-text">${companyProfile.value}</span></a></li>

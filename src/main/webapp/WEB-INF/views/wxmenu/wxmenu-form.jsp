@@ -17,22 +17,18 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="page-header">
-								<!-- STYLER -->
-								
-								<!-- /STYLER -->
 								<!-- BREADCRUMBS -->
 								<ul class="breadcrumb">
 									<li>
 										<i class="fa fa-home"></i>
-										<a href="index.html">主页</a>
+										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">菜单管理</a>
+										<a href="${ctx}/wxmenu">菜单管理</a>
 									</li>
 									<li>创建菜单</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
-								
 							</div>
 						</div>
 					</div>
@@ -52,7 +48,7 @@
 						</div>
 						
 						<div class="box-body">
-							<form id="inputForm" class="form-horizontal" action="${ctx}/weixinMenu/${action}" method="post">
+							<form id="inputForm" class="form-horizontal" action="${ctx}/wxmenu/${action}" method="post">
 								<input type="hidden" name="id" value="${weixinMenu.id}"/>
 								
 								<div class="form-group">
@@ -102,7 +98,7 @@
 			App.setPage("menu_forms");  //设置当前启动的页面
 			
 			App.setHasSub("weixin-manager");//设置一级菜单目录ID
-			App.setSubMenu("weixinMenus-list");//设置二级菜单目录ID
+			App.setSubMenu("wxmenus-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});
