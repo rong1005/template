@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>任务管理</title>
+	<title>微信订阅者管理</title>
 </head>
 <body>
 
@@ -26,16 +26,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="#">任务管理</a>
+										<li>微信订阅者列表</li>
 									</li>
-									<li>任务列表</li>
 								</ul>
-								<!-- /BREADCRUMBS -->
-								
-								<!-- <div class="clearfix">
-									<h3 class="content-title pull-left">任务列表</h3>
-								</div>
-								<div class="description">任务列表</div> -->
 								
 							</div>
 						</div>
@@ -57,7 +50,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>任务列表</h4>
+									<h4><i class="fa fa-table"></i>微信订阅者列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -70,7 +63,7 @@
 								<div class="box-body">
 									<form class="form-inline" action="#">
 										<div class="form-group">
-											<input type="text" name="search_LIKE_title" class="form-control" value="${param.search_LIKE_name}" placeholder="名称" />
+											<input type="text" name="search_LIKE_nickname" class="form-control" value="${param.search_LIKE_nickname}" placeholder="名称" />
 										</div>
 										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
 										<tags:sort/>
@@ -81,15 +74,31 @@
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>名称</th>
-												<th>管理</th>
+												<th>头像</th>
+												<th>微信订阅者</th>
+												<th>性别</th>
+												<!-- <th class="min_hidden">标识</th> -->
+												<th class="min_hidden">语言</th>
+												<th class="min_hidden">国家</th>
+												<th>省份</th>
+												<th>城市</th>
+												<th>是否订阅</th>
+												<th class="min_hidden">订阅时间</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${demos.content}" var="demo">
+										<c:forEach items="${weixinUsers.content}" var="weixinUser">
 											<tr>
-												<td>${demo.name}</td>
-												<td><a href="${ctx}/demo/update/${demo.id}">修改</a> / <a href="${ctx}/demo/delete/${demo.id}" onclick="return confirm('是否删除该任务？')">删除</a></td>
+												<td style="width: 30px;"><img alt="" style="border-radius:5px;" width="30" height="30" src="${weixinUser.headimgurl}" /></td>
+												<td style="line-height: 30px;">${weixinUser.nickname}</td>
+												<td style="line-height: 30px;">${weixinUser.sexValue}</td>
+												<%-- <td class="min_hidden" style="line-height: 30px;">${weixinUser.openid}</td> --%>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.language}</td>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.country}</td>
+												<td style="line-height: 30px;">${weixinUser.province}</td>
+												<td style="line-height: 30px;">${weixinUser.city}</td>
+												<td style="line-height: 30px;">${weixinUser.subscribeValue}</td>
+												<td class="min_hidden" style="line-height: 30px;">${weixinUser.subscribe_time}</td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -97,11 +106,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<tags:pagination page="${demos}" paginationSize="5"/>
-											</div>
-											
-											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/demo/create">创建任务</a>
+												<tags:pagination page="${weixinUsers}" paginationSize="5"/>
 											</div>
 										</div>
 									</div>
@@ -135,8 +140,8 @@
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
-			App.setHasSub("projects-manager");//设置一级菜单目录ID
-			App.setSubMenu("demos-list");//设置二级菜单目录ID
+			App.setHasSub("weixin-manager");//设置一级微信订阅者目录ID
+			App.setSubMenu("wxusers-list");//设置二级微信订阅者目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});

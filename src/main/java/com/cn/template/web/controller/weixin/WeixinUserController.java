@@ -65,7 +65,7 @@ public class WeixinUserController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "weixinUser/weixinUser_list";
+		return "wxuser/wxuser-list";
 	}
 	
 }
