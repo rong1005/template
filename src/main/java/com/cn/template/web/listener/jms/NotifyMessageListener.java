@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -78,10 +79,12 @@ public class NotifyMessageListener implements MessageListener {
 	 */
 	@Override
 	public void onMessage(Message message) {
+		String event=null; 
+		String openid=null; 
 		try {
 			MapMessage mapMessage = (MapMessage) message;
-			String event = mapMessage.getString("event");
-			String openid = mapMessage.getString("openid");
+			event = mapMessage.getString("event");
+			openid = mapMessage.getString("openid");
 			// 打印消息详情
 			logger.info("打印JMS信息 --> 事件：{}，标识：{} ",event,openid);
 			//根据微信的唯一标识，查询微信订阅者信息.
@@ -330,11 +333,16 @@ public class NotifyMessageListener implements MessageListener {
 	            			prop.put("mail.smtp.timeout", "25000");
 	            			senderImpl.setJavaMailProperties(prop);
 	            			// 发送邮件
-	            			senderImpl.send(mailMessage);
-	            			
-	            			msg="您的认证信息已经发送到您的邮箱，请注意查收。认证信息在30分钟后失效。";
+	            			try{
+	            				senderImpl.send(mailMessage);
+	            				msg="您的认证信息已经发送到您的邮箱，请注意查收。认证信息在30分钟后失效。";
+	            			}catch(MailException e){
+	            				msg="您的认证邮件发送失败，请检查您输入的邮箱与密码是否正确。如需帮助，请直接与我们联系。";
 	            			}
 	            			}
+	            			}
+	            		}else{
+	            			msg="您输入的认证信息格式不正确，请重新输入。";
 	            		}
 	            		
 	            		
@@ -349,7 +357,18 @@ public class NotifyMessageListener implements MessageListener {
 			}
 
 		} catch (Exception e) {
-			logger.error("处理消息时发生异常.", e);
+			logger.error("处理消息时发生异常.异常信息：{}", e);
+			if(openid!=null){
+				Map<String,Object> map=Maps.newHashMap();
+				map.put("openid", openid);
+				map.put("content", "服务器在处理消息时发生异常，请检查您输入的内容是否正确。如需帮助，请直接与我们联系。");
+				String messages = Utils.ftlAnalyze("textMessage.ftl", map);
+				try {
+					Utils.contentPublish(String.format(WeixinConstants.SENT_CUSTOM_MESSAGE_URL, AccessTokenUtil.getAccessToken(false)), messages);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 	
