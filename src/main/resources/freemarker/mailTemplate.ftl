@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>国光在线认证</title>
@@ -474,8 +474,8 @@
                                 	<!-- BEGIN HEADER // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                         <tr>
-                                            <td valign="top" class="headerContent">
-                                            	<img src="${contextPath!""}/static/img/ggec_logo.jpg" style="max-width:600px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                            <td valign="top" class="headerContent" style="padding: 10px 20px;">
+                                            	<img src="${contextPath!""}/static/img/ggec-logo.png" style="max-width:100%;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
                                             </td>
                                         </tr>
                                     </table>
@@ -488,21 +488,32 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content00">
-                                                <h1>账户信息认证</h1>
-                                                <h3>Creating a good-looking email is simple</h3>
-                                                Customize your template by clicking on the style editor tabs up above. Set your fonts, colors, and styles. After setting your styling is all done you can click here in this area, delete the text, and start adding your own awesome content.
+                                                <h1>亲爱的 <span style="color:blue;">${employee!"国光员工"}"</span> 您好： </h1>
+                                                <h3>下面内容是“国光在线”微信公众号的员工认证信息</h3>
+                                                 欢迎您加入<em>国光在线</em>，为保障您的信息安全，我们需要对您输入的认证信息的有效性进行验证以避免地址被滥用，请根据下面提示的操作来完成认证。一旦认证通过，您的微信号将会与工号关联，不可修改(取消关注也不可重新认证)！您可以在微信服务号上使用国光员工的专属功能。<br/><br/>
+												 请打开微信，扫描下面的二维码进行认证，二维码的有效期为30分钟！
                                             </td>
                                         </tr>
+                                        <tr>
+											<td valign="top" class="bodyContent" style="text-align: center;" >
+												<img src="${contextPath!""}/static/img/wxss1.jpg" style="width: 30%;"/> 
+												<img src="${contextPath!""}/static/img/wxss2.jpg" style="width: 30%; margin-left: 5px;margin-right: 5px;"/> 
+												<img src="${contextPath!""}/static/img/wxss3.jpg" style="width: 30%;"/> 
+											</td>
+										</tr>
                                     	<tr>
                                         	<td class="bodyContent" style="padding-top:0; padding-bottom:0; text-align: center;" >
-                                            	<img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket!""}" style="max-width:560px;" id="bodyImage" mc:label="body_image" mc:edit="body_image" mc:allowtext />
+                                        		<br/>
+                                            	<img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket!""}" style="max-width:100%;" id="bodyImage" mc:label="body_image" mc:edit="body_image" mc:allowtext />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content01">
-                                                <h2>Styling Your Content</h2>
-                                                <h4>Make your email easy to read</h4>
-                                                After you enter your content, highlight the text you want to style and select the options you set in the style editor in the "<em>styles</em>" drop down box. Want to <a href="http://www.mailchimp.com/kb/article/im-using-the-style-designer-and-i-cant-get-my-formatting-to-change" target="_blank">get rid of styling on a bit of text</a>, but having trouble doing it? Just use the "<em>remove formatting</em>" button to strip the text of any formatting and reset your style. 
+                                                <h2>说明：</h2>
+                                                (1) 您之所以收到这封邮件，是因为您在<em style="color:blue;">国光在线</em> 微信公众号上进行了<em style="color:blue;">员工认证</em> .<br/>
+												(2) 如果你并未进行过<em style="color:blue;">员工认证</em> ，可能是其他员工误输入了您的邮箱地址。请忽略本邮件或者与我们联系 ：lzr@ggec.gd .<br/>
+												(3) 如果您在认证过程中有任何疑问或建议，请联系我们 ：lzr@ggec.gd .<br/>
+                                                
                                             </td>
                                         </tr>
                                     </table>

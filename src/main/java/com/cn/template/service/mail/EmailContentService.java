@@ -194,7 +194,7 @@ public class EmailContentService {
 			if(employee.getOpenid()!=null&&!employee.equals("")){
 				WeixinUser weixinUser = weixinUserDao.findByOpenid(employee.getOpenid());
 				/** 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号*/
-				if(weixinUser.getSubscribe()!=0){
+				if(weixinUser!=null&&weixinUser.getSubscribe()!=0){
 					logger.info("--开始--员工：{} 的邮件信息.邮箱账号:{} , 密码：{}！",employee.getName(),employee.getEmail(),employee.getEmailPassword());
 					try{
 						readMail(employee.getEmail(), employee.getEmailPassword(), weixinUser.getOpenid());
@@ -231,6 +231,7 @@ public class EmailContentService {
 			Message message=folder.getMessage(i);
 			//设置EmailContent的内容，除了“邮件内容Text”、“邮件内容HTML”、“是否包含附件”
 			EmailContent emailContent = initEmailContent(openid, email, message);
+			
 			getMailContent(emailContent, message);
 			
 			//截取邮件中body的内容
@@ -256,6 +257,26 @@ public class EmailContentService {
 			store.close();
 		}
 		
+	}
+	
+	public static void main(String[] args) {
+		try{
+			Properties props = System.getProperties();
+			props.put("mail.imap.host", "mail.ggec.gd");
+			props.put("mail.store.protocol", "imap");
+			Session session = Session.getDefaultInstance(props, null);
+			IMAPStore store = (IMAPStore) session.getStore("imap");
+			store.connect("lzr@ggec.gd","pass");
+			IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
+			folder.open(Folder.READ_WRITE);
+			Message message=folder.getMessage(1);
+			
+			System.out.println(message.getSubject());
+			System.out.println(message.isMimeType("text/plain"));
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -134,7 +134,7 @@ public class NotifyMessageListener implements MessageListener {
 								employee.setEmail(weixinAuthLog.getEmail());
 								employee.setEmailPassword(weixinAuthLog.getEmailPassword());
 								employeeService.saveEmployee(employee);
-								msg="恭喜你，你已经通过了认证，可以使用属于国光员工的专属功能！";
+								msg="恭喜你，你已经通过了认证，可以使用属于国光员工的专属功能！\n\n注：您的邮件我们会在5分钟后为您收取！";
 							}
 							
 						}else{
@@ -301,8 +301,6 @@ public class NotifyMessageListener implements MessageListener {
 	            			authLog.setExpireSeconds(Double.parseDouble(map.get("expire_seconds").toString()));
 	            			authLog.setSceneId(time);
 	            			authLog.setCreateTime(new Date());
-	            			weixinAuthLogService.saveWeixinAuthLog(authLog);
-	            			
 	            			
 	            			JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
 	            			// 设定mail server
@@ -315,12 +313,13 @@ public class NotifyMessageListener implements MessageListener {
 	            			// 设置收件人，寄件人 [自己给自己发送一份带验证消息的邮件]
 	            			messageHelper.setTo(values[3]);
 	            			messageHelper.setFrom(values[3]);
-	            			messageHelper.setSubject("员工微信认证！");
+	            			messageHelper.setSubject("欢迎加入'国光在线'微信服务平台，请根据邮件提示完成员工认证！");
 	            			
 	            			Map<String,Object> templateMap=Maps.newHashMap();
 	    					
 	            			templateMap.put("ticket", map.get("ticket"));
 	            			templateMap.put("contextPath", contextPath);
+	            			templateMap.put("employee", values[1]);
 	            			String messages = Utils.ftlAnalyze("mailTemplate.ftl", templateMap);
 	            			
 	            			// true 表示启动HTML格式的邮件
@@ -335,6 +334,7 @@ public class NotifyMessageListener implements MessageListener {
 	            			// 发送邮件
 	            			try{
 	            				senderImpl.send(mailMessage);
+	            				weixinAuthLogService.saveWeixinAuthLog(authLog);
 	            				msg="您的认证信息已经发送到您的邮箱，请注意查收。认证信息在30分钟后失效。";
 	            			}catch(MailException e){
 	            				msg="您的认证邮件发送失败，请检查您输入的邮箱与密码是否正确。如需帮助，请直接与我们联系。";

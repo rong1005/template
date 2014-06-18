@@ -206,7 +206,7 @@ public class WeixinController {
 					Gson gson = new Gson();
 					Map map = gson.fromJson(reader,Map.class);
 					String openid = map.get("openid").toString();
-					logger.info("openid :{}",openid);
+					logger.info("取得授权标识 --> openid :{}",openid);
 					//测试------------
 					//Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
 					Utils.getCurrentUser().getSession().setAttribute("openid", openid);

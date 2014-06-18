@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cn.template.entity.Employee;
 import com.cn.template.entity.mail.EmailContent;
+import com.cn.template.service.employee.EmployeeService;
 import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.xutil.Constants;
@@ -45,6 +47,10 @@ public class WeixinMailController {
 	@Autowired
 	private EmailAttachmentService emailAttachmentService;
 	
+	/** 员工信息的业务处理 */
+	@Autowired
+	private EmployeeService employeeService;
+	
 	/**
 	 * 邮件列表.
 	 * @param openid 微信用户的标识
@@ -61,13 +67,37 @@ public class WeixinMailController {
 			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType,
 			Model model) {
-		logger.info("Utils.getCurrentUser().getSession() --> openid :{}", Utils.getCurrentUser().getSession().getAttribute("openid"));
-		Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+		boolean bool=false;
+		String openid =null;
+		if(Utils.getCurrentUser()!=null&&Utils.getCurrentUser().getSession()!=null&&Utils.getCurrentUser().getSession().getAttribute("openid")!=null){
+			openid = Utils.getCurrentUser().getSession().getAttribute("openid").toString();
+			logger.info("邮件获取 --> openid :{}", openid);
 		
-		Page<EmailContent> emailContents = emailContentService.getUserEmailContent(Utils.getCurrentUser().getSession().getAttribute("openid").toString(), pageNumber, pageSize, sortType);
-		model.addAttribute("emailContents", emailContents);
-
-		return "wxmail/mail-list";
+			//测试时使用，提供了我的标识作为验证.
+			//Utils.getCurrentUser().getSession().setAttribute("openid", "o7Chyt0jbuYPa5AWGDQ-Ttbk2gGU");
+		
+			Employee employee = employeeService.findByOpenid(openid);
+			if(employee!=null){
+				Page<EmailContent> emailContents = emailContentService.getUserEmailContent(openid, pageNumber, pageSize, sortType);
+				if(emailContents.getTotalElements()>0){
+					model.addAttribute("emailContents", emailContents);
+					bool=true;
+				}else{
+					model.addAttribute("message", "如果您是新认证的员工，请稍等5分钟，您的邮件我们正在为您收取！\n\n 如果不是，请确认您的邮箱是否有邮件！");
+				}
+			}else{
+				model.addAttribute("message", "该功能只对认证员工开放，您尚未进行“员工认证”，请认证后再查阅邮件！");
+			}
+			
+		}else{
+			model.addAttribute("message", "您的邮件授权有误！请“关闭”页面重新进入！");
+		}
+		
+		if(bool){
+			return "wxmail/mail-list";
+		}else{
+			return "wxmail/mail-list-error";
+		}
 	}
 	
 	/**

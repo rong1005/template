@@ -27,7 +27,7 @@
      <ul id="list" class="ui-listview" data-role="listview" data-icon="false">
      <c:forEach items="${emailContents.content}" var="email">
      <li class="ui-li-has-alt ui-first-child">
-     <a href="${ctx}/html/email/${email.url}" class="ui-btn" data-transition="flow">
+     <a href="${ctx}/html/email/${email.url}" class="ui-btn">
      <div class="ui-grid-a">
      <div class="ui-block-a"><h3>${email.fromName}</h3></div>
      <div class="ui-block-b" style="padding-top:5px;"><span style="font-size:.75em;">${email.sentDate}</span></div>
@@ -57,7 +57,7 @@
 				$(msg.content).each(function(i,email){
 					var html='';
 					html=html+'<li class="ui-li-has-alt ui-first-child">';
-					html=html+'<a href="${ctx}/html/email/'+email.url+'" class="ui-btn" data-transition="flow">';
+					html=html+'<a href="${ctx}/html/email/'+email.url+'" class="ui-btn">';
 					html=html+'<div class="ui-grid-a">';
 					html=html+'<div class="ui-block-a"><h3>'+email.fromName+'</h3></div>';
 					html=html+'<div class="ui-block-b" style="padding-top:5px;"><span style="font-size:.75em;">'+email.sentDate+'</span></div>';

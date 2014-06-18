@@ -11,8 +11,9 @@
 	<task:scheduler id="springScheduler" pool-size="2"/>
 	
 	<task:scheduled-tasks scheduler="springScheduler">
-		<!-- timer 测试5秒 -->
-		<task:scheduled ref="userCountScanner" method="executeBySpringTimerByXml" fixed-rate="5000"/>
+		<!-- timer 测试1分钟/项目5分钟300000 -->
+		<task:scheduled ref="userCountScanner" method="executeBySpringTimerByXml" fixed-rate="300000"/>
+		
 		<!-- 初期考虑：读取员工的邮件消息每10分钟抓取一次，员工同样可以使用页面上“收信”的按钮取得. -->
 	    <!-- <task:scheduled ref="userCountScanner" method="executeBySpringTimerByXml" fixed-rate="600000"/> -->
 	    <!-- cron 
