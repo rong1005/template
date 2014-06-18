@@ -319,6 +319,7 @@ java.lang.ClassNotFoundException: org.apache.commons.codec.DecoderException
 		<!-- /文件上传 -->
 
 		<!-- WebService -->
+		<!-- 此引入中，会引入 geronimo 相关的类，其中geronimo-javamail_1.4_spec 会与mail冲突-->
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
 			<artifactId>axis2-java2wsdl</artifactId>

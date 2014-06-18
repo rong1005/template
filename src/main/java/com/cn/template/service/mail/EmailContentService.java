@@ -215,33 +215,44 @@ public class EmailContentService {
 	 */
 	private void readMail(String email,String password,String openid) throws Exception {
 		Properties props = System.getProperties();
-		props.put("mail.imap.host", "mail.ggec.gd");
+		//props.put("mail.imap.host", "mail.ggec.gd");
+		props.put("mail.imap.host", "imap.163.com");
 		props.put("mail.store.protocol", "imap");
 		Session session = Session.getDefaultInstance(props, null);
 		IMAPStore store = (IMAPStore) session.getStore("imap");
-		store.connect(email,password);
+//		store.connect(email,password);
+		store.connect("rong_1005@163.com","248858868");
 		IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
 		folder.open(Folder.READ_WRITE);
 		
 		int maxMsgnum = folder.getMessageCount();
 		int minMsgnum =minMsgnum(maxMsgnum, email);
+		
+//		int maxMsgnum = 3;
+//		int minMsgnum =1;
 		logger.info("最大邮件ID：{}，当前邮件ID：{}",maxMsgnum,minMsgnum);
+		logger.info("-----------------{}:{}",maxMsgnum>0,maxMsgnum>=minMsgnum);
 		if(maxMsgnum>0&&maxMsgnum>=minMsgnum){
-		for(int i=minMsgnum(maxMsgnum, email);i<=maxMsgnum;i++){
+		for(int i=minMsgnum;i<=maxMsgnum;i++){
 			Message message=folder.getMessage(i);
 			//设置EmailContent的内容，除了“邮件内容Text”、“邮件内容HTML”、“是否包含附件”
 			EmailContent emailContent = initEmailContent(openid, email, message);
 			
 			getMailContent(emailContent, message);
 			
+			if(emailContent.getBodyHtml()==null){
+				emailContent.setBodyHtml(emailContent.getBodyText());
+			}else{
 			//截取邮件中body的内容
 			emailContent.setBodyHtml(cutHtmlBody(emailContent.getBodyHtml()));
 			//替换邮件中的图片路径（由代号 cid 更换为路径）
 			emailContent.setBodyHtml(replaceAttachPath(emailContent.getBodyHtml(), emailContent.getAttachments()));
 			
 			//如果text的值为空Html不为空，则将html内容去除HTML标签作为Text保存
-			emailContent.setBodyText(Utils.delHTMLTag(emailContent.getBodyHtml()).replaceAll("\\s*|\t|\r|\n","").replaceAll("&.*?;", ""));
-			
+			if(emailContent.getBodyText()==null){
+				emailContent.setBodyText(Utils.delHTMLTag(emailContent.getBodyHtml()).replaceAll("\\s*|\t|\r|\n","").replaceAll("&.*?;", ""));
+			}
+			}
 			//将邮件内容静态化，保存访问路径
 			saveHtml(emailContent,Constants.WEBROOT+"/html/email/");
 			
@@ -262,11 +273,11 @@ public class EmailContentService {
 	public static void main(String[] args) {
 		try{
 			Properties props = System.getProperties();
-			props.put("mail.imap.host", "mail.ggec.gd");
+			props.put("mail.imap.host", "imap.163.com");
 			props.put("mail.store.protocol", "imap");
 			Session session = Session.getDefaultInstance(props, null);
 			IMAPStore store = (IMAPStore) session.getStore("imap");
-			store.connect("lzr@ggec.gd","pass");
+			store.connect("rong_1005@163.com","248858868");
 			IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
 			folder.open(Folder.READ_WRITE);
 			Message message=folder.getMessage(1);
@@ -285,13 +296,17 @@ public class EmailContentService {
 	 * @return
 	 */
 	private String cutHtmlBody(String html){
+		logger.info("html stare2->{}，end2->{} ",html.indexOf("<body"),html.indexOf("</body"));
+		if(html.indexOf("<body")<0||html.indexOf("</body>")<0){
+			logger.info("html :{}",html);
+			return html;
+		}else{
 		int stateSite=html.toLowerCase().indexOf(">", html.indexOf("<body"));
 		int endSite=html.toLowerCase().indexOf("</body>");
 		logger.info("html stare->{}，end->{} ",stateSite,endSite);
-		if(endSite<0){
-			logger.info("html :{}",html);
-		}
+		
 		return html.substring(stateSite+1,endSite);
+		}
 	}
 	
 	/**
@@ -347,6 +362,7 @@ public class EmailContentService {
 		if(minMsgnum<=0){
 			minMsgnum=0;
 		}
+		//为什么要在此处加1？当minMsgnum不为空且>0时，会出现当前值与最大值一致，所以要当前值大于最大值，则加1
 		return minMsgnum+1;
 	}
 	
@@ -542,6 +558,10 @@ public class EmailContentService {
 	 * @throws Exception
 	 */
 	private void getMailContent(EmailContent emailContent,Part part) throws Exception{
+		//通过下面的方式，获得调用的详细路径，对比是否使用合适的包文件，如果不是，则出现包冲突的问题。
+		//如该项在Tomcat下不能通过，报NullPointerException的问题，是项目中多了这个文件包geronimo-javamail_1.4_spec-1.6.jar
+		System.out.println(javax.mail.internet.MimeMessage.class.getResource(""));
+		logger.info("emailContent:{}",emailContent);
 		if(part.isMimeType("text/plain")){
 			//取得邮件的Text内容
 			if(emailContent.getBodyText()!=null){
