@@ -17,6 +17,7 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -195,11 +196,12 @@ public class EmailContentService {
 				WeixinUser weixinUser = weixinUserDao.findByOpenid(employee.getOpenid());
 				/** 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号*/
 				if(weixinUser!=null&&weixinUser.getSubscribe()!=0){
-					logger.info("--开始--员工：{} 的邮件信息.邮箱账号:{} , 密码：{}！",employee.getName(),employee.getEmail(),employee.getEmailPassword());
+					logger.info("--开始--员工：{} 的邮件信息.邮箱账号:{} , 密码：{}",employee.getName(),employee.getEmail(),employee.getEmailPassword());
 					try{
 						readMail(employee.getEmail(), employee.getEmailPassword(), weixinUser.getOpenid());
 					}catch(Exception e){
 						e.printStackTrace();
+						logger.info(e.getMessage());
 						logger.info("--结束--员工：{} 的邮件信息 -- 抓取失败.",employee.getName());
 					}
 				}
@@ -208,20 +210,127 @@ public class EmailContentService {
 	}
 	
 	/**
+	 * 连接邮件存储空间
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	private IMAPStore connectStore(String email,String password,String imapHost){
+		Properties props = System.getProperties();
+		props.put("mail.imap.host", imapHost);
+		props.put("mail.store.protocol", "imap");
+		Session session = Session.getDefaultInstance(props, null);
+		IMAPStore store=null;
+		try {
+			store = (IMAPStore) session.getStore("imap");
+			try {
+				//链接
+				store.connect(email,password);
+			} catch (MessagingException e) {
+				logger.info(e.getMessage());
+				return null;
+			}
+		} catch (NoSuchProviderException e) {
+			logger.info(e.getMessage());
+			return null;
+		}
+		return store;
+	}
+	
+	/**
 	 * 连接员工邮箱，取得邮件信息并解析保存.
+	 * [邮件通过OutLook收取到本地，并删除服务器上的邮件信息]
 	 * @param email
 	 * @param password
 	 * @throws Exception
 	 */
 	private void readMail(String email,String password,String openid) throws Exception {
+		IMAPStore store = null;
+		//适配内部邮件的两个服务器.
+		store=connectStore(email, password,"mail.ggec.gd");
+		if(store==null){
+			logger.info("-----------------------mail10.ggec.gd------------------------");
+			store=connectStore(email, password,"mail10.ggec.gd");
+		}
+		
+		if(store!=null){
+		IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
+		folder.open(Folder.READ_WRITE);
+		//当前服务器中邮件的数量
+		int maxMsgnum = folder.getMessageCount();
+		if(maxMsgnum>0){
+			Date receiveDate=emailContentDao.findMaxReceiveDateByEmail(email);
+			boolean bool=true;
+			//收取邮件的数量
+			int num=0;
+			while(bool&&num<15){
+				//当前要读取的邮件编号.
+				int thisNum=maxMsgnum-num;
+				if(thisNum>0){
+					Message message=folder.getMessage(thisNum);
+					EmailContent emailContent = initEmailContent(openid, email, message);
+					logger.info("抓取邮箱：{}，邮件编号：{}，邮件主题：{}",email,emailContent.getMessageId(),emailContent.getSubject());
+					//判断接收时间，如果数据库中最新的接收邮件大于或等于邮件服务器的邮件，则该邮件已读取
+					if(receiveDate!=null&&(emailContent.getReceiveDate().equals(receiveDate)||emailContent.getReceiveDate().before(receiveDate))){
+						bool=false;
+					}else{
+						getMailContent(emailContent, message);
+						
+						if(emailContent.getBodyHtml()==null){
+							emailContent.setBodyHtml(emailContent.getBodyText());
+						}else{
+						//截取邮件中body的内容
+						emailContent.setBodyHtml(cutHtmlBody(emailContent.getBodyHtml()));
+						//替换邮件中的图片路径（由代号 cid 更换为路径）
+						emailContent.setBodyHtml(replaceAttachPath(emailContent.getBodyHtml(), emailContent.getAttachments()));
+						
+						//如果text的值为空Html不为空，则将html内容去除HTML标签作为Text保存
+						if(emailContent.getBodyText()==null){
+							emailContent.setBodyText(Utils.delHTMLTag(emailContent.getBodyHtml()).replaceAll("\\s*|\t|\r|\n","").replaceAll("&.*?;", ""));
+						}
+						}
+						//将邮件内容静态化，保存访问路径
+						saveHtml(emailContent,Constants.WEBROOT+"/html/email/");
+						emailContentDao.save(emailContent);
+						num=num+1;
+					}
+				}else{
+					bool=false;
+				}
+			}
+			
+		}
+		
+		//关闭收件箱
+		if(folder!=null&&folder.isOpen()){
+			folder.close(false);
+		}
+		//关闭邮件存储空间
+		if(store!=null){
+			store.close();
+		}
+		}else{
+			logger.info("邮件服务store链接失败，未能获取邮件！");
+		}
+	}
+	
+	
+	/**
+	 * 连接员工邮箱，取得邮件信息并解析保存.
+	 * [并非通过OutLook获取，所有的邮件会保留在邮件服务器，不适用与当前公司的情况  废弃]
+	 * @param email
+	 * @param password
+	 * @throws Exception
+	 */
+	/*private void readMailSaveInService(String email,String password,String openid) throws Exception {
 		Properties props = System.getProperties();
-		//props.put("mail.imap.host", "mail.ggec.gd");
-		props.put("mail.imap.host", "imap.163.com");
+		props.put("mail.imap.host", "mail.ggec.gd");
+		//props.put("mail.imap.host", "imap.163.com");
 		props.put("mail.store.protocol", "imap");
 		Session session = Session.getDefaultInstance(props, null);
 		IMAPStore store = (IMAPStore) session.getStore("imap");
-//		store.connect(email,password);
-		store.connect("rong_1005@163.com","248858868");
+		store.connect(email,password);
+		//store.connect("rong_1005@163.com","248858868");
 		IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
 		folder.open(Folder.READ_WRITE);
 		
@@ -268,27 +377,55 @@ public class EmailContentService {
 			store.close();
 		}
 		
-	}
+	}*/
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		try{
 			Properties props = System.getProperties();
-			props.put("mail.imap.host", "imap.163.com");
+			props.put("mail.imap.host", "mail.ggec.gd");
+			//props.put("mail.imap.host", "imap.163.com");
+			
 			props.put("mail.store.protocol", "imap");
 			Session session = Session.getDefaultInstance(props, null);
 			IMAPStore store = (IMAPStore) session.getStore("imap");
-			store.connect("rong_1005@163.com","248858868");
+			store.connect("lzr@ggec.gd","pass");
+			//store.connect("rong_1005@163.com","248858868");
+			
+//			for(Folder folder :store.getPersonalNamespaces()){
+//				System.out.println("33"+folder.getNewMessageCount());
+//			}
+//			System.out.println("--"+store.getDefaultFolder().getMessageCount());
+//			
 			IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
 			folder.open(Folder.READ_WRITE);
-			Message message=folder.getMessage(1);
 			
-			System.out.println(message.getSubject());
+//			for(Folder folder2 :folder.list()){
+//				System.out.println("33"+folder2.getName());
+//			}
+			
+			System.out.println(folder.getDeletedMessageCount());
+			System.out.println(folder.getMessageCount());
+			Message message=folder.getMessage(247);
+			
+			InternetAddress address[] = (InternetAddress[]) message.getFrom();   
+			
+			
+			
+	        String from = address[0].getAddress();   
+	        if (from == null)   
+	            from = "";   
+	        String personal = address[0].getPersonal();   
+	        if (personal == null)   
+	            personal = "";   
+	        
+	        logger.info("发件人信息：{}",personal + "<" + from + ">");
+	        
 			System.out.println(message.isMimeType("text/plain"));
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	/**
 	 * 截取html中对应的body内容
@@ -354,7 +491,7 @@ public class EmailContentService {
 	 * @param email
 	 * @return
 	 */
-	private int minMsgnum(int maxMsgnum,String email){
+	/*private int minMsgnum(int maxMsgnum,String email){
 		Integer minMsgnum = emailContentDao.findMaxMessageIdByEmail(email);
 		if(minMsgnum==null){
 			minMsgnum=maxMsgnum-21; 
@@ -364,7 +501,7 @@ public class EmailContentService {
 		}
 		//为什么要在此处加1？当minMsgnum不为空且>0时，会出现当前值与最大值一致，所以要当前值大于最大值，则加1
 		return minMsgnum+1;
-	}
+	}*/
 	
 	/** 设置邮件的查询条件 :情况 邮件中ReceivedDateTerm 、 SentDateTerm的时间比较是按天进行比较的，不能进行时分秒比较*/
 	/*private SearchTerm searchTerm(String email){
@@ -414,8 +551,9 @@ public class EmailContentService {
         if (from == null)   
             from = "";   
         String personal = address[0].getPersonal();   
-        if (personal == null)   
-            personal = "";   
+        if (personal == null){
+            personal = from;   
+        }
         
         logger.info("发件人信息：{}",personal + "<" + from + ">");
         emailContent.setFromName(personal);
@@ -493,6 +631,7 @@ public class EmailContentService {
 		}
 		emailContent.setSubject(subject);
 		
+		//邮件发送时间
 		emailContent.setSentDate(message.getSentDate());
 		if(getReplySign(message)){
 			//需要回执
@@ -525,6 +664,7 @@ public class EmailContentService {
 		//"bcc"----收件人
 		emailContent.setMailAddressBcc(getMailAddress("bcc", message));
 		
+		//邮件接收时间
 		emailContent.setReceiveDate(message.getReceivedDate());
 		emailContent.setMessageId(message.getMessageNumber());
 		
@@ -560,8 +700,8 @@ public class EmailContentService {
 	private void getMailContent(EmailContent emailContent,Part part) throws Exception{
 		//通过下面的方式，获得调用的详细路径，对比是否使用合适的包文件，如果不是，则出现包冲突的问题。
 		//如该项在Tomcat下不能通过，报NullPointerException的问题，是项目中多了这个文件包geronimo-javamail_1.4_spec-1.6.jar
-		System.out.println(javax.mail.internet.MimeMessage.class.getResource(""));
-		logger.info("emailContent:{}",emailContent);
+//		System.out.println(javax.mail.internet.MimeMessage.class.getResource(""));
+//		logger.info("emailContent:{}",emailContent);
 		if(part.isMimeType("text/plain")){
 			//取得邮件的Text内容
 			if(emailContent.getBodyText()!=null){
@@ -605,10 +745,7 @@ public class EmailContentService {
     				}
     				
     				saveFile(emailAttachment,bodyPart.getInputStream(),fileName.substring(fileName.lastIndexOf(".")),Constants.WEBROOT+"/html/email/",emailAttachment.getAttachmentType());
-    				
-    				
-    				
-    				
+
     				if(emailContent.getAttachments()==null){
     					List<EmailAttachment> list=Lists.newArrayList();
     					list.add(emailAttachment);

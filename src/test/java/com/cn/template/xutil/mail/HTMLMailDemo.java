@@ -27,8 +27,9 @@ public class HTMLMailDemo {
 		MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
 
 		// 设置收件人，寄件人
-		messageHelper.setTo("luojh@ggec.gd");
-		messageHelper.setFrom("lzr@ggec.gd");
+		messageHelper.setTo("lzr@ggec.gd");
+//		messageHelper.setFrom("梁生");
+		messageHelper.setFrom("lzr@ggec.gd", "梁生");
 		messageHelper.setSubject("测试HTML邮件！");
 		// true 表示启动HTML格式的邮件
 		messageHelper

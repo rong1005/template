@@ -126,7 +126,7 @@ public class NotifyMessageListener implements MessageListener {
 					}else{
 						Employee employee=employeeService.findByCode(weixinAuthLog.getCode());
 						if(employee!=null){
-							if(employee.getWhether().equals(Whether.YES)){
+							if(employee.getWhether()!=null&&employee.getWhether().equals(Whether.YES)){
 								msg="您的账号已经认证过！";
 							}else{
 								employee.setWhether(Whether.YES);
@@ -313,6 +313,7 @@ public class NotifyMessageListener implements MessageListener {
 	            			// 设置收件人，寄件人 [自己给自己发送一份带验证消息的邮件]
 	            			messageHelper.setTo(values[3]);
 	            			messageHelper.setFrom(values[3]);
+	            			messageHelper.setFrom(values[3], values[1]);
 	            			messageHelper.setSubject("欢迎加入'国光在线'微信服务平台，请根据邮件提示完成员工认证！");
 	            			
 	            			Map<String,Object> templateMap=Maps.newHashMap();

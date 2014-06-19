@@ -488,16 +488,17 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content00">
-                                                <h1>亲爱的 <span style="color:blue;">${employee!"国光员工"}"</span> 您好： </h1>
+                                                <h1>亲爱的 <span style="color:blue;">${employee!"国光员工"}</span> 您好： </h1>
                                                 <h3>下面内容是“国光在线”微信公众号的员工认证信息</h3>
-                                                 欢迎您加入<em>国光在线</em>，为保障您的信息安全，我们需要对您输入的认证信息的有效性进行验证以避免地址被滥用，请根据下面提示的操作来完成认证。一旦认证通过，您的微信号将会与工号关联，不可修改(取消关注也不可重新认证)！您可以在微信服务号上使用国光员工的专属功能。<br/><br/>
-												 请打开微信，扫描下面的二维码进行认证，二维码的有效期为30分钟！
+                                                 欢迎您加入<em>国光在线</em>，为保障您的信息安全，我们需要对您输入的认证信息的有效性进行验证以避免地址被滥用，请根据下面提示的操作来完成认证。一旦认证通过，您的微信号将会与工号关联，不可修改(取消关注也不可重新认证)！您可以在微信服务号上使用国光员工的专属功能。
+												 <h2 style="margin-top: 20px; background-color: antiquewhite;">请打开微信，扫描下面的二维码进行认证。</h2>
+												 二维码的有效期为30分钟！
                                             </td>
                                         </tr>
                                         <tr>
 											<td valign="top" class="bodyContent" style="text-align: center;" >
-												<img src="${contextPath!""}/static/img/wxss1.jpg" style="width: 30%;"/> 
-												<img src="${contextPath!""}/static/img/wxss2.jpg" style="width: 30%; margin-left: 5px;margin-right: 5px;"/> 
+												<img src="${contextPath!""}/static/img/wxss1.jpg" style="width: 30%;"/>&emsp;
+												<img src="${contextPath!""}/static/img/wxss2.jpg" style="width: 30%;"/>&emsp; 
 												<img src="${contextPath!""}/static/img/wxss3.jpg" style="width: 30%;"/> 
 											</td>
 										</tr>
