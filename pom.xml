@@ -52,6 +52,18 @@ java.lang.ClassNotFoundException: org.apache.commons.codec.DecoderException
 		<jdbc.driver.artifactId>h2</jdbc.driver.artifactId>
 		<jdbc.driver.version>${h2.version}</jdbc.driver.version> -->
 		
+		<!-- SQL Service Jdbc 
+		<jdbc.driver.groupId>com.microsoft.sqlserver</jdbc.driver.groupId>
+		<jdbc.driver.artifactId>sqljdbc4</jdbc.driver.artifactId>
+		<jdbc.driver.version>4.4.0</jdbc.driver.version>
+		-->
+		
+		<!-- SQL Service Jdbc 第二种 
+		<jdbc.driver.groupId>net.sourceforge.jtds</jdbc.driver.groupId>
+		<jdbc.driver.artifactId>jtds</jdbc.driver.artifactId>
+		<jdbc.driver.version>1.3.1</jdbc.driver.version>
+		-->
+		
 		<!-- MySQL -->
 		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
 		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>

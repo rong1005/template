@@ -4,6 +4,7 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/> -->
+            <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/> -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <!-- value="create" 每次启动都会创建一个新的数据表; value="update" 对已存在的数据表进行修改; value="create-drop" 与 "create" 类似，在项目关闭后删除数据表; value="validate" 不进行任何修改操作 -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>

@@ -35,7 +35,7 @@
      <p class="topic"><strong>${email.subject}</strong></p>
      <p class="topic">${email.bodyText}</p>
      </a>
-     <a href="#" class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-shadow ui-btn-icon-left"></a>
+     <a href="${ctx}/html/email/${email.url}" class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-shadow ui-btn-icon-left"></a>
      </li>
      </c:forEach>
      </ul>
@@ -65,7 +65,7 @@
 					html=html+'<p class="topic"><strong>'+email.subject+'</strong></p>';
 					html=html+'<p class="topic">'+email.shortBodyText+'</p>';
 					html=html+'</a>';
-					html=html+'<a href="#" class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-shadow ui-btn-icon-left"></a>';
+					html=html+'<a href="${ctx}/html/email/'+email.url+'" class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-shadow ui-btn-icon-left"></a>';
 					html=html+'</li>';
 					$("#list").append(html);
 				});
