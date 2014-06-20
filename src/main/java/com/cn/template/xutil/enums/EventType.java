@@ -16,7 +16,9 @@ public enum EventType {
 	/** 菜单点击 */
 	CLICK("CLICK", 3),
 	/** 二维码扫描 */
-	SCAN("SCAN", 4)
+	SCAN("SCAN", 4),
+	/** 客服文本消息 */
+	CUSTOM_TEXT("CUSTOM_TEXT",5)
 	;
 
 	private String value;

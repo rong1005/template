@@ -32,7 +32,7 @@ public class Project extends IdEntity {
 	private Integer finishTask;
 	
 	/** 项目进度 */
-	private Double percent;
+	private Double percents;
 	
 	/** 项目负责人 */
 	private User director;
@@ -73,11 +73,11 @@ public class Project extends IdEntity {
 	}
 
 	public Double getPercent() {
-		return percent;
+		return percents;
 	}
 
 	public void setPercent(Double percent) {
-		this.percent = percent;
+		this.percents = percent;
 	}
 
 	/**

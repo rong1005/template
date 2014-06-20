@@ -30,6 +30,16 @@ public class NotifyMessageProducer {
 		sendMessage(event, openid, notifyQueue);
 	}
 	
+	/**
+	 * 加入队列.
+	 * @param event 事件
+	 * @param openid 公众号的用户唯一标识
+	 * @param content 消息内容
+	 */
+	public void sendQueue(String event,String openid,String content) {
+		sendMessage(event, openid, content, notifyQueue);
+	}
+	
 
 	/**
 	 * 加入队列.
@@ -74,6 +84,20 @@ public class NotifyMessageProducer {
 		Map<String,Object> map = Maps.newHashMap();
 		map.put("event", event);
 		map.put("openid", openid);
+		jmsTemplate.convertAndSend(destination, map);
+	}
+	
+	/**
+	 * 使用jmsTemplate最简便的封装convertAndSend()发送Map类型的消息.
+	 * @param event
+	 * @param openid
+	 * @param destination
+	 */
+	private void sendMessage(String event, String openid, String content, Destination destination) {
+		Map<String,Object> map = Maps.newHashMap();
+		map.put("event", event);
+		map.put("openid", openid);
+		map.put("content", content);
 		jmsTemplate.convertAndSend(destination, map);
 	}
 	

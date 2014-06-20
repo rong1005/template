@@ -41,9 +41,11 @@ import com.cn.template.entity.weixin.WeixinUser;
 import com.cn.template.repository.EmployeeDao;
 import com.cn.template.repository.mail.EmailContentDao;
 import com.cn.template.repository.weixin.WeixinUserDao;
+import com.cn.template.web.listener.jms.NotifyMessageProducer;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.AttachmentType;
+import com.cn.template.xutil.enums.EventType;
 import com.cn.template.xutil.enums.Operator;
 import com.cn.template.xutil.enums.Status;
 import com.cn.template.xutil.enums.Whether;
@@ -74,6 +76,10 @@ public class EmailContentService {
 	
 	/** 微信订阅者信息的数据访问接口 */
 	private WeixinUserDao weixinUserDao;
+	
+	/** JMS消息的生产者（将消息加入JMS消息列表） */
+	@Autowired
+	private NotifyMessageProducer notifyMessageProducer;
 	
 	@Autowired
 	public void setEmailContentDao(EmailContentDao emailContentDao) {
@@ -259,7 +265,10 @@ public class EmailContentService {
 		//当前服务器中邮件的数量
 		int maxMsgnum = folder.getMessageCount();
 		if(maxMsgnum>0){
+			//数据库中最近一份邮件的收取时间
 			Date receiveDate=emailContentDao.findMaxReceiveDateByEmail(email);
+			//新邮件数量
+			int newMessage=0;
 			boolean bool=true;
 			//收取邮件的数量
 			int num=0;
@@ -272,6 +281,7 @@ public class EmailContentService {
 					logger.info("抓取邮箱：{}，邮件编号：{}，邮件主题：{}",email,emailContent.getMessageId(),emailContent.getSubject());
 					//判断接收时间，如果数据库中最新的接收邮件大于或等于邮件服务器的邮件，则该邮件已读取
 					if(receiveDate!=null&&(emailContent.getReceiveDate().equals(receiveDate)||emailContent.getReceiveDate().before(receiveDate))){
+						logger.info("{}：{}  的邮件已存在，不再往下收取！",emailContent.getMessageId(),emailContent.getSubject());
 						bool=false;
 					}else{
 						getMailContent(emailContent, message);
@@ -293,12 +303,23 @@ public class EmailContentService {
 						saveHtml(emailContent,Constants.WEBROOT+"/html/email/");
 						emailContentDao.save(emailContent);
 						num=num+1;
+						if(emailContent.getHasRead().equals(Whether.NOT)){
+							//在读取邮件进行解析时，邮件服务器会将该邮件标记为已读，不便于两个客户端之间的处理，
+				        	//所以，要将原来是“未读”的邮件重新标记为未读
+				        	logger.info("设置邮件 {} 为“未读”",message.getSubject());
+				        	message.setFlag(Flags.Flag.SEEN, false);
+							newMessage=newMessage+1;
+						}
 					}
 				}else{
 					bool=false;
 				}
 			}
 			
+			if(newMessage>0){
+				String content="您好：我们刚为您收取了 "+newMessage+" 封未读邮件，请进入'个人中心-我的邮箱'查阅，以免错过重要信息！ ";
+				notifyMessageProducer.sendQueue(EventType.CUSTOM_TEXT.getValue(),openid,content);
+			}
 		}
 		
 		//关闭收件箱
@@ -379,7 +400,7 @@ public class EmailContentService {
 		
 	}*/
 	
-/*	public static void main(String[] args) {
+	public static void main(String[] args) {
 		try{
 			Properties props = System.getProperties();
 			props.put("mail.imap.host", "mail.ggec.gd");
@@ -403,9 +424,9 @@ public class EmailContentService {
 //				System.out.println("33"+folder2.getName());
 //			}
 			
-			System.out.println(folder.getDeletedMessageCount());
 			System.out.println(folder.getMessageCount());
-			Message message=folder.getMessage(247);
+			Message message=folder.getMessage(255);
+			System.out.println(message.getSubject());
 			
 			InternetAddress address[] = (InternetAddress[]) message.getFrom();   
 			
@@ -425,7 +446,7 @@ public class EmailContentService {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	/**
 	 * 截取html中对应的body内容

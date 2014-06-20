@@ -355,6 +355,14 @@ public class NotifyMessageListener implements MessageListener {
             		
 	            	}
 	            }
+			}else if(StringUtils.equals(EventType.CUSTOM_TEXT.getValue(), event)){
+				String content=mapMessage.getString("content");
+				Map<String,Object> map=Maps.newHashMap();
+				map.put("openid", openid);
+				map.put("content", content);
+				String messages = Utils.ftlAnalyze("textMessage.ftl", map);
+				logger.info(messages);
+				Utils.contentPublish(String.format(WeixinConstants.SENT_CUSTOM_MESSAGE_URL, AccessTokenUtil.getAccessToken(false)), messages);
 			}
 
 		} catch (Exception e) {

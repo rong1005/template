@@ -29,10 +29,13 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cn.template.service.mail.EmailContentService;
 import com.cn.template.web.shiro.ShiroUser;
 
 import freemarker.template.Configuration;
@@ -46,6 +49,8 @@ import freemarker.template.Template;
  */
 public class Utils {
 
+	private static final Logger logger = LoggerFactory.getLogger(EmailContentService.class); 
+	
 	/** 保存图片的字节大小 */
 	private final static int BUFFER_SIZE = 16 * 1024;
 	
@@ -636,6 +641,7 @@ public class Utils {
 				// 关闭连接
 				http.disconnect();
 			}
+			logger.info("publish result:{}",bufferRes.toString());
 			return bufferRes.toString();
 		}catch(Exception e){
 			e.printStackTrace();
