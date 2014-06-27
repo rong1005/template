@@ -49,7 +49,7 @@ import freemarker.template.Template;
  */
 public class Utils {
 
-	private static final Logger logger = LoggerFactory.getLogger(EmailContentService.class); 
+	private static final Logger logger = LoggerFactory.getLogger(Utils.class); 
 	
 	/** 保存图片的字节大小 */
 	private final static int BUFFER_SIZE = 16 * 1024;
