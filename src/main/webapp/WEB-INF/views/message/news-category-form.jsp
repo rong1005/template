@@ -38,7 +38,7 @@
 					</div>
 					<!-- /PAGE HEADER -->
 					
-					<div class="box border green">
+					<div class="box border primary">
 						<div class="box-title">
 							<h4><i class="fa fa-table"></i>创建${newsCategory.messageCategory.value}类</h4>
 							<div class="tools hidden-xs">
@@ -86,7 +86,7 @@
 												  
 								<div class="form-group">
 									<div class="col-sm-offset-2 col-sm-10">
-										<input id="submit_btn" class="btn btn-success" type="submit" value="提交"/>&nbsp;
+										<input id="submit_btn" class="btn btn-info" type="submit" value="提交"/>&nbsp;
 										<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
 									</div>
 								</div>

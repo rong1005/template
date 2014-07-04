@@ -120,7 +120,7 @@
 						
 						<div class="form-group">
 							<div class="col-sm-12" align="center">
-								<input id="submit_btn" class="btn btn-success" type="submit" value="提交"/>&nbsp;
+								<input id="submit_btn" class="btn btn-info" type="submit" value="提交"/>&nbsp;
 								<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
 							</div>
 						</div>

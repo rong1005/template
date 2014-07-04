@@ -47,7 +47,7 @@
 					</div>
 					<!-- /PAGE HEADER -->
 					
-					<div class="box border green">
+					<div class="box border primary">
 						<div class="box-title">
 							<h4><i class="fa fa-table"></i>创建角色</h4>
 							<div class="tools hidden-xs">
