@@ -1,18 +1,19 @@
 package com.cn.template.xutil.enums;
 
 /**
- * 用于信息的状态标记的.
+ * 公司类型
  * 
  * @author Libra
  *
  */
-public enum Status {
-	/** 删除 */
-	DELETE("删除", 0),
-	/** 停用 */
-	DISABLE("停用", 1),
-	/** 正常 */
-	NORMAL("正常",2);
+public enum DepartmentType {
+	/** 集团 */
+	GROUP("集团", 0),
+	/** 公司 */
+	COMPANY("公司", 1),
+	/** 部门 */
+	DEPARTMENT("部门", 2)
+	;
 
 	private String value;
 	private int index;
@@ -23,7 +24,7 @@ public enum Status {
 	 * @param value
 	 * @param index
 	 */
-	private Status(String value, int index) {
+	private DepartmentType(String value, int index) {
 		this.value = value;
 		this.index = index;
 	}
@@ -35,7 +36,7 @@ public enum Status {
 	 * @return
 	 */
 	public static String getName(int index) {
-		for (Status c : Status.values()) {
+		for (DepartmentType c : DepartmentType.values()) {
 			if (c.getIndex() == index) {
 				return c.value;
 			}

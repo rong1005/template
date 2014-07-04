@@ -29,13 +29,6 @@
 										员工列表
 									</li>
 								</ul>
-								<!-- /BREADCRUMBS -->
-								
-								<!-- <div class="clearfix">
-									<h3 class="content-title pull-left">员工列表</h3>
-								</div>
-								<div class="description">员工列表</div> -->
-								
 							</div>
 						</div>
 					</div>
@@ -77,13 +70,13 @@
 									
 									<br/>
 									
-									<table  class="table table-striped table-bordered table-hover">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
 												<th>员工</th>
-												<th>工号</th>
+												<th class="min_hidden">工号</th>
 												<th>邮箱</th>
-												<th>微信标识</th>
+												<th class="min_hidden">微信标识</th>
 												<th>是否认证</th>
 												<th>管理</th>
 											</tr>
@@ -92,9 +85,9 @@
 										<c:forEach items="${employees.content}" var="employee">
 											<tr>
 												<td>${employee.name}</td>
-												<td>${employee.code}</td>
+												<td class="min_hidden">${employee.code}</td>
 												<td>${employee.email}</td>
-												<td>${employee.openid}</td>
+												<td class="min_hidden">${employee.openid}</td>
 												<td>${employee.whether.value}</td>
 												<td><a href="${ctx}/employee/update/${employee.id}">修改</a> / <a href="${ctx}/employee/delete/${employee.id}" onclick="return confirm('是否删除该员工？')">删除</a></td>
 											</tr>

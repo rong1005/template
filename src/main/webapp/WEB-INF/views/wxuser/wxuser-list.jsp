@@ -69,7 +69,7 @@
 									
 									<br/>
 									
-									<table  class="table table-striped table-bordered table-hover">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
 												<th>头像</th>
