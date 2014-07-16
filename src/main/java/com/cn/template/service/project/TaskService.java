@@ -12,64 +12,65 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cn.template.entity.project.Project;
-import com.cn.template.repository.project.ProjectDao;
+import com.cn.template.entity.project.Task;
+import com.cn.template.repository.project.TaskDao;
 import com.cn.template.xutil.enums.Operator;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 
 /**
- * 项目管理的业务逻辑.
+ * 任务管理的业务逻辑.
  * @author Libra
  *
  */
 @Component  // Spring Bean的标识.
-@Transactional // 类中所有public函数都纳入事务管理的标识.
-public class ProjectService {
+@Transactional(readOnly=true) // 类中所有public函数都纳入事务管理的标识.
+public class TaskService {
 	
-	/** 项目管理的数据访问接口 */
-	private ProjectDao projectDao;
+	/** 任务管理的数据访问接口 */
+	private TaskDao taskDao;
 	
 	@Autowired
-	public void setProjectDao(ProjectDao projectDao) {
-		this.projectDao = projectDao;
+	public void setTaskDao(TaskDao taskDao) {
+		this.taskDao = taskDao;
 	}
 
 	/**
-	 * 根据ID获得项目记录.
+	 * 根据ID获得任务记录.
 	 * @param id
 	 * @return
 	 */
-	public Project getProject(Long id) {
-		return projectDao.findOne(id);
+	public Task getTask(Long id) {
+		return taskDao.findOne(id);
 	}
 
 	/**
-	 * 保存项目信息.
+	 * 保存任务信息.
 	 * @param entity
 	 */
-	public void saveProject(Project entity) {
-		projectDao.save(entity);
+	public void saveTask(Task entity) {
+		taskDao.save(entity);
 	}
 
 	/**
-	 * 单个删除项目记录.
+	 * 单个删除任务记录.
 	 * @param id
 	 */
-	public void deleteProject(Long id) {
-		projectDao.delete(id);
+	@Transactional(readOnly=false)
+	public void deleteTask(Long id) {
+		taskDao.delete(id);
 	}
 
 	/**
-	 * 获得所有的项目记录.
+	 * 获得所有的任务记录.
 	 * @return
 	 */
-	public List<Project> getAllProject() {
-		return (List<Project>) projectDao.findAll();
+	public List<Task> getAllTask() {
+		return (List<Task>) taskDao.findAll();
 	}
 
 	/**
-	 * 获取项目记录[查询、分页、排序].
+	 * 获取任务记录[查询、分页、排序].
 	 * @param userId
 	 * @param searchParams
 	 * @param pageNumber
@@ -77,15 +78,16 @@ public class ProjectService {
 	 * @param sortType
 	 * @return
 	 */
-	public Page<Project> getUserProject(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public Page<Task> getUserTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		Specification<Project> spec = buildSpecification(userId, searchParams);
-		return projectDao.findAll(spec, pageRequest);
+		Specification<Task> spec = buildSpecification(userId, searchParams);
+
+		return taskDao.findAll(spec, pageRequest);
 	}
 
 	/**
-	 * 创建分页\排序请求.
+	 * 创建分页请求.
 	 * @param pageNumber
 	 * @param pagzSize
 	 * @param sortType
@@ -94,9 +96,9 @@ public class ProjectService {
 	private PageRequest buildPageRequest(int pageNumber, int pagzSize, String sortType) {
 		Sort sort = null;
 		if ("auto".equals(sortType)) {
-			sort = new Sort(Direction.ASC, "createTime");
-		} else if ("name".equals(sortType)) {
-			sort = new Sort(Direction.ASC, "name");
+			sort = new Sort(Direction.DESC, "id");
+		} else if ("title".equals(sortType)) {
+			sort = new Sort(Direction.ASC, "title");
 		}
 		return new PageRequest(pageNumber - 1, pagzSize, sort);
 	}
@@ -107,10 +109,10 @@ public class ProjectService {
 	 * @param searchParams
 	 * @return
 	 */
-	private Specification<Project> buildSpecification(Long userId, Map<String, Object> searchParams) {
+	private Specification<Task> buildSpecification(Long userId, Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		filters.put("director", new SearchFilter("director", Operator.EQ, userId));
-		Specification<Project> spec = DynamicSpecifications.bySearchFilter(filters.values(), Project.class);
+		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
+		Specification<Task> spec = DynamicSpecifications.bySearchFilter(filters.values(), Task.class);
 		return spec;
 	}
 	

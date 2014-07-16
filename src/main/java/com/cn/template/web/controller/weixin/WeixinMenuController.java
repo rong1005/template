@@ -74,7 +74,7 @@ public class WeixinMenuController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "wxmenu/wxmenu-list";
+		return "weixin/wxmenu-list";
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class WeixinMenuController {
 	public String create(Model model) {
 		model.addAttribute("weixinMenu", new WeixinMenu());
 		model.addAttribute("action", "create");
-		return "wxmenu/wxmenu-form";
+		return "weixin/wxmenu-form";
 	}
 
 	/**

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cn.template.entity.Employee;
 import com.cn.template.entity.mail.EmailContent;
-import com.cn.template.service.employee.EmployeeService;
+import com.cn.template.entity.structure.Employee;
 import com.cn.template.service.mail.EmailAttachmentService;
 import com.cn.template.service.mail.EmailContentService;
+import com.cn.template.service.structure.EmployeeService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Utils;
 import com.google.common.collect.Maps;
@@ -94,9 +94,9 @@ public class WeixinMailController {
 		}
 		
 		if(bool){
-			return "wxmail/mail-list";
+			return "weixin/mail-list";
 		}else{
-			return "wxmail/mail-list-error";
+			return "weixin/mail-list-error";
 		}
 	}
 	

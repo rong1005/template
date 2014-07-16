@@ -1,11 +1,12 @@
-package com.cn.template.web.controller.project;
+package com.cn.template.web.controller.authority;
 
-import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,36 +18,35 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cn.template.entity.authority.User;
-import com.cn.template.entity.project.Project;
-import com.cn.template.service.project.ProjectService;
+import com.cn.template.entity.authority.Sidebar;
+import com.cn.template.service.authority.SidebarService;
 import com.cn.template.xutil.Constants;
-import com.cn.template.xutil.Utils;
-import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Maps;
 
 /**
- * 项目管理的业务代理.
+ * 菜单信息管理的业务代理.
  * 
  * @author Libra
  */
 @Controller
-@RequestMapping(value = "/project")
-public class ProjectController {
+@RequestMapping(value = "/sidebar")
+public class SidebarController {
 
+	private static Logger logger=LoggerFactory.getLogger(SidebarController.class);
+	
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
 	static {
 		sortTypes.put("auto", "自动");
-		sortTypes.put("name", "标题");
+		sortTypes.put("name", "名称");
 	}
-
-	/** 项目管理的业务逻辑 */
+	
+	/** 菜单管理的业务逻辑 */
 	@Autowired
-	private ProjectService projectService;
+	private SidebarService sidebarService;
 
 	/**
-	 * 项目列表.
+	 * 菜单列表.
 	 * @param pageNumber
 	 * @param pageSize
 	 * @param sortType
@@ -60,100 +60,99 @@ public class ProjectController {
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Long userId = Utils.getCurrentUserId();
+		Page<Sidebar> sidebars = sidebarService.getSidebar(searchParams, pageNumber, pageSize, sortType);
 
-		Page<Project> projects = projectService.getUserProject(userId, searchParams, pageNumber, pageSize, sortType);
-
-		model.addAttribute("projects", projects);
+		model.addAttribute("sidebars", sidebars);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "project/project-list";
+		return "authority/sidebar-list";
 	}
 
 	/**
-	 * 进入项目创建页面.
+	 * 进入菜单创建页面.
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String create(Model model) {
-		model.addAttribute("project", new Project());
+		model.addAttribute("sidebar", new Sidebar());
+		model.addAttribute("topSidebars", sidebarService.getTopSidebar());
 		model.addAttribute("action", "create");
-		return "project/project-form";
+		return "authority/sidebar-form";
 	}
 
 	/**
-	 * 创建项目.
-	 * @param newProject
+	 * 创建菜单.
+	 * @param newSidebar
 	 * @param redirectAttributes
 	 * @return
 	 */
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String create(@Valid Project newProject, RedirectAttributes redirectAttributes) {
-		User user = new User(Utils.getCurrentUserId());
-		newProject.setDirector(user);
-		newProject.setIsPlaceOnFile(Whether.NOT);
-		newProject.setTotalTask(0);
-		newProject.setFinishTask(0);
-		newProject.setPercent(0.0);
-		newProject.setCreateTime(new Date());
-		newProject.setUpdateTime(new Date());
-		projectService.saveProject(newProject);
-		redirectAttributes.addFlashAttribute("message", "创建项目成功");
-		return "redirect:/project/";
+	public String create(@Valid Sidebar newSidebar, RedirectAttributes redirectAttributes) {
+		sidebarService.saveSidebar(newSidebar);
+		redirectAttributes.addFlashAttribute("message", "创建菜单成功");
+		return "redirect:/sidebar/";
 	}
 
+
 	/**
-	 * 进入项目更新页面.
+	 * 进入菜单更新页面.
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String update(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("project", projectService.getProject(id));
+		model.addAttribute("sidebar", sidebarService.getSidebar(id));
+		model.addAttribute("topSidebars", sidebarService.getTopSidebar());
 		model.addAttribute("action", "update");
-		return "project/project-form";
+		return "authority/sidebar-form";
 	}
 
 	/**
-	 * 更新项目.
-	 * @param project
+	 * 提交更新的菜单信息.
+	 * @param sidebar
 	 * @param redirectAttributes
 	 * @return
 	 */
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @ModelAttribute("project") Project project, RedirectAttributes redirectAttributes) {
-		projectService.saveProject(project);
-		redirectAttributes.addFlashAttribute("message", "更新项目成功");
-		return "redirect:/project/";
+	public String update(@Valid @ModelAttribute("sidebar") Sidebar sidebar, RedirectAttributes redirectAttributes) {
+		sidebarService.saveSidebar(sidebar);
+		redirectAttributes.addFlashAttribute("message", "更新菜单‘" + sidebar.getName() + "’成功");
+		return "redirect:/sidebar";
 	}
-
+	
 	/**
-	 * 删除项目.
+	 * 删除菜单记录.
 	 * @param id
 	 * @param redirectAttributes
 	 * @return
 	 */
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		projectService.deleteProject(id);
-		redirectAttributes.addFlashAttribute("message", "删除项目成功");
-		return "redirect:/project/";
+		Sidebar sidebar = sidebarService.getSidebar(id);
+		sidebarService.deleteSidebar(id);
+		redirectAttributes.addFlashAttribute("message", "删除菜单" + sidebar.getName() + "成功");
+		return "redirect:/sidebar";
 	}
 
 	/**
-	 * 所有RequestMapping方法调用前的Model准备方法, 实现预处理部分绑定的效果,先根据form的id从数据库查出Project对象,再把Form提交的内容绑定到该对象上。
+	 * 所有RequestMapping方法调用前的Model准备方法, 实现预处理部分绑定的效果,先根据form的id从数据库查出Sidebar对象,再把Form提交的内容绑定到该对象上。
 	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
 	 */
 	@ModelAttribute
-	public void getProject(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+	public void getSidebar(@RequestParam(value = "id", defaultValue = "-1") Long id,@RequestParam(value = "preSidebar.id", defaultValue = "-1") Long preSidebarId, Model model) {
 		if (id != -1) {
-			model.addAttribute("project", projectService.getProject(id));
+			Sidebar sidebar=sidebarService.getSidebar(id);
+			if(preSidebarId>0){
+				sidebar.setPreSidebar(sidebarService.getSidebar(preSidebarId));
+			}else{
+				sidebar.setPreSidebar(null);
+			}
+			model.addAttribute("sidebar", sidebar);
 		}
 	}
-
 }

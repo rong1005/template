@@ -34,12 +34,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cn.template.entity.Employee;
 import com.cn.template.entity.mail.EmailAttachment;
 import com.cn.template.entity.mail.EmailContent;
+import com.cn.template.entity.structure.Employee;
 import com.cn.template.entity.weixin.WeixinUser;
-import com.cn.template.repository.EmployeeDao;
 import com.cn.template.repository.mail.EmailContentDao;
+import com.cn.template.repository.structure.EmployeeDao;
 import com.cn.template.repository.weixin.WeixinUserDao;
 import com.cn.template.web.listener.jms.NotifyMessageProducer;
 import com.cn.template.xutil.Constants;

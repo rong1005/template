@@ -16,10 +16,10 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
-import com.cn.template.entity.Role;
-import com.cn.template.entity.Sidebar;
-import com.cn.template.entity.User;
-import com.cn.template.service.user.UserService;
+import com.cn.template.entity.authority.Role;
+import com.cn.template.entity.authority.Sidebar;
+import com.cn.template.entity.authority.User;
+import com.cn.template.service.authority.UserService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Encodes;
 import com.google.common.collect.Lists;

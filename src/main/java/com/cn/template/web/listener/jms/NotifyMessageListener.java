@@ -22,12 +22,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import com.cn.template.entity.Employee;
+import com.cn.template.entity.structure.Employee;
 import com.cn.template.entity.weixin.NewsCategory;
 import com.cn.template.entity.weixin.NewsMessage;
 import com.cn.template.entity.weixin.WeixinAuthLog;
 import com.cn.template.entity.weixin.WeixinUser;
-import com.cn.template.service.employee.EmployeeService;
+import com.cn.template.service.structure.EmployeeService;
 import com.cn.template.service.weixin.NewsCategoryService;
 import com.cn.template.service.weixin.NewsMessageService;
 import com.cn.template.service.weixin.WeixinAuthLogService;
