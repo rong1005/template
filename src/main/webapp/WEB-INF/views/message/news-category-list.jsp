@@ -83,7 +83,7 @@
 												<td>
 													<a href="${ctx}/news-category/update/${newsCategory.id}?messageCategory=${messageCategory}">修改</a> / 
 													<a href="${ctx}/news-category/delete/${newsCategory.id}?messageCategory=${messageCategory}" onclick="return confirm('是否删除该图文消息类别？')">删除</a> / 
-													<a href="${ctx}/news?newsCategoryId=${newsCategory.id}">文章管理</a>
+													<a href="${ctx}/news/${newsCategory.id}">文章管理</a>
 												</td>
 											</tr>
 										</c:forEach>

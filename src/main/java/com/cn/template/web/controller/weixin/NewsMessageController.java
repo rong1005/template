@@ -57,8 +57,8 @@ public class NewsMessageController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public String list(@RequestParam(value = "newsCategoryId") Long newsCategoryId,
+	@RequestMapping(value="/{newsCategoryId}",method = RequestMethod.GET)
+	public String list(@PathVariable(value = "newsCategoryId") Long newsCategoryId,
 			@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -104,7 +104,7 @@ public class NewsMessageController {
 			RedirectAttributes redirectAttributes) {
 		newsMessageService.saveNewsMessage(newNewsMessage,bigPic,smallPic);
 		redirectAttributes.addFlashAttribute("message", "创建图文消息成功");
-		return "redirect:/news?newsCategoryId="+newNewsMessage.getNewsCategory().getId();
+		return "redirect:/news/"+newNewsMessage.getNewsCategory().getId();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class NewsMessageController {
 			RedirectAttributes redirectAttributes) {
 		newsMessageService.saveNewsMessage(newsMessage,bigPic,smallPic);
 		redirectAttributes.addFlashAttribute("message", "更新图文消息成功");
-		return "redirect:/news?newsCategoryId="+newsMessage.getNewsCategory().getId();
+		return "redirect:/news/"+newsMessage.getNewsCategory().getId();
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class NewsMessageController {
 	public String delete(@PathVariable("id") Long id, @RequestParam(value = "newsCategoryId") Long newsCategoryId, RedirectAttributes redirectAttributes) {
 		newsMessageService.deleteNewsMessage(id);
 		redirectAttributes.addFlashAttribute("message", "删除图文消息成功");
-		return "redirect:/news?newsCategoryId="+newsCategoryId;
+		return "redirect:/news/"+newsCategoryId;
 	}
 	
 	/**
@@ -160,7 +160,7 @@ public class NewsMessageController {
 		NewsMessage newsMessage = newsMessageService.getNewsMessage(id);
 		newsMessageService.publishNewsMessage(newsMessage);
 		redirectAttributes.addFlashAttribute("message", "发布图文消息成功");
-		return "redirect:/news?newsCategoryId="+newsMessage.getNewsCategory().getId();
+		return "redirect:/news/"+newsMessage.getNewsCategory().getId();
 	}
 
 	/**

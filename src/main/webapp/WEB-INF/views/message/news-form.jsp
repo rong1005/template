@@ -35,7 +35,7 @@
 										<a href="${ctx}/news-category?messageCategory=${newsMessage.newsCategory.messageCategory}">${newsMessage.newsCategory.title}</a>
 									</li>
 									<li>
-										<a href="${ctx}/news?newsCategoryId=${newsMessage.newsCategory.id}">${newsMessage.newsCategory.title}列表</a>
+										<a href="${ctx}/news/${newsMessage.newsCategory.id}">${newsMessage.newsCategory.title}列表</a>
 									</li>
 									<li>创建图文消息</li>
 								</ul>
