@@ -47,6 +47,15 @@
 					<li id="tasks-list"><a class="" href="${ctx}/task"><span class="sub-menu-text">任务列表</span></a></li>
 				</ul>
 			</li>
+			<li id="forms-manager" class="has-sub">
+				<a href="javascript:;" class="">
+				<i class="fa fa-pencil-square-o fa-fw"></i> <span class="menu-text">表单管理</span>
+				<span class="arrow"></span>
+				</a>
+				<ul class="sub">
+					<li id="froms-list"><a class="" href="${ctx}/form"><span class="sub-menu-text">表单列表</span></a></li>
+				</ul>
+			</li>
 			<li id="weixin-manager" class="has-sub">
 				<a href="javascript:;" class="">
 				<i class="fa fa-comments fa-fw"></i> <span class="menu-text">微信管理</span>

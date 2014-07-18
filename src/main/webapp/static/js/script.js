@@ -3295,6 +3295,11 @@ var App = function () {
 				handleAutosize(); //Function to handle textarea autosize
 				handleCountable(); //Function to handle char count
 			}
+			if (App.isPage("form_forms")) {
+				handleUniform();
+				handleAutosize(); //Function to handle textarea autosize
+				handleCountable(); //Function to handle char count
+			}
 			if (App.isPage("department_forms")) {
 				handleAutosize(); //Function to handle textarea autosize
 				handleCountable(); //Function to handle char count
