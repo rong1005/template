@@ -67,7 +67,7 @@ public class FieldController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "field/field-list";
+		return "form/field-list";
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class FieldController {
 	public String create(@RequestParam(value = "formId") Long formId,Model model) {
 		model.addAttribute("field", new Field());
 		model.addAttribute("action", "create");
-		return "field/field-form";
+		return "form/field-form";
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class FieldController {
 	public String update(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("field", fieldService.getField(id));
 		model.addAttribute("action", "update");
-		return "field/field-form";
+		return "form/field-form";
 	}
 
 	/**

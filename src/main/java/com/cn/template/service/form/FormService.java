@@ -15,10 +15,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.form.Form;
+import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.form.FormDao;
-import com.cn.template.xutil.enums.Operator;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
+import com.google.common.collect.Maps;
 
 /**
  * 表单信息的业务处理.
@@ -37,12 +38,20 @@ public class FormService {
 
 	/** 表单信息的数据访问对象 */
 	private FormDao formDao;
+	
+	/** 基础信息处理的数据访问接口, */
+	private BaseMybatisDao baseMybatisDao;
 
 	@Autowired
 	public void setFormDao(FormDao formDao) {
 		this.formDao = formDao;
 	}
 	
+	@Autowired
+	public void setBaseMybatisDao(BaseMybatisDao baseMybatisDao) {
+		this.baseMybatisDao = baseMybatisDao;
+	}
+
 
 	/**
 	 * 根据ID获得表单记录.
@@ -59,10 +68,18 @@ public class FormService {
 	 */
 	public void saveForm(Form entity) {
 		if(entity.getId()==null){
+			logger.info("新建表单");
 			entity=formDao.save(entity);
 			entity.setChTableName("ch_form_"+entity.getId());
 			entity.setEnTableName("en_form_"+entity.getId());
+			//创建表单对应的数据表Table
+			Map<String, Object> parameters =Maps.newHashMap();
+			parameters.put("tableName", entity.getChTableName());
+			baseMybatisDao.createTable(parameters);
+			parameters.put("tableName", entity.getEnTableName());
+			baseMybatisDao.createTable(parameters);
 		}
+		logger.info("更新表单");
 		formDao.save(entity);
 	}
 
@@ -71,6 +88,15 @@ public class FormService {
 	 * @param id
 	 */
 	public void deleteForm(Long id) {
+		Form form = getForm(id);
+		
+		//删除表单对应的数据表Table
+		Map<String, Object> parameters =Maps.newHashMap();
+		parameters.put("tableName", form.getChTableName());
+		baseMybatisDao.dropTable(parameters);
+		parameters.put("tableName", form.getEnTableName());
+		baseMybatisDao.dropTable(parameters);
+		
 		formDao.delete(id);
 	}
 

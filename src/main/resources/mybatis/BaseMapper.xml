@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.cn.template.mybatis.BaseMybatisDao">
+
+	<!-- 创建数据表 -->
+	<update id="createTable" parameterType="map" >
+		create table ${tableName} (`id` bigint not null auto_increment ,`name` varchar(200) null ,primary key (`id`))
+	</update>
+	
+	<!-- 删除数据表 -->
+	<update id="dropTable" parameterType="map" >
+		drop table if exists ${tableName} 
+	</update>
+	
+	<!-- 给数据表添加字段 -->
+	<update id="addColumn" parameterType="map" >
+		alter table ${tableName} add column ${columnName} ${columnAttribute} 
+	</update>
+	
+	<!-- 删除数据表字段 -->
+	<update id="dropColumn" parameterType="map" >
+		alter table ${tableName} drop column ${columnName}
+	</update>
+
+	<!-- 自定义组合更新 -->
+	<update id="update" parameterType="map" >
+		update ${tableName} set ${setString} where ${whereString}
+	</update>
+	
+	<!-- 自定义组合添加 -->
+	<insert id="insert" parameterType="map" >
+		insert into ${tableName} (${fieldNames}) values (${fieldValues})
+	</insert>
+
+</mapper> 

@@ -85,7 +85,10 @@
 											<tr>
 												<td>${form.name}</td>
 												<td>${form.formFormat.value}</td>
-												<td><a href="${ctx}/form/update/${form.id}">修改</a> / <a href="${ctx}/form/delete/${form.id}" onclick="return confirm('是否删除该表单？')" >删除</a></td>
+												<td><a href="${ctx}/form/update/${form.id}">修改</a> / 
+												<a href="${ctx}/form/delete/${form.id}" onclick="return confirm('是否删除该表单？')" >删除</a> / 
+												<a href="${ctx}/field/${form.id}">字段管理</a>
+												</td>
 											</tr>
 										</c:forEach>
 										</tbody>

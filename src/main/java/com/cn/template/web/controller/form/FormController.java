@@ -133,8 +133,12 @@ public class FormController {
 	 */
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		try{
 		formService.deleteForm(id);
 		redirectAttributes.addFlashAttribute("message", "删除表单成功");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return "redirect:/form/";
 	}
 

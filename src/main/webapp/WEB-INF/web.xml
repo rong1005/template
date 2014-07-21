@@ -12,6 +12,7 @@
 			classpath*:/applicationContext.xml,
 			classpath*:/applicationContext-shiro.xml
 			classpath*:/applicationContext-scheduler.xml
+			classpath*:/applicationContext-mybatis.xml
 		</param-value>
 	</context-param>
 
