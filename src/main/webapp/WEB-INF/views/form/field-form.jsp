@@ -1,7 +1,12 @@
+<%@page import="com.cn.template.xutil.enums.FieldType"%>
+<%@page import="com.cn.template.xutil.enums.FieldInputType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="INPUT" value="<%=FieldInputType.INPUT %>" />
+<c:set var="SHOW" value="<%=FieldInputType.SHOW %>" />
+<c:set var="CREATE" value="<%=FieldInputType.CREATE %>" />
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -29,7 +34,10 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/field">字段列表</a>
+										<a href="${ctx}/form">${field.form.name}</a>
+									</li>
+									<li>
+										<a href="${ctx}/field/${field.form.id}">字段列表</a>
 									</li>
 									<li>创建字段</li>
 								</ul>
@@ -56,6 +64,7 @@
 						<div class="box-body">
 							<form id="inputForm" class="form-horizontal" action="${ctx}/field/${action}" method="post">
 								<input type="hidden" name="id" value="${field.id}"/>
+								<input type="hidden" name="form.id" value="${field.form.id}"/>
 								
 								<div class="form-group">
 									<label class="col-sm-2 control-label">字段名称</label>
@@ -63,12 +72,52 @@
 										<input type="text" id="field_name" name="name" value="${field.name}" class="form-control" placeholder="字段名称"/>
 									</div>
 								</div>
-	
 								<div class="form-group">
-									<label class="col-sm-2 control-label">字段描述</label> 
+									<label class="col-sm-2 control-label">中文显示</label>
 									<div class="col-sm-10">
-										<textarea rows="3" cols="5" id="description" name="description" class="autosize countable form-control" placeholder="字段描述" data-limit="100"></textarea>
-										<p class="help-block">您还可以输入 <span id="counter"></span> 字.</p> 
+										<input type="text" id="field_chViewName" name="chViewName" value="${field.chViewName}" class="form-control" placeholder="中文显示"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">英文显示</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_enViewName" name="enViewName" value="${field.enViewName}" class="form-control" placeholder="英文显示"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">排序</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_showOrder" name="showOrder" value="${field.showOrder}" class="form-control" placeholder="排序"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">输入类型</label> 
+									<div class="col-sm-10">
+										<c:forEach items="<%=FieldInputType.values() %>" var="fieldInputType">
+											<label class="radio-inline"> <input type="radio" name="fieldInputType" class="uniform" <c:if test="${field.fieldInputType eq fieldInputType}">checked="checked"</c:if> value="${fieldInputType }">${fieldInputType.value }</label>
+										</c:forEach> 
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">字段类型</label> 
+									<div class="col-sm-10">
+									<select class="form-control" id="field_fieldType" name="fieldType">
+										<c:forEach items="<%=FieldType.values() %>" var="fieldType">
+											<option value="${fieldType }">${fieldType.value}</option>
+										</c:forEach>
+									</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">长度</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_fieldLength" name="fieldLength" value="${field.fieldLength}" class="form-control" placeholder="长度"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">精度</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_fieldPrecision" name="fieldPrecision" value="${field.fieldPrecision}" class="form-control" placeholder="精度"/>
 									</div>
 								</div>
 												  
@@ -94,16 +143,12 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
-	<!-- TextArea 自动调整SIZE -->
-	<script type="text/javascript" src="${ctx}/static/js/autosize/jquery.autosize.min.js"></script>
-	<!-- TextArea 计算剩余字数 -->
-	<script type="text/javascript" src="${ctx}/static/js/countable/jquery.simplyCountable.min.js"></script>
 	
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
 		jQuery(document).ready(function() {
-			
+			App.setPage("field_forms");  //设置当前启动的页面
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
 			App.setSubMenu("forms-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置字段路径

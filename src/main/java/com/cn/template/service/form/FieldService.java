@@ -15,10 +15,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.form.Field;
+import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.form.FieldDao;
+import com.cn.template.xutil.enums.FieldType;
 import com.cn.template.xutil.enums.Operator;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * 字段信息的业务处理.
@@ -34,10 +38,18 @@ public class FieldService {
 	
 	/** 字段信息的数据访问对象 */
 	private FieldDao fieldDao;
+	
+	/** 基础信息处理的数据访问接口 */
+	private BaseMybatisDao baseMybatisDao; 
 
 	@Autowired
 	public void setFieldDao(FieldDao fieldDao) {
 		this.fieldDao = fieldDao;
+	}
+	
+	@Autowired
+	public void setBaseMybatisDao(BaseMybatisDao baseMybatisDao) {
+		this.baseMybatisDao = baseMybatisDao;
 	}
 	
 
@@ -55,6 +67,25 @@ public class FieldService {
 	 * @param entity
 	 */
 	public void saveField(Field entity) {
+		if(entity.getId()==null){
+			logger.info("新增字段");
+			Map<String, Object> parameters = Maps.newHashMap();
+			parameters.put("columnName", entity.getName());
+			StringBuffer attr=new StringBuffer();
+			attr.append(entity.getFieldType().getType());
+			if(entity.getFieldType().equals(FieldType.DOUBLE)){
+				attr.append(" ("+entity.getFieldLength()+","+entity.getFieldPrecision()+") ");
+			}else{
+				attr.append(" ("+entity.getFieldLength()+") ");
+			}
+			attr.append(" NULL");
+			parameters.put("columnAttribute", attr.toString());
+			parameters.put("tableName", entity.getForm().getChTableName());
+			baseMybatisDao.addColumn(parameters);
+			parameters.put("tableName", entity.getForm().getEnTableName());
+			baseMybatisDao.addColumn(parameters);
+			
+		}
 		fieldDao.save(entity);
 	}
 
@@ -63,6 +94,13 @@ public class FieldService {
 	 * @param id
 	 */
 	public void deleteField(Long id) {
+		Field field = getField(id);
+		Map<String, Object> parameters = Maps.newHashMap();
+		parameters.put("columnName", field.getName());
+		parameters.put("tableName", field.getForm().getChTableName());
+		baseMybatisDao.dropColumn(parameters);
+		parameters.put("tableName", field.getForm().getEnTableName());
+		baseMybatisDao.dropColumn(parameters);
 		fieldDao.delete(id);
 	}
 
@@ -70,8 +108,12 @@ public class FieldService {
 	 * 获得所有的字段记录.
 	 * @return
 	 */
-	public List<Field> getAllField() {
-		return (List<Field>) fieldDao.findAll();
+	public List<Field> getAllField(Long formId) {
+		Sort sort = new Sort(Direction.ASC, "showOrder");
+		List<SearchFilter> list=Lists.newArrayList(); 
+		list.add(new SearchFilter("form.id", Operator.EQ, formId));
+		Specification<Field> spec = DynamicSpecifications.bySearchFilter(list, Field.class);
+		return fieldDao.findAll(spec, sort);
 	}
 
 	/**

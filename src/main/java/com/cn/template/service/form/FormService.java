@@ -3,6 +3,8 @@ package com.cn.template.service.form;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cn.template.entity.form.Field;
 import com.cn.template.entity.form.Form;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.form.FormDao;
@@ -39,8 +42,12 @@ public class FormService {
 	/** 表单信息的数据访问对象 */
 	private FormDao formDao;
 	
-	/** 基础信息处理的数据访问接口, */
+	/** 基础信息处理的数据访问接口 */
 	private BaseMybatisDao baseMybatisDao;
+	
+	/** 字段信息的数据访问接口 */
+	private FieldService fieldService;
+	 
 
 	@Autowired
 	public void setFormDao(FormDao formDao) {
@@ -52,6 +59,10 @@ public class FormService {
 		this.baseMybatisDao = baseMybatisDao;
 	}
 
+	@Autowired
+	public void setFieldService(FieldService fieldService) {
+		this.fieldService = fieldService;
+	}
 
 	/**
 	 * 根据ID获得表单记录.
@@ -61,6 +72,7 @@ public class FormService {
 	public Form getForm(Long id) {
 		return formDao.findOne(id);
 	}
+
 
 	/**
 	 * 保存表单信息.
@@ -98,6 +110,49 @@ public class FormService {
 		baseMybatisDao.dropTable(parameters);
 		
 		formDao.delete(id);
+	}
+	
+	/**
+	 * 保存实验委托信息.
+	 * @param request
+	 */
+	public void saveApply(ServletRequest request){
+		Map<String, String[]> paramMap=request.getParameterMap();
+		if(paramMap.containsKey("formId")&&paramMap.containsKey("name")){
+			Long formId = Long.parseLong(request.getParameter("formId"));
+			logger.info("formId：{}",formId);
+			Form form = getForm(formId);
+			List<Field> fieldList = fieldService.getAllField(formId);
+			StringBuffer fieldNames=new StringBuffer();
+			StringBuffer chFieldValues=new StringBuffer();
+			StringBuffer enFieldValues=new StringBuffer();
+			fieldNames.append("name");
+			chFieldValues.append("'"+request.getParameter("name")+"'");
+			enFieldValues.append("'"+request.getParameter("name")+"'");
+			
+			for(Field field : fieldList){
+				if(paramMap.containsKey("ch_"+field.getName())&&paramMap.containsKey("en_"+field.getName())){
+					String chValue = request.getParameter("ch_"+field.getName());
+					logger.info("中文内容：{}",chValue);
+					String enValue = request.getParameter("en_"+field.getName());
+					logger.info("英文内容：{}",enValue);
+					
+					fieldNames.append(", "+field.getName());
+					chFieldValues.append(", '"+chValue+"'");
+					enFieldValues.append(", '"+enValue+"'");
+				}
+			}
+			
+			//insert into ${tableName} (${fieldNames}) values (${fieldValues})
+			Map<String, Object> parameters = Maps.newHashMap();
+			parameters.put("tableName", form.getChTableName());
+			parameters.put("fieldNames", fieldNames.toString());
+			parameters.put("fieldValues", chFieldValues.toString());
+			baseMybatisDao.insert(parameters);
+			parameters.put("tableName", form.getEnTableName());
+			parameters.put("fieldValues", enFieldValues.toString());
+			baseMybatisDao.insert(parameters);
+		}
 	}
 
 	/**
@@ -151,5 +206,4 @@ public class FormService {
 		return spec;
 	}
 	
-
 }

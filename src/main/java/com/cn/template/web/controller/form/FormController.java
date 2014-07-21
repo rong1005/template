@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cn.template.entity.authority.User;
 import com.cn.template.entity.form.Form;
+import com.cn.template.service.form.FieldService;
 import com.cn.template.service.form.FormService;
 import com.cn.template.xutil.Constants;
-import com.cn.template.xutil.Utils;
-import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Maps;
 
@@ -34,7 +34,7 @@ import com.google.common.collect.Maps;
 @Controller
 @RequestMapping(value = "/form")
 public class FormController {
-
+	private static final Logger logger = LoggerFactory.getLogger(FormController.class);
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
 	static {
 		sortTypes.put("auto", "自动");
@@ -44,6 +44,9 @@ public class FormController {
 	/** 表单管理的业务逻辑 */
 	@Autowired
 	private FormService formService;
+	
+	@Autowired
+	private FieldService fieldService;
 
 	/**
 	 * 表单列表.
@@ -56,7 +59,7 @@ public class FormController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
@@ -133,12 +136,8 @@ public class FormController {
 	 */
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		try{
 		formService.deleteForm(id);
 		redirectAttributes.addFlashAttribute("message", "删除表单成功");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 		return "redirect:/form/";
 	}
 
@@ -151,6 +150,38 @@ public class FormController {
 		if (id != -1) {
 			model.addAttribute("form", formService.getForm(id));
 		}
+	}
+	
+	
+	/**
+	 * 进入委托申请页面.
+	 * @param formId
+	 * @param model
+	 */
+	@RequestMapping(value="apply/{formId}",method = RequestMethod.GET)
+	public String apply(@PathVariable(value = "formId") Long formId,Model model){
+		model.addAttribute("fields", fieldService.getAllField(formId));
+		model.addAttribute("formId", formId);
+		model.addAttribute("action", "apply");
+		return "form/form-apply";
+	}
+	
+	/**
+	 * 创建委托申请.
+	 * @param newForm
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "apply", method = RequestMethod.POST)
+	public String apply(ServletRequest request,RedirectAttributes redirectAttributes) {
+		logger.info("提交实验委托申请");
+		try{
+		formService.saveApply(request);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		redirectAttributes.addFlashAttribute("message", "创建委托申请成功");
+		return "redirect:/form/";
 	}
 
 }

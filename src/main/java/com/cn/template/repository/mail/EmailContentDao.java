@@ -2,7 +2,6 @@ package com.cn.template.repository.mail;
 
 import java.util.Date;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

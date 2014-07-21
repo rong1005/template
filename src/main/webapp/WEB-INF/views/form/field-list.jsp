@@ -26,6 +26,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
+										<a href="${ctx}/form">${form.name}</a>
+									</li>
+									<li>
 										字段列表
 									</li>
 								</ul>
@@ -76,6 +79,10 @@
 										<thead>
 											<tr>
 												<th>字段</th>
+												<th>中文</th>
+												<th>英文</th>
+												<th>字段类型</th>
+												<th>排序</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -83,7 +90,11 @@
 										<c:forEach items="${fields.content}" var="field">
 											<tr>
 												<td>${field.name}</td>
-												<td><a href="${ctx}/field/update/${field.id}">修改</a> / <a href="${ctx}/field/delete/${field.id}" onclick="return confirm('是否删除该字段？')" >删除</a></td>
+												<td>${field.chViewName}</td>
+												<td>${field.enViewName}</td>
+												<td>${field.fieldType.value}</td>
+												<td>${field.showOrder}</td>
+												<td><a href="${ctx}/field/update/${field.id}">修改</a> / <a href="${ctx}/field/delete/${field.id}?formId=${form.id}" onclick="return confirm('是否删除该字段？')" >删除</a></td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -95,7 +106,7 @@
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/field/create">创建字段</a>
+												<a class="btn btn-info" href="${ctx}/field/create?formId=${form.id}">创建字段</a>
 											</div>
 										</div>
 									</div>

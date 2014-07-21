@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.form.Field;
 import com.cn.template.service.form.FieldService;
+import com.cn.template.service.form.FormService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Maps;
@@ -41,6 +42,11 @@ public class FieldController {
 	/** 字段信息的业务逻辑 */
 	@Autowired
 	private FieldService fieldService;
+	
+	/** 表单信息的业务处理 */
+	@Autowired
+	private FormService formService;
+	
 
 	/**
 	 * 字段列表.
@@ -54,7 +60,7 @@ public class FieldController {
 	@RequestMapping(value="/{formId}",method = RequestMethod.GET)
 	public String list(@PathVariable(value = "formId") Long formId,
 			@RequestParam(value = "page", defaultValue = "1") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
@@ -66,6 +72,8 @@ public class FieldController {
 		model.addAttribute("sortTypes", sortTypes);
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+		
+		model.addAttribute("form", formService.getForm(formId));
 
 		return "form/field-list";
 	}
@@ -77,7 +85,9 @@ public class FieldController {
 	 */
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String create(@RequestParam(value = "formId") Long formId,Model model) {
-		model.addAttribute("field", new Field());
+		Field field = new Field();
+		field.setForm(formService.getForm(formId));
+		model.addAttribute("field", field);
 		model.addAttribute("action", "create");
 		return "form/field-form";
 	}
@@ -92,7 +102,12 @@ public class FieldController {
 	public String create(@Valid Field newField, RedirectAttributes redirectAttributes) {
 		newField.setCreateTime(new Date());
 		newField.setUpdateTime(new Date());
-		fieldService.saveField(newField);
+		try{
+			newField.setForm(formService.getForm(newField.getForm().getId()));
+			fieldService.saveField(newField);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		redirectAttributes.addFlashAttribute("message", "创建字段成功");
 		return "redirect:/field/"+newField.getForm().getId();
 	}
