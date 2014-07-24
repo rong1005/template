@@ -59,7 +59,9 @@ public class AccessTokenUtil {
 		
 		logger.info("--------------------重新读取------------------------");
 		URL access_token_url = new URL(String.format(WeixinConstants.GET_TOKEN_URL, WeixinConstants.APPID, WeixinConstants.SECRET));  
-	    Reader reader = new InputStreamReader(access_token_url.openStream());
+		//解决提取tooken时出现的一个未知问题(暂未了解详细原因，待分析)
+		System.setProperty ("jsse.enableSNIExtension", "false"); 
+		Reader reader = new InputStreamReader(access_token_url.openStream());
 	    Gson gson = new Gson();
 	    //取得access_token ,有效期为7200秒；多处调用用到.
 	    AccessToken accessToken = gson.fromJson(reader, AccessToken.class);

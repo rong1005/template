@@ -82,13 +82,10 @@ public class FormService {
 		if(entity.getId()==null){
 			logger.info("新建表单");
 			entity=formDao.save(entity);
-			entity.setChTableName("ch_form_"+entity.getId());
-			entity.setEnTableName("en_form_"+entity.getId());
+			entity.setTableName("form_"+entity.getId());
 			//创建表单对应的数据表Table
 			Map<String, Object> parameters =Maps.newHashMap();
-			parameters.put("tableName", entity.getChTableName());
-			baseMybatisDao.createTable(parameters);
-			parameters.put("tableName", entity.getEnTableName());
+			parameters.put("tableName", entity.getTableName());
 			baseMybatisDao.createTable(parameters);
 		}
 		logger.info("更新表单");
@@ -104,11 +101,8 @@ public class FormService {
 		
 		//删除表单对应的数据表Table
 		Map<String, Object> parameters =Maps.newHashMap();
-		parameters.put("tableName", form.getChTableName());
+		parameters.put("tableName", form.getTableName());
 		baseMybatisDao.dropTable(parameters);
-		parameters.put("tableName", form.getEnTableName());
-		baseMybatisDao.dropTable(parameters);
-		
 		formDao.delete(id);
 	}
 	
@@ -124,11 +118,11 @@ public class FormService {
 			Form form = getForm(formId);
 			List<Field> fieldList = fieldService.getAllField(formId);
 			StringBuffer fieldNames=new StringBuffer();
-			StringBuffer chFieldValues=new StringBuffer();
-			StringBuffer enFieldValues=new StringBuffer();
+			StringBuffer fieldValues=new StringBuffer();
+			
 			fieldNames.append("name");
-			chFieldValues.append("'"+request.getParameter("name")+"'");
-			enFieldValues.append("'"+request.getParameter("name")+"'");
+			fieldValues.append("'"+request.getParameter("name")+"'");
+
 			
 			for(Field field : fieldList){
 				if(paramMap.containsKey("ch_"+field.getName())&&paramMap.containsKey("en_"+field.getName())){
@@ -137,20 +131,18 @@ public class FormService {
 					String enValue = request.getParameter("en_"+field.getName());
 					logger.info("英文内容：{}",enValue);
 					
-					fieldNames.append(", "+field.getName());
-					chFieldValues.append(", '"+chValue+"'");
-					enFieldValues.append(", '"+enValue+"'");
+					fieldNames.append(", ch_"+field.getName());
+					fieldNames.append(", en_"+field.getName());
+					fieldValues.append(", '"+chValue+"'");
+					fieldValues.append(", '"+enValue+"'");
 				}
 			}
 			
 			//insert into ${tableName} (${fieldNames}) values (${fieldValues})
 			Map<String, Object> parameters = Maps.newHashMap();
-			parameters.put("tableName", form.getChTableName());
+			parameters.put("tableName", form.getTableName());
 			parameters.put("fieldNames", fieldNames.toString());
-			parameters.put("fieldValues", chFieldValues.toString());
-			baseMybatisDao.insert(parameters);
-			parameters.put("tableName", form.getEnTableName());
-			parameters.put("fieldValues", enFieldValues.toString());
+			parameters.put("fieldValues", fieldValues.toString());
 			baseMybatisDao.insert(parameters);
 		}
 	}

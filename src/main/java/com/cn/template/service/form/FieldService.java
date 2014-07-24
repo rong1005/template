@@ -70,7 +70,7 @@ public class FieldService {
 		if(entity.getId()==null){
 			logger.info("新增字段");
 			Map<String, Object> parameters = Maps.newHashMap();
-			parameters.put("columnName", entity.getName());
+			parameters.put("columnName", "ch_"+entity.getName());
 			StringBuffer attr=new StringBuffer();
 			attr.append(entity.getFieldType().getType());
 			if(entity.getFieldType().equals(FieldType.DOUBLE)){
@@ -80,11 +80,10 @@ public class FieldService {
 			}
 			attr.append(" NULL");
 			parameters.put("columnAttribute", attr.toString());
-			parameters.put("tableName", entity.getForm().getChTableName());
+			parameters.put("tableName", entity.getForm().getTableName());
 			baseMybatisDao.addColumn(parameters);
-			parameters.put("tableName", entity.getForm().getEnTableName());
+			parameters.put("columnName", "en_"+entity.getName());
 			baseMybatisDao.addColumn(parameters);
-			
 		}
 		fieldDao.save(entity);
 	}
@@ -96,10 +95,10 @@ public class FieldService {
 	public void deleteField(Long id) {
 		Field field = getField(id);
 		Map<String, Object> parameters = Maps.newHashMap();
-		parameters.put("columnName", field.getName());
-		parameters.put("tableName", field.getForm().getChTableName());
+		parameters.put("columnName", "ch_"+field.getName());
+		parameters.put("tableName", field.getForm().getTableName());
 		baseMybatisDao.dropColumn(parameters);
-		parameters.put("tableName", field.getForm().getEnTableName());
+		parameters.put("columnName", "en_"+field.getName());
 		baseMybatisDao.dropColumn(parameters);
 		fieldDao.delete(id);
 	}

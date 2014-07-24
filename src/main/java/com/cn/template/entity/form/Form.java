@@ -10,27 +10,25 @@ import com.cn.template.xutil.enums.FormFormat;
 
 /**
  * 表单信息
+ * 
  * @author Libra
  *
  */
 @Entity
 @Table(name = "tb_form")
-public class Form extends IdEntity{
+public class Form extends IdEntity {
 
 	/** 表单名称 */
 	private String name;
-	
+
 	/** 表单说明 */
 	private String description;
-	
+
 	/** 表单格式 */
 	private FormFormat formFormat;
-	
+
 	/** 中文表名 */
-	private String chTableName;
-	
-	/** 英文表名 */
-	private String enTableName;
+	private String tableName;
 
 	public String getName() {
 		return name;
@@ -57,20 +55,12 @@ public class Form extends IdEntity{
 		this.formFormat = formFormat;
 	}
 
-	public String getChTableName() {
-		return chTableName;
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setChTableName(String chTableName) {
-		this.chTableName = chTableName;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
-	public String getEnTableName() {
-		return enTableName;
-	}
-
-	public void setEnTableName(String enTableName) {
-		this.enTableName = enTableName;
-	}
-	
 }

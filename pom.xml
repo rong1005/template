@@ -360,6 +360,24 @@ java.lang.ClassNotFoundException: org.apache.commons.codec.DecoderException
 		</dependency>
 		<!-- /WebService -->
 		
+		<!-- JasperReport -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>5.6.0</version>
+		</dependency>
+		<dependency>
+  			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+  			<version>4.2.1</version>
+		</dependency>
+		<dependency>
+  			<groupId>org.olap4j</groupId>
+  			<artifactId>olap4j</artifactId>
+  			<version>1.2.0</version>
+		</dependency>
+		<!-- JasperReport -->
+		
 		<!-- TEST begin -->
 		<dependency>
 			<groupId>junit</groupId>
