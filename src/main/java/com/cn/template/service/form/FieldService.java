@@ -15,10 +15,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.form.Field;
+import com.cn.template.entity.form.SelectItem;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.form.FieldDao;
+import com.cn.template.repository.form.SelectItemDao;
+import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.FieldType;
 import com.cn.template.xutil.enums.Operator;
+import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 import com.google.common.collect.Lists;
@@ -41,6 +45,9 @@ public class FieldService {
 	
 	/** 基础信息处理的数据访问接口 */
 	private BaseMybatisDao baseMybatisDao; 
+	
+	/** 字段选择项的数据访问接口 */
+	private SelectItemDao selectItemDao;
 
 	@Autowired
 	public void setFieldDao(FieldDao fieldDao) {
@@ -52,6 +59,10 @@ public class FieldService {
 		this.baseMybatisDao = baseMybatisDao;
 	}
 	
+	@Autowired
+	public void setSelectItemDao(SelectItemDao selectItemDao) {
+		this.selectItemDao = selectItemDao;
+	}
 
 	/**
 	 * 根据ID获得字段记录.
@@ -85,6 +96,26 @@ public class FieldService {
 			parameters.put("columnName", "en_"+entity.getName());
 			baseMybatisDao.addColumn(parameters);
 		}
+		
+		List<SelectItem> items=null;
+		if(entity.getFieldType().equals(FieldType.SELECT)||entity.getFieldType().equals(FieldType.CHECKBOX)||entity.getFieldType().equals(FieldType.RADIO)){
+			int showOrder=0;
+			items=Lists.newArrayList();
+			for(SelectItem selectItem : entity.getSelectItems()){
+				if(Utils.isNotBlank(selectItem.getEnItemName())||Utils.isNotBlank(selectItem.getChItemName())){
+					selectItem.setField(entity);
+					selectItem.setShowOrder(showOrder);
+					if(selectItem.getIsdefault()==null){
+						selectItem.setIsdefault(Whether.NOT);
+					}
+					selectItemDao.save(selectItem);
+					items.add(selectItem);
+					showOrder=showOrder+1;
+				}
+			}
+		}
+		
+		entity.setSelectItems(items);
 		fieldDao.save(entity);
 	}
 
@@ -100,6 +131,11 @@ public class FieldService {
 		baseMybatisDao.dropColumn(parameters);
 		parameters.put("columnName", "en_"+field.getName());
 		baseMybatisDao.dropColumn(parameters);
+		
+		if(field.getSelectItems()!=null&&!field.getSelectItems().isEmpty()){
+			selectItemDao.delete(field.getSelectItems());
+		}
+		
 		fieldDao.delete(id);
 	}
 
@@ -160,6 +196,5 @@ public class FieldService {
 		Specification<Field> spec = DynamicSpecifications.bySearchFilter(filters.values(), Field.class);
 		return spec;
 	}
-	
 	
 }

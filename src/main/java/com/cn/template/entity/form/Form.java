@@ -1,8 +1,13 @@
 package com.cn.template.entity.form;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
@@ -29,6 +34,9 @@ public class Form extends IdEntity {
 
 	/** 中文表名 */
 	private String tableName;
+	
+	/** 表单中包含的字段 */
+	private List<Field> fields;
 
 	public String getName() {
 		return name;
@@ -63,4 +71,12 @@ public class Form extends IdEntity {
 		this.tableName = tableName;
 	}
 
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="form")
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
+	}
 }

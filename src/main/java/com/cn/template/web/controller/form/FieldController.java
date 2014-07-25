@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ import com.google.common.collect.Maps;
 @RequestMapping(value = "/field")
 public class FieldController {
 
+	/** 日志信息 */
+	private final static Logger logger = LoggerFactory.getLogger(FieldController.class);
+	
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
 	static {
 		sortTypes.put("auto", "自动");
@@ -46,7 +51,6 @@ public class FieldController {
 	/** 表单信息的业务处理 */
 	@Autowired
 	private FormService formService;
-	
 
 	/**
 	 * 字段列表.
@@ -146,7 +150,11 @@ public class FieldController {
 	 */
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, @RequestParam(value = "formId") Long formId, RedirectAttributes redirectAttributes) {
+		try{
 		fieldService.deleteField(id);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		redirectAttributes.addFlashAttribute("message", "删除字段成功");
 		return "redirect:/field/"+formId;
 	}

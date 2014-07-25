@@ -1,12 +1,15 @@
+<%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@page import="com.cn.template.xutil.enums.FieldType"%>
 <%@page import="com.cn.template.xutil.enums.FieldInputType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<c:set var="INPUT" value="<%=FieldInputType.INPUT %>" />
-<c:set var="SHOW" value="<%=FieldInputType.SHOW %>" />
-<c:set var="CREATE" value="<%=FieldInputType.CREATE %>" />
+<c:set var="SELECT" value="<%=FieldType.SELECT %>" />
+<c:set var="CHECKBOX" value="<%=FieldType.CHECKBOX %>" />
+<c:set var="RADIO" value="<%=FieldType.RADIO %>" />
+
+<c:set var="DOUBLE" value="<%=FieldType.DOUBLE %>" />
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -103,9 +106,57 @@
 									<div class="col-sm-10">
 									<select class="form-control" id="field_fieldType" name="fieldType">
 										<c:forEach items="<%=FieldType.values() %>" var="fieldType">
-											<option value="${fieldType }">${fieldType.value}</option>
+											<option value="${fieldType }" <c:if test="${fieldType eq field.fieldType}">selected="selected"</c:if>>${fieldType.value}</option>
 										</c:forEach>
 									</select>
+									</div>
+								</div>
+								<div class="form-group" id="selectItems"
+									<c:if test="${SELECT ne field.fieldType and CHECKBOX ne field.fieldType and RADIO ne field.fieldType }">
+									style="display: none;"
+									</c:if>>
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">
+										<div class="box border inverse">
+											<div class="box-title">
+												<h4>
+													<i class="fa fa-table"></i>选择项
+												</h4>
+											</div>
+											<div class="box-body">
+												<table class="table table-bordered">
+													<thead>
+														<tr>
+															<th style="text-align: center;">#</th>
+															<th style="text-align: center;">中文</th>
+															<th style="text-align: center;">英文</th>
+															<th style="text-align: center;">是否默认</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td style="text-align: center;"><input
+																type="checkbox" name="itemId" value="0" /> <input
+																type="hidden" name="selectItems[0].showOrder" value="0" />
+															</td>
+															<td style="text-align: center;"><input type="text"
+																name="selectItems[0].chItemName" placeholder="中文"
+																style="width: 98%;" /></td>
+															<td style="text-align: center;"><input type="text"
+																name="selectItems[0].enItemName" placeholder="英文"
+																style="width: 98%;" /></td>
+															<td style="text-align: center;"><input type="radio"
+																name="selectItems[0].isdefault" value="<%=Whether.YES%>"
+																onclick="isdefault(this)"></td>
+														</tr>
+													</tbody>
+												</table>
+
+												<input id="addSelectItem" class="btn btn-grey" type="button"
+													value="添加" />&emsp; <input id="deleteSelectItem"
+													class="btn btn-danger" type="button" value="删除" />
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -114,10 +165,22 @@
 										<input type="text" id="field_fieldLength" name="fieldLength" value="${field.fieldLength}" class="form-control" placeholder="长度"/>
 									</div>
 								</div>
-								<div class="form-group">
+								<div id="div_fieldPrecision" class="form-group" <c:if test="${DOUBLE ne field.fieldType}">style="display: none;"</c:if>>
 									<label class="col-sm-2 control-label">精度</label>
 									<div class="col-sm-10">
 										<input type="text" id="field_fieldPrecision" name="fieldPrecision" value="${field.fieldPrecision}" class="form-control" placeholder="精度"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">默认值(中文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_chDefaultValue" name="chDefaultValue" value="${field.chDefaultValue}" class="form-control" placeholder="默认值(中文)"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">默认值(英文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="field_enDefaultValue" name="enDefaultValue" value="${field.enDefaultValue}" class="form-control" placeholder="默认值(英文)"/>
 									</div>
 								</div>
 												  
@@ -147,6 +210,8 @@
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
+		var count=1;
+	
 		jQuery(document).ready(function() {
 			App.setPage("field_forms");  //设置当前启动的页面
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
@@ -155,38 +220,57 @@
 			App.init(); //初始化元素以及插件
 			
 			$("#field_name").focus();
-			//表单校验.
-			$("#inputForm").validate({
-				errorPlacement: function(error, element) { 
-				    $(element).attr("data-content",$(error).html());
-				    $(element).popover({
-				    	placement : 'left',
-				    	trigger : 'focus'
-				    });
-				},
-				rules: {
-					name: {
-						required: true,
-						minlength: 3
-						},
-					description: {
-						required: true,
-						minlength: 10
-						}
-				},
-				messages: {
-					name: {
-						required: "请输入字段名称",
-						minlength: jQuery.format("名称长度不能小于{0}个字符")
-						},
-					description: {
-						required: "请描述您的字段",
-						minlength: jQuery.format("描述不能小于{0}个字 符")
-						}
+			
+			$("#field_fieldType").change( function() {
+				var fieldType = $(this).val();
+				if(fieldType=="${DOUBLE}"){
+					$("#div_fieldPrecision").show();
+				}else if(fieldType=="${SELECT}"||fieldType=="${CHECKBOX}"||fieldType=="${RADIO}"){
+					$("#selectItems").show();
+				}else{
+					$("#div_fieldPrecision").hide();
+					$("#selectItems").hide();
+				}
+			});
+			
+			$("#addSelectItem").click( function() {
+				var str='<tr>';
+				str=str+'<td style="text-align: center;">';
+				str=str+'<input type="checkbox" name="itemId" value="'+count+'" />';
+				str=str+'<input type="hidden" name="selectItems['+count+'].showOrder" value="'+count+'"/>';
+				str=str+'</td>';
+				str=str+'<td style="text-align: center;">';
+				str=str+'<input type="text" name="selectItems['+count+'].chItemName" placeholder="中文" style="width: 98%;"/>';
+				str=str+'</td>';
+				str=str+'<td style="text-align: center;">';
+				str=str+'<input type="text" name="selectItems['+count+'].enItemName" placeholder="英文" style="width: 98%;"/>';
+				str=str+'</td>';
+				str=str+'<td style="text-align: center;">';
+				str=str+'<input type="radio" name="selectItems['+count+'].isdefault" value="<%=Whether.YES%>" onclick="isdefault(this)">';
+				str=str+'</td></tr>';
+				$("#selectItems table").append(str);
+				count=count+1;
+			});
+			
+			$("#deleteSelectItem").click(function(){
+				if(confirm('是否删除该项内容？')){
+					$("input[name='itemId']:checked").each(function(index, domEle){
+						$(domEle).parents("tr").remove();
+					});
 				}
 			});
 			
 		});
+		
+		function isdefault(e){
+			$("#selectItems table :radio").each(function(index, domEle){
+				if(domEle==e){
+					$(domEle).attr("checked", true);
+				}else{
+					$(domEle).attr("checked", false);
+				}
+			});
+		}
 	</script>
 	<!-- /JAVASCRIPTS -->
 </body>

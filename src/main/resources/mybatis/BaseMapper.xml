@@ -6,7 +6,21 @@
 
 	<!-- 创建数据表 -->
 	<update id="createTable" parameterType="map" >
-		create table ${tableName} (`id` bigint not null auto_increment ,`name` varchar(200) null ,primary key (`id`))
+		create table ${tableName} (
+		`id` bigint(20) NOT NULL AUTO_INCREMENT,
+		`apply_id` bigint(20) DEFAULT NULL,
+		`create_time` datetime DEFAULT NULL,
+		`update_time` datetime DEFAULT NULL,
+		`ch_apply_name` varchar(255) DEFAULT NULL,
+		`en_apply_name` varchar(255) DEFAULT NULL,
+		`ch_check_type` varchar(255) DEFAULT NULL,
+		`en_check_type` varchar(255) DEFAULT NULL,
+		`ch_consigner` varchar(255) DEFAULT NULL,
+		`en_consigner` varchar(255) DEFAULT NULL,
+		`ch_test_items` varchar(255) DEFAULT NULL,
+		`en_test_items` varchar(255) DEFAULT NULL,
+		primary key (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 
 	</update>
 	
 	<!-- 删除数据表 -->

@@ -1,10 +1,14 @@
 package com.cn.template.entity.form;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
@@ -47,6 +51,16 @@ public class Field extends IdEntity {
 
 	/** 排序 */
 	private Integer showOrder;
+	
+	/** 中文默认值 */
+	private String chDefaultValue;
+	
+	/** 英文默认值 */
+	private String enDefaultValue;
+	
+	/** 字段对应的选择项内容 */
+	private List<SelectItem> selectItems; 
+	
 
 	@ManyToOne
 	@JoinColumn(name = "form_id")
@@ -122,6 +136,31 @@ public class Field extends IdEntity {
 
 	public void setShowOrder(Integer showOrder) {
 		this.showOrder = showOrder;
+	}
+
+	public String getChDefaultValue() {
+		return chDefaultValue;
+	}
+
+	public void setChDefaultValue(String chDefaultValue) {
+		this.chDefaultValue = chDefaultValue;
+	}
+
+	public String getEnDefaultValue() {
+		return enDefaultValue;
+	}
+
+	public void setEnDefaultValue(String enDefaultValue) {
+		this.enDefaultValue = enDefaultValue;
+	}
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="field")
+	public List<SelectItem> getSelectItems() {
+		return selectItems;
+	}
+
+	public void setSelectItems(List<SelectItem> selectItems) {
+		this.selectItems = selectItems;
 	}
 
 }
