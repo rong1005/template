@@ -4,12 +4,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="SELECT" value="<%=FieldType.SELECT %>" />
 <c:set var="CHECKBOX" value="<%=FieldType.CHECKBOX %>" />
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
-
 <c:set var="DOUBLE" value="<%=FieldType.DOUBLE %>" />
+<c:set var="YES" value="<%=Whether.YES%>" />
+<c:set var="NOT" value="<%=Whether.NOT%>" />
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -27,9 +29,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="page-header">
-								<!-- STYLER -->
-								
-								<!-- /STYLER -->
+							
 								<!-- BREADCRUMBS -->
 								<ul class="breadcrumb">
 									<li>
@@ -134,21 +134,24 @@
 														</tr>
 													</thead>
 													<tbody>
+														<c:forEach items="${field.selectItems}" var="selectItem">
 														<tr>
-															<td style="text-align: center;"><input
-																type="checkbox" name="itemId" value="0" /> <input
-																type="hidden" name="selectItems[0].showOrder" value="0" />
+															<td style="text-align: center;">
+																<input type="checkbox" name="itemId" value="${selectItem.id}"/> 
+																<input type="hidden" name="selectItems[${selectItem.showOrder}].showOrder" value="${selectItem.showOrder}" />
 															</td>
-															<td style="text-align: center;"><input type="text"
-																name="selectItems[0].chItemName" placeholder="中文"
-																style="width: 98%;" /></td>
-															<td style="text-align: center;"><input type="text"
-																name="selectItems[0].enItemName" placeholder="英文"
-																style="width: 98%;" /></td>
-															<td style="text-align: center;"><input type="radio"
-																name="selectItems[0].isdefault" value="<%=Whether.YES%>"
-																onclick="isdefault(this)"></td>
+															<td style="text-align: center;">
+																<input type="text"name="selectItems[${selectItem.showOrder}].chItemName" value="${selectItem.chItemName}" placeholder="中文" style="width: 98%;" />
+															</td>
+															<td style="text-align: center;">
+																<input type="text" name="selectItems[${selectItem.showOrder}].enItemName" value="${selectItem.enItemName}" placeholder="英文" style="width: 98%;" />
+															</td>
+															<td style="text-align: center;" name="td_isdefault">
+																<input type="radio" name="isDefault" <c:if test="${YES eq selectItem.isdefault}">checked="checked"</c:if> onchange="isdefault(this)" >
+																<input type="hidden" name="selectItems[${selectItem.showOrder}].isdefault" value="${selectItem.isdefault}" />
+															</td>
 														</tr>
+														</c:forEach>
 													</tbody>
 												</table>
 
@@ -171,13 +174,17 @@
 										<input type="text" id="field_fieldPrecision" name="fieldPrecision" value="${field.fieldPrecision}" class="form-control" placeholder="精度"/>
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="div_chDefaultValue" <c:if test="${SELECT eq field.fieldType or CHECKBOX eq field.fieldType or RADIO eq field.fieldType }">
+									style="display: none;"
+									</c:if>>
 									<label class="col-sm-2 control-label">默认值(中文)</label>
 									<div class="col-sm-10">
 										<input type="text" id="field_chDefaultValue" name="chDefaultValue" value="${field.chDefaultValue}" class="form-control" placeholder="默认值(中文)"/>
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="div_enDefaultValue" <c:if test="${SELECT eq field.fieldType or CHECKBOX eq field.fieldType or RADIO eq field.fieldType }">
+									style="display: none;"
+									</c:if>>
 									<label class="col-sm-2 control-label">默认值(英文)</label>
 									<div class="col-sm-10">
 										<input type="text" id="field_enDefaultValue" name="enDefaultValue" value="${field.enDefaultValue}" class="form-control" placeholder="默认值(英文)"/>
@@ -210,7 +217,8 @@
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
-		var count=1;
+		var count=0;
+		var itemLength=parseInt("${fn:length(field.selectItems)}");
 	
 		jQuery(document).ready(function() {
 			App.setPage("field_forms");  //设置当前启动的页面
@@ -225,18 +233,29 @@
 				var fieldType = $(this).val();
 				if(fieldType=="${DOUBLE}"){
 					$("#div_fieldPrecision").show();
+					$("#selectItems").hide();
+					$("#div_chDefaultValue").show();
+					$("#div_enDefaultValue").show();
 				}else if(fieldType=="${SELECT}"||fieldType=="${CHECKBOX}"||fieldType=="${RADIO}"){
 					$("#selectItems").show();
+					$("#div_fieldPrecision").hide();
+					$("#div_chDefaultValue").hide();
+					$("#div_enDefaultValue").hide();
 				}else{
 					$("#div_fieldPrecision").hide();
 					$("#selectItems").hide();
+					$("#div_chDefaultValue").show();
+					$("#div_enDefaultValue").show();
 				}
 			});
 			
 			$("#addSelectItem").click( function() {
+				if(count==0&&itemLength>0){
+					count=itemLength;
+				}
 				var str='<tr>';
 				str=str+'<td style="text-align: center;">';
-				str=str+'<input type="checkbox" name="itemId" value="'+count+'" />';
+				str=str+'<input type="checkbox" name="itemId" value="0"/>';
 				str=str+'<input type="hidden" name="selectItems['+count+'].showOrder" value="'+count+'"/>';
 				str=str+'</td>';
 				str=str+'<td style="text-align: center;">';
@@ -245,17 +264,34 @@
 				str=str+'<td style="text-align: center;">';
 				str=str+'<input type="text" name="selectItems['+count+'].enItemName" placeholder="英文" style="width: 98%;"/>';
 				str=str+'</td>';
-				str=str+'<td style="text-align: center;">';
-				str=str+'<input type="radio" name="selectItems['+count+'].isdefault" value="<%=Whether.YES%>" onclick="isdefault(this)">';
+				str=str+'<td style="text-align: center;" name="td_isdefault">';
+				str=str+'<input type="radio" name="isDefault" onchange="isdefault(this)">';
+				str=str+'<input type="hidden" name="selectItems['+count+'].isdefault" value="${NOT}" />';
 				str=str+'</td></tr>';
 				$("#selectItems table").append(str);
+				
 				count=count+1;
 			});
 			
 			$("#deleteSelectItem").click(function(){
 				if(confirm('是否删除该项内容？')){
 					$("input[name='itemId']:checked").each(function(index, domEle){
-						$(domEle).parents("tr").remove();
+						if($(domEle).val()!=0){
+						jQuery.ajax({
+			                    url: "${ctx}/select/delete/"+$(domEle).val(),
+			                    type: "post",
+			                    dataType: "json",
+			                    success: function(msg) {
+			                        if(msg.bool){
+			                        	$(domEle).parents("tr").remove();
+			                        }else{
+			                        	alert("该项内容删除失败!");
+			                        }
+			                    }
+						});
+						}else{
+							$(domEle).parents("tr").remove();
+						}
 					});
 				}
 			});
@@ -263,13 +299,11 @@
 		});
 		
 		function isdefault(e){
-			$("#selectItems table :radio").each(function(index, domEle){
-				if(domEle==e){
-					$(domEle).attr("checked", true);
-				}else{
-					$(domEle).attr("checked", false);
-				}
+			$("td[name='td_isdefault'] :hidden").each(function(index, domEle){
+				$(domEle).val("${NOT}");
 			});
+			
+			$(e).next(":hidden").val("${YES}")
 		}
 	</script>
 	<!-- /JAVASCRIPTS -->

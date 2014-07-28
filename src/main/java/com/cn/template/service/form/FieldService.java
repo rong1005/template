@@ -105,7 +105,7 @@ public class FieldService {
 				if(Utils.isNotBlank(selectItem.getEnItemName())||Utils.isNotBlank(selectItem.getChItemName())){
 					selectItem.setField(entity);
 					selectItem.setShowOrder(showOrder);
-					if(selectItem.getIsdefault()==null){
+					if(selectItem.getIsdefault()!=Whether.YES){
 						selectItem.setIsdefault(Whether.NOT);
 					}
 					selectItemDao.save(selectItem);
