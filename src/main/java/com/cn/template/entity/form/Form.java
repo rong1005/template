@@ -6,8 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
@@ -72,6 +72,7 @@ public class Form extends IdEntity {
 	}
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="form")
+	@OrderBy(value = "showOrder ASC")
 	public List<Field> getFields() {
 		return fields;
 	}

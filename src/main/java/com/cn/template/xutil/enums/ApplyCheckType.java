@@ -58,4 +58,13 @@ public enum ApplyCheckType {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+
+	public String getEnValue() {
+		return enValue;
+	}
+
+	public void setEnValue(String enValue) {
+		this.enValue = enValue;
+	}
+	
 }

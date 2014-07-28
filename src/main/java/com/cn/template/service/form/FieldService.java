@@ -81,7 +81,6 @@ public class FieldService {
 		if(entity.getId()==null){
 			logger.info("新增字段");
 			Map<String, Object> parameters = Maps.newHashMap();
-			parameters.put("columnName", "ch_"+entity.getName());
 			StringBuffer attr=new StringBuffer();
 			attr.append(entity.getFieldType().getType());
 			if(entity.getFieldType().equals(FieldType.DOUBLE)){
@@ -92,9 +91,21 @@ public class FieldService {
 			attr.append(" NULL");
 			parameters.put("columnAttribute", attr.toString());
 			parameters.put("tableName", entity.getForm().getTableName());
-			baseMybatisDao.addColumn(parameters);
-			parameters.put("columnName", "en_"+entity.getName());
-			baseMybatisDao.addColumn(parameters);
+			if(entity.getFieldType().equals(FieldType.DOUBLE)||entity.getFieldType().equals(FieldType.INT)){
+				parameters.put("columnName", entity.getName());
+				baseMybatisDao.addColumn(parameters);
+			}else{
+				parameters.put("columnName", "ch_"+entity.getName());
+				baseMybatisDao.addColumn(parameters);
+				parameters.put("columnName", "en_"+entity.getName());
+				baseMybatisDao.addColumn(parameters);
+			}
+			if(entity.getFieldType().equals(FieldType.SELECT)||entity.getFieldType().equals(FieldType.CHECKBOX)||entity.getFieldType().equals(FieldType.RADIO)){
+				parameters.put("columnAttribute", "varchar(255) DEFAULT NULL ");
+				parameters.put("columnName", entity.getName());
+				baseMybatisDao.addColumn(parameters);
+			}
+			
 		}
 		
 		List<SelectItem> items=null;
@@ -126,11 +137,22 @@ public class FieldService {
 	public void deleteField(Long id) {
 		Field field = getField(id);
 		Map<String, Object> parameters = Maps.newHashMap();
-		parameters.put("columnName", "ch_"+field.getName());
 		parameters.put("tableName", field.getForm().getTableName());
-		baseMybatisDao.dropColumn(parameters);
-		parameters.put("columnName", "en_"+field.getName());
-		baseMybatisDao.dropColumn(parameters);
+		
+		if(field.getFieldType().equals(FieldType.DOUBLE)||field.getFieldType().equals(FieldType.INT)){
+			parameters.put("columnName", field.getName());
+			baseMybatisDao.dropColumn(parameters);
+		}else{
+			parameters.put("columnName", "ch_"+field.getName());
+			baseMybatisDao.dropColumn(parameters);
+			parameters.put("columnName", "en_"+field.getName());
+			baseMybatisDao.dropColumn(parameters);
+		}
+		
+		if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
+			parameters.put("columnName", field.getName());
+			baseMybatisDao.dropColumn(parameters);
+		}
 		
 		if(field.getSelectItems()!=null&&!field.getSelectItems().isEmpty()){
 			selectItemDao.delete(field.getSelectItems());

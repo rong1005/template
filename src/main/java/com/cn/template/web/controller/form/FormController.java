@@ -152,36 +152,6 @@ public class FormController {
 		}
 	}
 	
-	
-	/**
-	 * 进入委托申请页面.
-	 * @param formId
-	 * @param model
-	 */
-	@RequestMapping(value="apply/{formId}",method = RequestMethod.GET)
-	public String apply(@PathVariable(value = "formId") Long formId,Model model){
-		model.addAttribute("fields", fieldService.getAllField(formId));
-		model.addAttribute("formId", formId);
-		model.addAttribute("action", "apply");
-		return "form/form-apply";
-	}
-	
-	/**
-	 * 创建委托申请.
-	 * @param newForm
-	 * @param redirectAttributes
-	 * @return
-	 */
-	@RequestMapping(value = "apply", method = RequestMethod.POST)
-	public String apply(ServletRequest request,RedirectAttributes redirectAttributes) {
-		logger.info("提交实验委托申请");
-		try{
-		formService.saveApply(request);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		redirectAttributes.addFlashAttribute("message", "创建委托申请成功");
-		return "redirect:/form/";
-	}
+
 
 }

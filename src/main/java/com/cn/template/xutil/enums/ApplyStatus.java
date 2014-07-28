@@ -9,9 +9,9 @@ package com.cn.template.xutil.enums;
 public enum ApplyStatus {
 	/** 申请 */
 	REQUEST("申请", 0),
-	/** 停用 */
+	/** 审核通过 */
 	PASS("审核通过", 1),
-	/** 正常 */
+	/** 否决 */
 	REJECT("否决",2);
 
 	private String value;

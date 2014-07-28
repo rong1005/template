@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
@@ -155,6 +156,7 @@ public class Field extends IdEntity {
 	}
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="field")
+	@OrderBy(value = "showOrder ASC")
 	public List<SelectItem> getSelectItems() {
 		return selectItems;
 	}

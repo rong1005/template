@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
 import com.cn.template.entity.form.Form;
+import com.cn.template.xutil.enums.ApplyCheckType;
 import com.cn.template.xutil.enums.ApplyStatus;
 
 /**
@@ -41,6 +42,9 @@ public class Apply extends IdEntity {
 	
 	/** 检验项目 英文 */
 	private String enTestItems;
+	
+	/** 检验类别 */
+	private ApplyCheckType checkType;
 	
 	/** 检验类别 中文 */
 	private String chCheckType;
@@ -134,4 +138,12 @@ public class Apply extends IdEntity {
 		this.enCheckType = enCheckType;
 	}
 
+	@Enumerated(EnumType.ORDINAL)
+	public ApplyCheckType getCheckType() {
+		return checkType;
+	}
+
+	public void setCheckType(ApplyCheckType checkType) {
+		this.checkType = checkType;
+	}
 }

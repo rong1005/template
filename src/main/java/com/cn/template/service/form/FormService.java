@@ -3,8 +3,6 @@ package com.cn.template.service.form;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cn.template.entity.form.Field;
 import com.cn.template.entity.form.Form;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.form.FormDao;
@@ -104,47 +101,6 @@ public class FormService {
 		parameters.put("tableName", form.getTableName());
 		baseMybatisDao.dropTable(parameters);
 		formDao.delete(id);
-	}
-	
-	/**
-	 * 保存实验委托信息.
-	 * @param request
-	 */
-	public void saveApply(ServletRequest request){
-		Map<String, String[]> paramMap=request.getParameterMap();
-		if(paramMap.containsKey("formId")&&paramMap.containsKey("name")){
-			Long formId = Long.parseLong(request.getParameter("formId"));
-			logger.info("formId：{}",formId);
-			Form form = getForm(formId);
-			List<Field> fieldList = fieldService.getAllField(formId);
-			StringBuffer fieldNames=new StringBuffer();
-			StringBuffer fieldValues=new StringBuffer();
-			
-			fieldNames.append("name");
-			fieldValues.append("'"+request.getParameter("name")+"'");
-
-			
-			for(Field field : fieldList){
-				if(paramMap.containsKey("ch_"+field.getName())&&paramMap.containsKey("en_"+field.getName())){
-					String chValue = request.getParameter("ch_"+field.getName());
-					logger.info("中文内容：{}",chValue);
-					String enValue = request.getParameter("en_"+field.getName());
-					logger.info("英文内容：{}",enValue);
-					
-					fieldNames.append(", ch_"+field.getName());
-					fieldNames.append(", en_"+field.getName());
-					fieldValues.append(", '"+chValue+"'");
-					fieldValues.append(", '"+enValue+"'");
-				}
-			}
-			
-			//insert into ${tableName} (${fieldNames}) values (${fieldValues})
-			Map<String, Object> parameters = Maps.newHashMap();
-			parameters.put("tableName", form.getTableName());
-			parameters.put("fieldNames", fieldNames.toString());
-			parameters.put("fieldValues", fieldValues.toString());
-			baseMybatisDao.insert(parameters);
-		}
 	}
 
 	/**
