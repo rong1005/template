@@ -21,6 +21,7 @@ import com.cn.template.entity.experiment.Apply;
 import com.cn.template.entity.form.Field;
 import com.cn.template.entity.form.Form;
 import com.cn.template.entity.form.SelectItem;
+import com.cn.template.mybatis.ApplyMybatisDao;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.experiment.ApplyDao;
 import com.cn.template.repository.form.SelectItemDao;
@@ -54,6 +55,9 @@ public class ApplyService {
 	/** 实验委托请求信息的数据访问接口. */
 	private ApplyDao applyDao;
 	
+	/** 实验委托请求信息的数据访问接口 MyBatis调用 */
+	private ApplyMybatisDao applyMybatisDao;
+	
 	/** 字段选择项的数据访问接口 */
 	private SelectItemDao selectItemDao;
 	
@@ -63,6 +67,11 @@ public class ApplyService {
 	@Autowired
 	public void setApplyDao(ApplyDao applyDao) {
 		this.applyDao = applyDao;
+	}
+
+	@Autowired
+	public void setApplyMybatisDao(ApplyMybatisDao applyMybatisDao) {
+		this.applyMybatisDao = applyMybatisDao;
 	}
 
 	@Autowired
@@ -82,6 +91,36 @@ public class ApplyService {
 	 */
 	public Apply getApply(Long id) {
 		return applyDao.findOne(id);
+	}
+	
+	/**
+	 * 取得委托申请中对应的自定义字段值.
+	 * @param apply
+	 * @return
+	 */
+	public Map<String,Object> getApplyCustomField(Apply apply){
+		if(apply!=null){
+			Map<String, Object> parameters = Maps.newHashMap();
+			parameters.put("applyId", apply.getId());
+			parameters.put("tableName", apply.getForm().getTableName());
+			StringBuffer customFields=new StringBuffer();
+			for(Field field : apply.getForm().getFields()){
+				if(field.getFieldType().equals(FieldType.DOUBLE)||field.getFieldType().equals(FieldType.INT)){
+					customFields.append(field.getName()+", ");
+				}else{
+					customFields.append("ch_"+field.getName()+" as '"+field.getName()+".ch', ");
+					customFields.append("en_"+field.getName()+" as '"+field.getName()+".en', ");
+					if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
+						customFields.append(field.getName()+" as '"+field.getName()+".id', ");
+					}
+				}
+			}
+			parameters.put("customFields", customFields.toString());
+			logger.info("customFields : {}",customFields.toString());
+			return applyMybatisDao.findOne(parameters);
+		}else{
+			return null;
+		}
 	}
 
 
@@ -117,8 +156,6 @@ public class ApplyService {
 			fieldValues.append(",'"+newApply.getEnCheckType()+"'");
 			
 			for(Field field : form.getFields()){
-				
-				
 				if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
 					//选择框类型的.（除中英文外，还有对应的ID）
 					if(paramMap.containsKey(field.getName())){
@@ -183,12 +220,109 @@ public class ApplyService {
 
 	}
 	
+	
+	
+	/**
+	 * 更新实验委托信息.
+	 * @param request
+	 */
+	public void updateApply(Apply apply,ServletRequest request){
+		Map<String, String[]> paramMap=request.getParameterMap();
+		
+		if(apply.getForm()!=null&&apply.getForm().getId()!=null&&apply.getForm().getId()>0){
+			Form form = formService.getForm(apply.getForm().getId());
+			apply.setChCheckType(apply.getCheckType().getValue());
+			apply.setEnCheckType(apply.getCheckType().getEnValue());
+
+			apply.setUpdateTime(new Date());
+			apply.setApplyStatus(ApplyStatus.REQUEST);
+			//保存委托申请信息.
+			apply=applyDao.save(apply);
+			
+			StringBuffer setString=new StringBuffer();
+			StringBuffer whereString=new StringBuffer();
+			
+			whereString.append("apply_id = "+apply.getId());
+			
+			setString.append(" ch_apply_name='"+apply.getChApplyName()+"', ");
+			setString.append(" en_apply_name='"+apply.getEnApplyName()+"', ");
+			setString.append(" ch_check_type='"+apply.getChConsigner()+"', ");
+			setString.append(" en_check_type='"+apply.getEnConsigner()+"', ");
+			setString.append(" ch_consigner='"+apply.getChTestItems()+"', ");
+			setString.append(" en_consigner='"+apply.getEnTestItems()+"', ");
+			setString.append(" ch_test_items='"+apply.getChCheckType()+"', ");
+			setString.append(" en_test_items='"+apply.getEnCheckType()+"', ");
+
+			for(Field field : form.getFields()){
+				
+				
+				if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
+					//选择框类型的.（除中英文外，还有对应的ID）
+					if(paramMap.containsKey(field.getName())){
+						if(field.getFieldType().equals(FieldType.CHECKBOX)){
+							String[] values = request.getParameterValues(field.getName());
+							String selectItemId="";
+							String selectItemChName="";
+							String selectItemEnName="";
+							for(String value : values){
+								SelectItem selectItem = selectItemDao.findOne(Long.parseLong(value));
+								selectItemId=selectItemId+","+selectItem.getId();
+								selectItemChName=selectItemChName+","+selectItem.getChItemName();
+								selectItemEnName=selectItemEnName+","+selectItem.getEnItemName();
+							}
+							
+							setString.append(field.getName()+"='"+selectItemId.substring(1)+"', ");
+							setString.append("ch_"+field.getName()+"='"+selectItemChName.substring(1)+"', ");
+							setString.append("en_"+field.getName()+"='"+selectItemEnName.substring(1)+"', ");
+							
+						}else{
+							String value = request.getParameter(field.getName());
+							SelectItem selectItem = selectItemDao.findOne(Long.parseLong(value));
+							
+							setString.append(field.getName()+"='"+selectItem.getId()+"', ");
+							setString.append("ch_"+field.getName()+"='"+selectItem.getChItemName()+"', ");
+							setString.append("en_"+field.getName()+"='"+selectItem.getEnItemName()+"', ");
+							
+						}
+					}
+				}else if(field.getFieldType().equals(FieldType.DOUBLE)||field.getFieldType().equals(FieldType.INT)){
+					//数字类型（只有中文类字段）
+					if(paramMap.containsKey(field.getName())){
+						String value = request.getParameter(field.getName());
+						setString.append(field.getName()+"="+value+", ");
+					}
+				}else{
+					//其他文本类型（中英文字段）
+					if(paramMap.containsKey("ch_"+field.getName())&&paramMap.containsKey("en_"+field.getName())){
+						String chValue = request.getParameter("ch_"+field.getName());
+						String enValue = request.getParameter("en_"+field.getName());
+
+						setString.append("ch_"+field.getName()+"='"+chValue+"', ");
+						setString.append("en_"+field.getName()+"='"+enValue+"', ");
+					}
+				}
+				
+				
+			}
+			
+			
+			setString.append(" apply_id="+apply.getId());
+			//将数据插入到指定的委托申请（table）中
+			//update ${tableName} set ${setString} where ${whereString}
+			Map<String, Object> parameters = Maps.newHashMap();
+			parameters.put("tableName", form.getTableName());
+			parameters.put("setString", setString.toString());
+			parameters.put("whereString", whereString.toString());
+			baseMybatisDao.update(parameters);
+		}
+
+	}
 
 	/**
 	 * 单个删除委托申请记录.
 	 * @param id
 	 */
-	public void deleteForm(Long id) {
+	public void deleteApply(Long id) {
 		applyDao.delete(id);
 	}
 
@@ -196,7 +330,7 @@ public class ApplyService {
 	 * 获得所有的委托申请记录.
 	 * @return
 	 */
-	public List<Apply> getAllForm() {
+	public List<Apply> getAllApply() {
 		return (List<Apply>) applyDao.findAll();
 	}
 
@@ -208,7 +342,7 @@ public class ApplyService {
 	 * @param sortType
 	 * @return
 	 */
-	public Page<Apply> getForm(Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public Page<Apply> getApply(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<Apply> spec = buildSpecification(searchParams);

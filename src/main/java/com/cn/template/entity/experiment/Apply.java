@@ -54,7 +54,7 @@ public class Apply extends IdEntity {
 	
 	/** 申请的状态 */
 	private ApplyStatus applyStatus;
-
+	
 	@ManyToOne
 	@JoinColumn(name="form_id")
 	public Form getForm() {
@@ -72,6 +72,16 @@ public class Apply extends IdEntity {
 
 	public void setApplyStatus(ApplyStatus applyStatus) {
 		this.applyStatus = applyStatus;
+	}
+	
+	/**
+	 * 将Mybatis取得的数字转换为枚举量.
+	 * @param applyStatus
+	 */
+	public void setApplyStatusEnum(Integer applyStatus) {
+		if(applyStatus!=null){
+			this.applyStatus = ApplyStatus.values()[applyStatus];
+		}
 	}
 
 	public String getChApplyName() {
@@ -146,4 +156,15 @@ public class Apply extends IdEntity {
 	public void setCheckType(ApplyCheckType checkType) {
 		this.checkType = checkType;
 	}
+	
+	/**
+	 * 将Mybatis取得的数字转换为枚举量
+	 * @param checkType
+	 */
+	public void setCheckTypeEnum(Integer checkType) {
+		if(checkType!=null){
+			this.checkType = ApplyCheckType.values()[checkType];
+		}
+	}
+
 }

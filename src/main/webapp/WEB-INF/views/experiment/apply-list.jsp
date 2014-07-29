@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>表单管理</title>
+	<title>委托申请管理</title>
 </head>
 <body>
 
@@ -26,7 +26,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										表单列表
+										委托申请列表
 									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
@@ -51,7 +51,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>表单列表</h4>
+									<h4><i class="fa fa-table"></i>委托申请列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -64,7 +64,10 @@
 								<div class="box-body">
 									<form class="form-inline" action="#">
 										<div class="form-group">
-											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="表单名称" />
+											<input type="text" name="search_LIKE_chApplyName" class="form-control" value="${param.search_LIKE_chApplyName}" placeholder="委托名称(中文)" />
+										</div>
+										<div class="form-group">
+											<input type="text" name="search_LIKE_enApplyName" class="form-control" value="${param.search_LIKE_enApplyName}" placeholder="委托名称(英文)" />
 										</div>
 										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
 										<tags:sort/>
@@ -72,27 +75,31 @@
 									
 									<br/>
 									
-									<table  class="table table-striped table-bordered table-hover">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>表单</th>
-												<th>格式</th>
+												<th>委托编号</th>
+												<th>委托时间</th>
+												<th>委托名称</th>
+												<th>委托单位</th>
+												<th>检验项目</th>
+												<th>检验类别</th>
 												<th>管理</th>
-												<th>申请</th>
-												<th>报表</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${forms.content}" var="form">
+										<c:forEach items="${applys.content}" var="apply">
 											<tr>
-												<td>${form.name}</td>
-												<td>${form.formFormat.value}</td>
-												<td><a href="${ctx}/form/update/${form.id}">修改</a> / 
-												<a href="${ctx}/form/delete/${form.id}" onclick="return confirm('是否删除该表单？')" >删除</a> / 
-												<a href="${ctx}/field/${form.id}">字段管理</a>
+												<td>${apply.id}</td>
+												<td>${apply.createTime}</td>
+												<td>${apply.chApplyName}<br/>${apply.enApplyName}</td>
+												<td>${apply.chConsigner}<br/>${apply.enConsigner}</td>
+												<td>${apply.chTestItems}<br/>${apply.enTestItems}</td>
+												<td>${apply.chCheckType}<br/>${apply.enCheckType}</td>
+												<td>
+													<a href="${ctx}/apply/update/${apply.id}">修改</a> / 
+													<a href="${ctx}/apply/delete/${apply.id}" onclick="return confirm('是否删除该委托申请记录？')" >删除</a>
 												</td>
-												<td><a href="${ctx}/apply/create/${form.id}">实验委托</a></td>
-												<td><a href="${ctx}/report/${form.id}">生成报表</a></td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -100,11 +107,11 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<tags:pagination page="${forms}" paginationSize="5"/>
+												<tags:pagination page="${applys}" paginationSize="5"/>
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/form/create">创建表单</a>
+												<a class="btn btn-info" href="${ctx}/form/create">委托申请</a>
 											</div>
 										</div>
 									</div>
@@ -139,7 +146,7 @@
 			//App.setPage("widgets_box");  //设置当前启动的页面
 			
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
-			App.setSubMenu("forms-list");//设置二级菜单目录ID
+			App.setSubMenu("applys-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置项目路径
 			App.init(); //初始化元素以及插件
 		});
