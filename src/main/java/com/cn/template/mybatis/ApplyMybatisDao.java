@@ -16,4 +16,10 @@ public interface ApplyMybatisDao {
 	 * @return
 	 */
 	Map<String,Object> findOne(Map<String, Object> parameters);
+	
+	/**
+	 * 删除其中一个委托申请信息.
+	 * @param parameters
+	 */
+	void deleteOne(Map<String, Object> parameters);
 }

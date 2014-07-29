@@ -301,11 +301,7 @@ public class ApplyService {
 						setString.append("en_"+field.getName()+"='"+enValue+"', ");
 					}
 				}
-				
-				
 			}
-			
-			
 			setString.append(" apply_id="+apply.getId());
 			//将数据插入到指定的委托申请（table）中
 			//update ${tableName} set ${setString} where ${whereString}
@@ -323,6 +319,12 @@ public class ApplyService {
 	 * @param id
 	 */
 	public void deleteApply(Long id) {
+		Apply apply = getApply(id);
+		//delete from ${tableName} where apply_id=#{applyId}
+		Map<String, Object> parameters=Maps.newHashMap();
+		parameters.put("tableName", apply.getForm().getTableName());
+		parameters.put("applyId", apply.getId());
+		applyMybatisDao.deleteOne(parameters);
 		applyDao.delete(id);
 	}
 

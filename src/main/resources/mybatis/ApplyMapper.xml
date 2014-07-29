@@ -12,5 +12,10 @@
 		from ${tableName}  
 		where apply_id=#{applyId}
 	</select>
+	
+	<!-- 删除其中一个委托申请信息 -->
+	<delete id="deleteOne" parameterType="String">
+		delete from ${tableName} where apply_id=#{applyId}
+	</delete>
 
 </mapper> 

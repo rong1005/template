@@ -136,11 +136,7 @@ public class ApplyController {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("apply") Apply apply, ServletRequest request, RedirectAttributes redirectAttributes) {
 		apply.setUpdateTime(new Date());
-		try{
 		applyService.updateApply(apply,request);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 		redirectAttributes.addFlashAttribute("message", "更新委托申请成功");
 		return "redirect:/apply/";
 	}
