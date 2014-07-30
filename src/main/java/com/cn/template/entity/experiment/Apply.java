@@ -1,10 +1,15 @@
 package com.cn.template.entity.experiment;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
@@ -24,45 +29,59 @@ public class Apply extends IdEntity {
 
 	/** 所属的表单类型 */
 	private Form form;
-	
+
+	/** 申请流水号 */
+	private String serialNumber;
+
 	/** 委托名称 中文 */
 	private String chApplyName;
-	
+
 	/** 委托名称 英语 */
 	private String enApplyName;
-	
+
 	/** 委托单位 中文 */
 	private String chConsigner;
-	
+
 	/** 委托单位 英语 */
 	private String enConsigner;
-	
+
 	/** 检验项目 中文 */
 	private String chTestItems;
-	
+
 	/** 检验项目 英文 */
 	private String enTestItems;
-	
+
 	/** 检验类别 */
 	private ApplyCheckType checkType;
-	
+
 	/** 检验类别 中文 */
 	private String chCheckType;
-	
+
 	/** 检验类别 英文 */
 	private String enCheckType;
-	
+
 	/** 申请的状态 */
 	private ApplyStatus applyStatus;
-	
+
+	/** 申请的备注记录信息 */
+	private List<ApplyRemark> remarks;
+
 	@ManyToOne
-	@JoinColumn(name="form_id")
+	@JoinColumn(name = "form_id")
 	public Form getForm() {
 		return form;
 	}
 
 	public void setForm(Form form) {
 		this.form = form;
+	}
+
+	public String getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(String serialNumber) {
+		this.serialNumber = serialNumber;
 	}
 
 	@Enumerated(EnumType.ORDINAL)
@@ -73,13 +92,14 @@ public class Apply extends IdEntity {
 	public void setApplyStatus(ApplyStatus applyStatus) {
 		this.applyStatus = applyStatus;
 	}
-	
+
 	/**
 	 * 将Mybatis取得的数字转换为枚举量.
+	 * 
 	 * @param applyStatus
 	 */
 	public void setApplyStatusEnum(Integer applyStatus) {
-		if(applyStatus!=null){
+		if (applyStatus != null) {
 			this.applyStatus = ApplyStatus.values()[applyStatus];
 		}
 	}
@@ -156,15 +176,26 @@ public class Apply extends IdEntity {
 	public void setCheckType(ApplyCheckType checkType) {
 		this.checkType = checkType;
 	}
-	
+
 	/**
 	 * 将Mybatis取得的数字转换为枚举量
+	 * 
 	 * @param checkType
 	 */
 	public void setCheckTypeEnum(Integer checkType) {
-		if(checkType!=null){
+		if (checkType != null) {
 			this.checkType = ApplyCheckType.values()[checkType];
 		}
+	}
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="apply")
+	@OrderBy(value = "id ASC")
+	public List<ApplyRemark> getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(List<ApplyRemark> remarks) {
+		this.remarks = remarks;
 	}
 
 }

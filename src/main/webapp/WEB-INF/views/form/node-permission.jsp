@@ -1,3 +1,4 @@
+<%@page import="com.cn.template.xutil.enums.PermissionType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -5,7 +6,9 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>表单管理</title>
+	<title>字段授权管理</title>
+	<!-- UNIFORM -->
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
 </head>
 <body>
 
@@ -26,7 +29,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										表单列表
+										字段授权列表
 									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
@@ -51,7 +54,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>表单列表</h4>
+									<h4><i class="fa fa-table"></i>字段授权列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -62,53 +65,49 @@
 									</div>
 								</div>
 								<div class="box-body">
-									<form class="form-inline" action="#">
-										<div class="form-group">
-											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="表单名称" />
-										</div>
-										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
-										<tags:sort/>
-									</form>
 									
 									<br/>
-									
+									<form id="inputForm" action="${ctx}/node/permission" method="post">
+									<input type="hidden" name="applyStatus" value="${applyStatus}" />
+									<input type="hidden" name="formId" value="${formId}" />
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>表单</th>
-												<th>格式</th>
-												<th>管理</th>
-												<th>申请</th>
-												<th>报表</th>
+												<th>字段</th>
+												<th>名称</th>
+												<th>授权</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${forms.content}" var="form">
+											<c:forEach items="${fields}" var="field" varStatus="status">
 											<tr>
-												<td>${form.name}</td>
-												<td>${form.formFormat.value}</td>
-												<td><a href="${ctx}/form/update/${form.id}">修改</a> / 
-												<a href="${ctx}/form/delete/${form.id}" onclick="return confirm('是否删除该表单？')" >删除</a> / 
-												<a href="${ctx}/field/${form.id}">字段管理</a> / 
-												<a href="${ctx}/node?formId=${form.id}">节点管理</a>
+												<td>${field.name}</td>
+												<td>${field.chViewName}(${field.enViewName})</td>
+												<td>
+													<input type="hidden" name="nodes[${status.index }].field.id" value="${field.id}"/>
+													<c:if test="${not empty nodeMap[field.id]}">
+														<input type="hidden" name="nodes[${status.index }].id" value="${nodeMap[field.id].id}"/>
+													</c:if>
+													<c:forEach items="<%=PermissionType.values() %>" var="permissionType">
+														<label class="radio-inline"> 
+															<input type="radio" name="nodes[${status.index }].permissionType" class="uniform" <c:if test="${nodeMap[field.id].permissionType eq permissionType}">checked="checked"</c:if> value="${permissionType }">${permissionType.value }
+														</label>
+													</c:forEach> 
 												</td>
-												<td><a href="${ctx}/apply/create/${form.id}">实验委托</a></td>
-												<td><a href="${ctx}/report/${form.id}">生成报表</a></td>
 											</tr>
-										</c:forEach>
+											</c:forEach>
 										</tbody>
 									</table>
+										
 									<div class="row">
 										<div class="col-sm-12">
-											<div class="pull-right">
-												<tags:pagination page="${forms}" paginationSize="5"/>
-											</div>
-											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/form/create">创建表单</a>
+												<input id="submit_btn" class="btn btn-info" type="submit" value="提交"/>&nbsp;
+												<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
 											</div>
 										</div>
-									</div>
+									</div>	
+									</form>
 								</div>
 							</div>
 							<!-- /BOX -->
@@ -132,12 +131,15 @@
 	<!-- 引入公共JS脚本 -->
 	<%@ include file="/WEB-INF/layouts/include_script.jsp"%>
 	
+	<!-- UNIFORM -->
+	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
+	
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
 		jQuery(document).ready(function() {
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
-			//App.setPage("widgets_box");  //设置当前启动的页面
+			App.setPage("node-permission");  //设置当前启动的页面
 			
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
 			App.setSubMenu("forms-list");//设置二级菜单目录ID
