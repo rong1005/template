@@ -18,12 +18,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.experiment.Apply;
+import com.cn.template.entity.experiment.ApplyRemark;
 import com.cn.template.entity.form.Field;
 import com.cn.template.entity.form.Form;
 import com.cn.template.entity.form.SelectItem;
 import com.cn.template.mybatis.ApplyMybatisDao;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.experiment.ApplyDao;
+import com.cn.template.repository.experiment.ApplyRemarkDao;
 import com.cn.template.repository.form.SelectItemDao;
 import com.cn.template.service.form.FormService;
 import com.cn.template.xutil.enums.ApplyStatus;
@@ -64,6 +66,9 @@ public class ApplyService {
 	/** 基础信息处理的数据访问接口.主要用于DDL操作 */
 	private BaseMybatisDao baseMybatisDao; 
 	
+	/** 实验申请备注信息的数据访问接口 */
+	private ApplyRemarkDao applyRemarkDao;
+	
 	@Autowired
 	public void setApplyDao(ApplyDao applyDao) {
 		this.applyDao = applyDao;
@@ -84,6 +89,11 @@ public class ApplyService {
 		this.baseMybatisDao = baseMybatisDao;
 	}
 	
+	@Autowired
+	public void setApplyRemarkDao(ApplyRemarkDao applyRemarkDao) {
+		this.applyRemarkDao = applyRemarkDao;
+	}
+
 	/**
 	 * 根据ID获得委托申请记录.
 	 * @param id
@@ -140,6 +150,15 @@ public class ApplyService {
 			newApply.setApplyStatus(ApplyStatus.REQUEST);
 			//保存委托申请信息.
 			newApply=applyDao.save(newApply);
+			
+			//保存备注信息
+			ApplyRemark applyRemark = new ApplyRemark();
+			applyRemark.setApply(newApply);
+			applyRemark.setApplyStatus(ApplyStatus.REQUEST);
+			applyRemark.setRemark(ApplyStatus.REQUEST.getValue());
+			applyRemark.setCreateTime(new Date());
+			applyRemark.setUpdateTime(new Date());
+			applyRemarkDao.save(applyRemark);
 			
 			StringBuffer fieldNames=new StringBuffer();
 			StringBuffer fieldValues=new StringBuffer();
@@ -324,7 +343,11 @@ public class ApplyService {
 		Map<String, Object> parameters=Maps.newHashMap();
 		parameters.put("tableName", apply.getForm().getTableName());
 		parameters.put("applyId", apply.getId());
+		//自定义表单
 		applyMybatisDao.deleteOne(parameters);
+		//删除备注
+		applyRemarkDao.delete(apply.getRemarks());
+		//删除申请
 		applyDao.delete(id);
 	}
 
