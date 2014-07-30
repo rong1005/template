@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>委托申请管理</title>
+	<title>实验样品管理</title>
 </head>
 <body>
 
@@ -26,7 +26,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										委托申请列表
+										实验样品列表
 									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
@@ -51,7 +51,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>委托申请列表</h4>
+									<h4><i class="fa fa-table"></i>实验样品列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -64,10 +64,7 @@
 								<div class="box-body">
 									<form class="form-inline" action="#">
 										<div class="form-group">
-											<input type="text" name="search_LIKE_chApplyName" class="form-control" value="${param.search_LIKE_chApplyName}" placeholder="委托名称(中文)" />
-										</div>
-										<div class="form-group">
-											<input type="text" name="search_LIKE_enApplyName" class="form-control" value="${param.search_LIKE_enApplyName}" placeholder="委托名称(英文)" />
+											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="实验样品名称" />
 										</div>
 										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
 										<tags:sort/>
@@ -75,34 +72,22 @@
 									
 									<br/>
 									
-									<table class="table table-striped table-bordered table-hover">
+									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>委托编号</th>
-												<th>表单</th>
-												<th>委托时间</th>
-												<th>委托名称</th>
-												<th>委托单位</th>
-												<th>检验项目</th>
-												<th>检验类别</th>
+												<th>流水号</th>
+												<th>样品</th>
+												<th>状态</th>
 												<th>管理</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${applys.content}" var="apply">
+										<c:forEach items="${samples.content}" var="sample">
 											<tr>
-												<td>${apply.id}</td>
-												<td>${apply.form.name}<br/>${apply.form.tableName}</td>
-												<td>${apply.createTime}</td>
-												<td>${apply.chApplyName}<br/>${apply.enApplyName}</td>
-												<td>${apply.chConsigner}<br/>${apply.enConsigner}</td>
-												<td>${apply.chTestItems}<br/>${apply.enTestItems}</td>
-												<td>${apply.chCheckType}<br/>${apply.enCheckType}</td>
-												<td>
-													<a href="${ctx}/apply/update/${apply.id}">修改</a> / 
-													<a href="${ctx}/apply/delete/${apply.id}" onclick="return confirm('是否删除该委托申请记录？')" >删除</a> / 
-													<a href="${ctx}/sample/${apply.id}">样品管理</a>
-												</td>
+												<td>${sample.serialNumber}</td>
+												<td>${sample.name}</td>
+												<td>${sample.status.value}</td>
+												<td><a href="${ctx}/sample/update/${sample.id}">修改</a> / <a href="${ctx}/sample/delete/${sample.id}" onclick="return confirm('是否删除该实验样品？')" >删除</a></td>
 											</tr>
 										</c:forEach>
 										</tbody>
@@ -110,11 +95,11 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<tags:pagination page="${applys}" paginationSize="5"/>
+												<tags:pagination page="${samples}" paginationSize="5"/>
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/form/create">委托申请</a>
+												<a class="btn btn-info" href="${ctx}/sample/create?applyId=${applyId}">添加实验样品</a>
 											</div>
 										</div>
 									</div>
