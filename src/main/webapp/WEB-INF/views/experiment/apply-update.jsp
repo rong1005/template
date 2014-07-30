@@ -1,3 +1,4 @@
+<%@page import="com.cn.template.xutil.enums.PermissionType"%>
 <%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@page import="com.cn.template.xutil.enums.FieldType"%>
 <%@page import="com.cn.template.xutil.enums.ApplyCheckType"%>
@@ -12,6 +13,10 @@
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
 <c:set var="DOUBLE" value="<%=FieldType.DOUBLE %>" />
 <c:set var="INT" value="<%=FieldType.INT %>" />
+
+<c:set var="REJECT" value="<%=PermissionType.REJECT %>" />
+<c:set var="READ_ONLY" value="<%=PermissionType.READ_ONLY %>" />
+<c:set var="READ_WRITE" value="<%=PermissionType.READ_WRITE %>" />
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -122,12 +127,13 @@
 								
 								
 								<c:forEach var="field" items="${apply.form.fields }">
+								<c:if test="${nodeMap[field.id].permissionType ne REJECT}">
 								<c:choose>
 								<c:when test="${field.fieldType eq SELECT}">
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<select class="form-control" name="${field.name}" id="apply_${field.name}">
+										<select class="form-control" name="${field.name}" id="apply_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>
 											<c:forEach items="${field.selectItems }" var="item">
 												<option value="${item.id }" <c:if test="${item.id eq customField[field.name]['id'] }">selected="selected"</c:if>>${item.chItemName}(${item.enItemName})</option>
 											</c:forEach>
@@ -143,7 +149,9 @@
 									<div class="col-sm-10">
 										<c:forEach items="${field.selectItems }" var="item">
 										<label class="checkbox-inline">
-											<input type="checkbox" class="uniform" name="${field.name}" id="apply_${field.name}" <c:if test="${fn:contains(customField[field.name]['ch'],item.chItemName)}">checked="checked"</c:if> value="${item.id }"> 
+											<input type="checkbox" class="uniform" name="${field.name}" id="apply_${field.name}" 
+											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
+											<c:if test="${fn:contains(customField[field.name]['ch'],item.chItemName)}">checked="checked"</c:if> value="${item.id }"> 
 											${item.chItemName}(${item.enItemName})
 										</label>
 										</c:forEach>
@@ -158,7 +166,9 @@
 									<div class="col-sm-10">
 										<c:forEach items="${field.selectItems }" var="item">
 										<label class="radio-inline">
-											<input type="radio" class="uniform" name="${field.name}" id="apply_${field.name}" <c:if test="${item.id eq customField[field.name]['id'] }">checked="checked"</c:if> value="${item.id }"> 
+											<input type="radio" class="uniform" name="${field.name}" id="apply_${field.name}" 
+											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
+											<c:if test="${item.id eq customField[field.name]['id'] }">checked="checked"</c:if> value="${item.id }"> 
 											${item.chItemName}(${item.enItemName})
 										</label>
 										</c:forEach>
@@ -171,7 +181,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<input type="text" id="apply_${field.name}" name="${field.name}"  class="form-control" value="${customField[field.name] }" placeholder="${field.chViewName}"/>
+										<input type="text" id="apply_${field.name}" name="${field.name}" class="form-control" value="${customField[field.name] }" placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
 									</div>
 								</div>
 								<hr>	
@@ -181,18 +191,19 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<input type="text" id="apply_ch_${field.name}" name="ch_${field.name}" value="${customField[field.name]['ch'] }" class="form-control"  placeholder="${field.chViewName}"/>
+										<input type="text" id="apply_ch_${field.name}" name="ch_${field.name}" value="${customField[field.name]['ch'] }" class="form-control"  placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.enViewName}</label>
 									<div class="col-sm-10">
-										<input type="text" id="apply_en_${field.name}" name="en_${field.name}" value="${customField[field.name]['en'] }" class="form-control"   placeholder="${field.enViewName}"/>
+										<input type="text" id="apply_en_${field.name}" name="en_${field.name}" value="${customField[field.name]['en'] }" class="form-control"   placeholder="${field.enViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
 									</div>
 								</div>
 								<hr>
 								</c:otherwise>
 								</c:choose>
+								</c:if>
 								</c:forEach>
 												  
 								<div class="form-group">

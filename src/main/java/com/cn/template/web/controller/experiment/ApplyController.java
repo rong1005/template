@@ -22,7 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.form.FieldService;
+import com.cn.template.service.form.NodeService;
 import com.cn.template.xutil.Constants;
+import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Maps;
 
@@ -51,6 +53,10 @@ public class ApplyController {
 	/** 实验委托申请管理的业务逻辑. */
 	@Autowired
 	private ApplyService applyService;
+	
+	/** 节点权限信息的业务处理 */
+	@Autowired
+	private NodeService nodeService;
 	
 	/**
 	 * 委托申请列表.
@@ -86,6 +92,7 @@ public class ApplyController {
 	 */
 	@RequestMapping(value="create/{formId}",method = RequestMethod.GET)
 	public String create(@PathVariable(value = "formId") Long formId,Model model){
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.REQUEST, formId));
 		model.addAttribute("fields", fieldService.getAllField(formId));
 		model.addAttribute("formId", formId);
 		model.addAttribute("apply", new Apply());
@@ -120,6 +127,8 @@ public class ApplyController {
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String update(@PathVariable("id") Long id, Model model) {
 		Apply apply = applyService.getApply(id);
+		
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.REQUEST, apply.getForm().getId()));
 		model.addAttribute("apply", apply);
 		logger.info(applyService.getApplyCustomField(apply).toString());
 		model.addAttribute("customField", applyService.getApplyCustomField(apply));

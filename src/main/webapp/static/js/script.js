@@ -3303,6 +3303,9 @@ var App = function () {
 			if (App.isPage("field_forms")) {
 				handleUniform();
 			}
+			if (App.isPage("node-permission")) {
+				handleUniform();
+			}
 			if (App.isPage("apply_forms")) {
 				handleUniform();
 			}

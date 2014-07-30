@@ -1,26 +1,18 @@
 package com.cn.template.xutil.enums;
 
 /**
- * 实验委托申请的状态.
+ * 授权权限类型.
  * 
  * @author Libra
  *
  */
-public enum ApplyStatus {
-	/** 申请 */
-	REQUEST("申请", 0),
-	/** 实验室审核 */
-	AUDITING("实验室审核", 1),
-	/** 客户确认 */
-	CONFIRM("客户确认", 2),
-	/** 实验进行 */
-	BE_IN_PROGRESS("实验进行",3),
-	/** 实验完成 */
-	FINISH("实验完成",4),
-	/** 实验取消 */
-	CANCEL("实验取消",5),
-	/** 实验终止 */
-	STOP("实验终止",6);
+public enum PermissionType {
+	/** 拒绝 */
+	REJECT("拒绝", 0),
+	/** 只读 */
+	READ_ONLY("只读", 1),
+	/** 读写 */
+	READ_WRITE("读写",2);
 
 	private String value;
 	private int index;
@@ -31,7 +23,7 @@ public enum ApplyStatus {
 	 * @param value
 	 * @param index
 	 */
-	private ApplyStatus(String value, int index) {
+	private PermissionType(String value, int index) {
 		this.value = value;
 		this.index = index;
 	}
@@ -43,7 +35,7 @@ public enum ApplyStatus {
 	 * @return
 	 */
 	public static String getName(int index) {
-		for (ApplyStatus c : ApplyStatus.values()) {
+		for (PermissionType c : PermissionType.values()) {
 			if (c.getIndex() == index) {
 				return c.value;
 			}

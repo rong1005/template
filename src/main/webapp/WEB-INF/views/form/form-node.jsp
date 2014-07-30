@@ -1,11 +1,17 @@
+<%@page import="com.cn.template.xutil.enums.ApplyStatus"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<c:set var="APPLY_REQUEST" value="<%=ApplyStatus.REQUEST %>"/>
+<c:set var="AUDITING" value="<%=ApplyStatus.AUDITING %>"/>
+<c:set var="BE_IN_PROGRESS" value="<%=ApplyStatus.BE_IN_PROGRESS %>"/>
+<c:set var="FINISH" value="<%=ApplyStatus.FINISH %>"/>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>表单管理</title>
+	<title>表单节点管理</title>
 </head>
 <body>
 
@@ -26,7 +32,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										表单列表
+										表单节点列表
 									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
@@ -51,7 +57,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>表单列表</h4>
+									<h4><i class="fa fa-table"></i>表单节点列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -62,53 +68,37 @@
 									</div>
 								</div>
 								<div class="box-body">
-									<form class="form-inline" action="#">
-										<div class="form-group">
-											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="表单名称" />
-										</div>
-										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
-										<tags:sort/>
-									</form>
+									
 									
 									<br/>
 									
 									<table  class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>表单</th>
-												<th>格式</th>
-												<th>管理</th>
-												<th>申请</th>
-												<th>报表</th>
+												<th>节点</th>
+												<th>操作</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${forms.content}" var="form">
 											<tr>
-												<td>${form.name}</td>
-												<td>${form.formFormat.value}</td>
-												<td><a href="${ctx}/form/update/${form.id}">修改</a> / 
-												<a href="${ctx}/form/delete/${form.id}" onclick="return confirm('是否删除该表单？')" >删除</a> / 
-												<a href="${ctx}/field/${form.id}">字段管理</a> / 
-												<a href="${ctx}/node?formId=${form.id}">节点管理</a>
-												</td>
-												<td><a href="${ctx}/apply/create/${form.id}">实验委托</a></td>
-												<td><a href="${ctx}/report/${form.id}">生成报表</a></td>
+												<td>${APPLY_REQUEST.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${APPLY_REQUEST}">授权设置</a></td>
 											</tr>
-										</c:forEach>
+											<tr>
+												<td>${AUDITING.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${AUDITING}">授权设置</a></td>
+											</tr>
+											<tr>
+												<td>${BE_IN_PROGRESS.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${BE_IN_PROGRESS}">授权设置</a></td>
+											</tr>
+											<tr>
+												<td>${FINISH.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${FINISH}">授权设置</a></td>
+											</tr>
 										</tbody>
 									</table>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="pull-right">
-												<tags:pagination page="${forms}" paginationSize="5"/>
-											</div>
-											
-											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/form/create">创建表单</a>
-											</div>
-										</div>
-									</div>
+									
 								</div>
 							</div>
 							<!-- /BOX -->
