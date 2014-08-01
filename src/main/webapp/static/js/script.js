@@ -3309,6 +3309,14 @@ var App = function () {
 			if (App.isPage("apply_forms")) {
 				handleUniform();
 			}
+			if (App.isPage("equipment_forms")) {
+				handleAutosize(); //Function to handle textarea autosize
+				handleCountable(); //Function to handle char count
+			}
+			if (App.isPage("equipmentType_forms")) {
+				handleAutosize(); //Function to handle textarea autosize
+				handleCountable(); //Function to handle char count
+			}
 			if (App.isPage("department_forms")) {
 				handleAutosize(); //Function to handle textarea autosize
 				handleCountable(); //Function to handle char count
