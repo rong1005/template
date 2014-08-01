@@ -54,6 +54,7 @@
 				</a>
 				<ul class="sub">
 					<li id="equipments-list"><a class="" href="${ctx}/equipment/type"><span class="sub-menu-text">设备信息</span></a></li>
+					<li id="prices-list"><a class="" href="${ctx}/price"><span class="sub-menu-text">费用明细</span></a></li>
 					<li id="froms-list"><a class="" href="${ctx}/form"><span class="sub-menu-text">表单列表</span></a></li>
 					<li id="applys-list"><a class="" href="${ctx}/apply"><span class="sub-menu-text">申请记录</span></a></li>
 				</ul>
