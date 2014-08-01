@@ -145,6 +145,8 @@ public class ApplyService {
 			Form form = formService.getForm(newApply.getForm().getId());
 			newApply.setChCheckType(newApply.getCheckType().getValue());
 			newApply.setEnCheckType(newApply.getCheckType().getEnValue());
+			newApply.setChUnits(newApply.getUnits().getValue());
+			newApply.setEnUnits(newApply.getUnits().getEnValue());
 			newApply.setCreateTime(new Date());
 			newApply.setUpdateTime(new Date());
 			newApply.setApplyStatus(ApplyStatus.REQUEST);
@@ -163,16 +165,24 @@ public class ApplyService {
 			StringBuffer fieldNames=new StringBuffer();
 			StringBuffer fieldValues=new StringBuffer();
 			
-			fieldNames.append("apply_id,ch_apply_name,en_apply_name,ch_check_type,en_check_type,ch_consigner,en_consigner,ch_test_items,en_test_items");
+			fieldNames.append("apply_id,ch_apply_name,en_apply_name,ch_check_type,en_check_type,ch_consigner,en_consigner,ch_client,en_client,ch_test_items,en_test_items,ch_sample_name,en_sample_name,sample_model,sample_number,ch_units,en_units");
 			fieldValues.append(newApply.getId());
 			fieldValues.append(",'"+newApply.getChApplyName()+"'");
 			fieldValues.append(",'"+newApply.getEnApplyName()+"'");
 			fieldValues.append(",'"+newApply.getChConsigner()+"'");
 			fieldValues.append(",'"+newApply.getEnConsigner()+"'");
+			fieldValues.append(",'"+newApply.getChClient()+"'");
+			fieldValues.append(",'"+newApply.getEnClient()+"'");
 			fieldValues.append(",'"+newApply.getChTestItems()+"'");
 			fieldValues.append(",'"+newApply.getEnTestItems()+"'");
 			fieldValues.append(",'"+newApply.getChCheckType()+"'");
 			fieldValues.append(",'"+newApply.getEnCheckType()+"'");
+			fieldValues.append(",'"+newApply.getChSampleName()+"'");
+			fieldValues.append(",'"+newApply.getEnSampleName()+"'");
+			fieldValues.append(",'"+newApply.getSampleModel()+"'");
+			fieldValues.append(",'"+newApply.getSampleNumber()+"'");
+			fieldValues.append(",'"+newApply.getChUnits()+"'");
+			fieldValues.append(",'"+newApply.getEnUnits()+"'");
 			
 			for(Field field : form.getFields()){
 				if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){

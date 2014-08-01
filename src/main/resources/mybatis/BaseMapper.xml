@@ -15,8 +15,16 @@
 		`en_check_type` varchar(255) DEFAULT NULL,
 		`ch_consigner` varchar(255) DEFAULT NULL,
 		`en_consigner` varchar(255) DEFAULT NULL,
+		`ch_client` varchar(255) DEFAULT NULL,
+		`en_client` varchar(255) DEFAULT NULL,
 		`ch_test_items` varchar(255) DEFAULT NULL,
 		`en_test_items` varchar(255) DEFAULT NULL,
+		`ch_sample_name` varchar(255) DEFAULT NULL,
+		`en_sample_name` varchar(255) DEFAULT NULL,
+		`sample_model` varchar(255) DEFAULT NULL,
+		`sample_number` int(10) DEFAULT NULL,
+		`ch_units` varchar(255) DEFAULT NULL,
+		`en_units` varchar(255) DEFAULT NULL,
 		primary key (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 
 	</update>

@@ -16,6 +16,7 @@ import com.cn.template.entity.IdEntity;
 import com.cn.template.entity.form.Form;
 import com.cn.template.xutil.enums.ApplyCheckType;
 import com.cn.template.xutil.enums.ApplyStatus;
+import com.cn.template.xutil.enums.Units;
 
 /**
  * 实验委托申请信息.
@@ -44,6 +45,12 @@ public class Apply extends IdEntity {
 
 	/** 委托单位 英语 */
 	private String enConsigner;
+	
+	/** 委托人 中文 */
+	private String chClient;
+	
+	/** 委托人 英文 */
+	private String enClient;
 
 	/** 检验项目 中文 */
 	private String chTestItems;
@@ -59,6 +66,27 @@ public class Apply extends IdEntity {
 
 	/** 检验类别 英文 */
 	private String enCheckType;
+	
+	/** 样品名称 (中文) */
+	private String chSampleName;
+	
+	/** 样品名称 (英文) */
+	private String enSampleName;
+	
+	/** 样品型号 */
+	private String sampleModel;
+	
+	/** 样品数量 */
+	private Integer sampleNumber;
+	
+	/** 数量单位 */
+	private Units units; 
+	
+	/** 数量单位 中文 */
+	private String chUnits;
+	
+	/** 数量单位 英文 */
+	private String enUnits;
 
 	/** 申请的状态 */
 	private ApplyStatus applyStatus;
@@ -198,4 +226,77 @@ public class Apply extends IdEntity {
 		this.remarks = remarks;
 	}
 
+	public String getChClient() {
+		return chClient;
+	}
+
+	public void setChClient(String chClient) {
+		this.chClient = chClient;
+	}
+
+	public String getEnClient() {
+		return enClient;
+	}
+
+	public void setEnClient(String enClient) {
+		this.enClient = enClient;
+	}
+
+	public String getChSampleName() {
+		return chSampleName;
+	}
+
+	public void setChSampleName(String chSampleName) {
+		this.chSampleName = chSampleName;
+	}
+
+	public String getEnSampleName() {
+		return enSampleName;
+	}
+
+	public void setEnSampleName(String enSampleName) {
+		this.enSampleName = enSampleName;
+	}
+
+	public String getSampleModel() {
+		return sampleModel;
+	}
+
+	public void setSampleModel(String sampleModel) {
+		this.sampleModel = sampleModel;
+	}
+
+	public Integer getSampleNumber() {
+		return sampleNumber;
+	}
+
+	public void setSampleNumber(Integer sampleNumber) {
+		this.sampleNumber = sampleNumber;
+	}
+
+	@Enumerated(EnumType.ORDINAL)
+	public Units getUnits() {
+		return units;
+	}
+
+	public void setUnits(Units units) {
+		this.units = units;
+	}
+
+	public String getChUnits() {
+		return chUnits;
+	}
+
+	public void setChUnits(String chUnits) {
+		this.chUnits = chUnits;
+	}
+
+	public String getEnUnits() {
+		return enUnits;
+	}
+
+	public void setEnUnits(String enUnits) {
+		this.enUnits = enUnits;
+	}
+	
 }

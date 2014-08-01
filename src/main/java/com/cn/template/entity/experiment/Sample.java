@@ -24,9 +24,6 @@ public class Sample extends IdEntity {
 	/** 申请信息 */
 	private Apply apply;
 
-	/** 样品名称 */
-	private String name;
-
 	/** 样品流水号 */
 	private String serialNumber;
 
@@ -50,14 +47,6 @@ public class Sample extends IdEntity {
 
 	public void setApply(Apply apply) {
 		this.apply = apply;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getSerialNumber() {

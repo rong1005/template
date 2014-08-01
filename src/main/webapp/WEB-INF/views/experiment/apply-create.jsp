@@ -1,3 +1,4 @@
+<%@page import="com.cn.template.xutil.enums.Units"%>
 <%@page import="com.cn.template.xutil.enums.PermissionType"%>
 <%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@page import="com.cn.template.xutil.enums.FieldType"%>
@@ -98,6 +99,19 @@
 								</div>
 								<hr>
 								<div class="form-group">
+									<label class="col-sm-2 control-label">委托人(中文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_chClient" name="chClient" class="form-control" value="${apply.chClient}" placeholder="委托人(中文)"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">委托人(英文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_enClient" name="enClient" class="form-control" value="${apply.enClient}" placeholder="委托人(英文)"/>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
 									<label class="col-sm-2 control-label">检验项目(中文)</label>
 									<div class="col-sm-10">
 										<input type="text" id="apply_chTestItems" name="chTestItems" class="form-control" value="${apply.chTestItems}" placeholder="检验项目(中文)"/>
@@ -119,6 +133,43 @@
 											${applyCheckType.value}(${applyCheckType.enValue}) 
 										</label>
 										</c:forEach>
+									</div>
+								</div>
+								<hr>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">样品名称(中文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_chSampleName" name="chSampleName" class="form-control" value="${apply.chSampleName}" placeholder="样品名称(中文)"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">样品名称(英文)</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_enSampleName" name="enSampleName" class="form-control" value="${apply.enSampleName}" placeholder="样品名称(英文)"/>
+									</div>
+								</div>
+								<hr>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">样品型号</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_sampleModel" name="sampleModel" class="form-control" value="${apply.sampleModel}" placeholder="样品型号"/>
+									</div>
+								</div>
+								<hr>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">样品数量</label>
+									<div class="col-sm-8">
+										<input type="text" id="apply_sampleNumber" name="sampleNumber" class="form-control" value="${apply.sampleNumber}" placeholder="样品数量"/>
+									</div>
+									<div class="col-sm-2">
+										<select id="apply_units" name="units" class="form-control">
+										<c:forEach items="<%=Units.values() %>" var="unit">
+											<option value="${unit }">${unit.value}(${unit.enValue})</option>
+										</c:forEach>
+										</select>
 									</div>
 								</div>
 								<hr>
