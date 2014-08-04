@@ -55,13 +55,6 @@
 							<form id="inputForm" class="form-horizontal" action="${ctx}/sample/${action}" method="post">
 								<input type="hidden" name="id" value="${sample.id}"/>
 								<input type="hidden" name="apply.id" value="${sample.apply.id}"/>
-								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">实验样品名称</label>
-									<div class="col-sm-10">
-										<input type="text" id="sample_name" name="name" value="${sample.name}" class="form-control" placeholder="实验样品名称"/>
-									</div>
-								</div>
 	
 								<div class="form-group">
 									<label class="col-sm-2 control-label">流水号</label> 

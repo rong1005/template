@@ -93,6 +93,13 @@
 										<input type="text" id="price_depreciation" name="depreciation" value="${price.depreciation}" class="form-control" placeholder="折旧费"/>
 									</div>
 								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">费用公式</label> 
+									<div class="col-sm-10">
+										<input type="text" id="price_formula" name="formula" value="${price.formula}" class="form-control" placeholder="总费用"/>
+									</div>
+								</div>
 	
 								<div class="form-group">
 									<label class="col-sm-2 control-label">备注</label> 

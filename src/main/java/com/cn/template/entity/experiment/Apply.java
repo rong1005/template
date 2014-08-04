@@ -17,6 +17,7 @@ import com.cn.template.entity.form.Form;
 import com.cn.template.xutil.enums.ApplyCheckType;
 import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.Units;
+import com.cn.template.xutil.enums.Whether;
 
 /**
  * 实验委托申请信息.
@@ -90,9 +91,15 @@ public class Apply extends IdEntity {
 
 	/** 申请的状态 */
 	private ApplyStatus applyStatus;
+	
+	/** 是否通过 */
+	private Whether isPass;
 
 	/** 申请的备注记录信息 */
 	private List<ApplyRemark> remarks;
+	
+	/** 费用清单 */
+	private List<ApplyPrice> applyPrices;
 
 	@ManyToOne
 	@JoinColumn(name = "form_id")
@@ -297,6 +304,25 @@ public class Apply extends IdEntity {
 
 	public void setEnUnits(String enUnits) {
 		this.enUnits = enUnits;
+	}
+
+	@Enumerated(EnumType.ORDINAL)
+	public Whether getIsPass() {
+		return isPass;
+	}
+
+	public void setIsPass(Whether isPass) {
+		this.isPass = isPass;
+	}
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="apply")
+	@OrderBy(value = "id ASC")
+	public List<ApplyPrice> getApplyPrices() {
+		return applyPrices;
+	}
+
+	public void setApplyPrices(List<ApplyPrice> applyPrices) {
+		this.applyPrices = applyPrices;
 	}
 	
 }

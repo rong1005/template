@@ -72,12 +72,12 @@
 									
 									<br/>
 									
-									<table  class="table table-striped table-bordered table-hover">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
 												<th>流水号</th>
-												<th>样品</th>
 												<th>状态</th>
+												<th>实验结果</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -85,8 +85,11 @@
 										<c:forEach items="${samples.content}" var="sample">
 											<tr>
 												<td>${sample.serialNumber}</td>
-												<td>${sample.name}</td>
 												<td>${sample.status.value}</td>
+												<td>
+												<c:if test="${empty sample.result}">未完成</c:if>
+												<c:if test="${not empty sample.result}">${sample.result.value}</c:if>
+												</td>
 												<td><a href="${ctx}/sample/update/${sample.id}">修改</a> / <a href="${ctx}/sample/delete/${sample.id}" onclick="return confirm('是否删除该实验样品？')" >删除</a></td>
 											</tr>
 										</c:forEach>

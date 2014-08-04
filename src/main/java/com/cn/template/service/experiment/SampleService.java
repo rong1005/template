@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cn.template.entity.experiment.Sample;
 import com.cn.template.repository.experiment.SampleDao;
 import com.cn.template.xutil.enums.Operator;
-import com.cn.template.xutil.enums.SampleStatus;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 
@@ -60,6 +59,17 @@ public class SampleService {
 	public void deleteSample(Long id) {
 		sampleDao.delete(id);
 	}
+	
+	/**
+	 * 单个删除实验样品记录.
+	 * @param id
+	 */
+	public void deleteApplySample(Long applyId) {
+		List<Sample> sampleList = getApplySample(applyId);
+		if(!sampleList.isEmpty()){
+			sampleDao.delete(sampleList);
+		}
+	}
 
 	/**
 	 * 获得所有的实验样品记录.
@@ -67,6 +77,15 @@ public class SampleService {
 	 */
 	public List<Sample> getAllSample() {
 		return (List<Sample>) sampleDao.findAll();
+	}
+	
+	/**
+	 * 取得申请下的所有样品信息.
+	 * @param applyId
+	 * @return
+	 */
+	public List<Sample> getApplySample(Long applyId){
+		return sampleDao.findByApply_Id(applyId);
 	}
 
 	/**

@@ -18,18 +18,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.experiment.Apply;
+import com.cn.template.entity.experiment.ApplyPrice;
 import com.cn.template.entity.experiment.ApplyRemark;
+import com.cn.template.entity.experiment.Sample;
 import com.cn.template.entity.form.Field;
 import com.cn.template.entity.form.Form;
 import com.cn.template.entity.form.SelectItem;
 import com.cn.template.mybatis.ApplyMybatisDao;
 import com.cn.template.mybatis.BaseMybatisDao;
 import com.cn.template.repository.experiment.ApplyDao;
+import com.cn.template.repository.experiment.ApplyPriceDao;
 import com.cn.template.repository.experiment.ApplyRemarkDao;
 import com.cn.template.repository.form.SelectItemDao;
 import com.cn.template.service.form.FormService;
 import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.FieldType;
+import com.cn.template.xutil.enums.SampleStatus;
+import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 import com.google.common.collect.Maps;
@@ -49,11 +54,29 @@ public class ApplyService {
 	/** 委托申请信息的业务处理 */
 	private FormService formService;
 	
+	/** 样品信息 */
+	private SampleService sampleService; 
+	
+	/** 收费管理的业务逻辑. */
+	private PriceService priceService;
+	
+	@Autowired
+	public void setSampleService(SampleService sampleService) {
+		this.sampleService = sampleService;
+	}
+
 	@Autowired
 	public void setFormService(FormService formService) {
 		this.formService = formService;
 	}
 	
+	@Autowired
+	public void setPriceService(PriceService priceService) {
+		this.priceService = priceService;
+	}
+
+
+
 	/** 实验委托请求信息的数据访问接口. */
 	private ApplyDao applyDao;
 	
@@ -68,6 +91,9 @@ public class ApplyService {
 	
 	/** 实验申请备注信息的数据访问接口 */
 	private ApplyRemarkDao applyRemarkDao;
+	
+	/** 实验费用清单的数据访问接口. */
+	private ApplyPriceDao applyPriceDao;
 	
 	@Autowired
 	public void setApplyDao(ApplyDao applyDao) {
@@ -92,6 +118,11 @@ public class ApplyService {
 	@Autowired
 	public void setApplyRemarkDao(ApplyRemarkDao applyRemarkDao) {
 		this.applyRemarkDao = applyRemarkDao;
+	}
+	
+	@Autowired
+	public void setApplyPriceDao(ApplyPriceDao applyPriceDao) {
+		this.applyPriceDao = applyPriceDao;
 	}
 
 	/**
@@ -264,15 +295,66 @@ public class ApplyService {
 			apply.setEnCheckType(apply.getCheckType().getEnValue());
 
 			apply.setUpdateTime(new Date());
-			apply.setApplyStatus(ApplyStatus.REQUEST);
 			//保存委托申请信息.
 			apply=applyDao.save(apply);
+			if(apply.getApplyStatus().equals(ApplyStatus.AUDITING)){
+				//添加审核备注信息
+				ApplyRemark applyRemark = new ApplyRemark();
+				applyRemark.setApply(apply);
+				applyRemark.setCreateTime(new Date());
+				applyRemark.setUpdateTime(new Date());
+				applyRemark.setApplyStatus(apply.getApplyStatus());
+				applyRemark.setIsPass(apply.getIsPass());
+				applyRemark.setRemark(request.getParameter("apply_remark"));
+				applyRemarkDao.save(applyRemark);
+			
+				//添加样品信息
+				if(apply.getIsPass().equals(Whether.YES)){
+					sampleService.deleteApplySample(apply.getId());
+					for(int i=1;i<=apply.getSampleNumber();i++){
+						Sample sample = new Sample();
+						sample.setApply(apply);
+						sample.setCreateTime(new Date());
+						sample.setUpdateTime(new Date());
+						sample.setSerialNumber(apply.getSerialNumber()+"-"+((100+i)+"").substring(1));
+						sample.setStatus(SampleStatus.WAIT_RECEIVE);
+						sampleService.saveSample(sample);
+					}
+					
+					if(paramMap.containsKey("priceId")&&paramMap.containsKey("usedHour")&&paramMap.containsKey("usedTimes")&&paramMap.containsKey("totalPrice")){
+						List<ApplyPrice> applyPriceList = applyPriceDao.findByApply_Id(apply.getId());
+						if(applyPriceList!=null&&!applyPriceList.isEmpty()){
+							applyPriceDao.delete(applyPriceList);
+						}
+						
+						String[] priceId=paramMap.get("priceId");
+						String[] usedHour=paramMap.get("usedHour");
+						String[] usedTimes=paramMap.get("usedTimes");
+						String[] totalPrice=paramMap.get("totalPrice");
+						for(int i=0;i<priceId.length;i++){
+							ApplyPrice applyPrice=new ApplyPrice();
+							applyPrice.setApply(apply);
+							applyPrice.setPrice(priceService.getPrice(Long.parseLong(priceId[i])));
+							applyPrice.setCreateTime(new Date());
+							applyPrice.setUpdateTime(new Date());
+							applyPrice.setUsedHour(Double.parseDouble(usedHour[i]));
+							applyPrice.setUsedTimes(Double.parseDouble(usedTimes[i]));
+							applyPrice.setTotalPrice(Double.parseDouble(totalPrice[i]));
+							applyPriceDao.save(applyPrice);
+						}
+					}
+					
+				}
+			
+			}
+			
 			
 			StringBuffer setString=new StringBuffer();
 			StringBuffer whereString=new StringBuffer();
 			
 			whereString.append("apply_id = "+apply.getId());
 			
+			setString.append(" serial_number='"+apply.getSerialNumber()+"', ");
 			setString.append(" ch_apply_name='"+apply.getChApplyName()+"', ");
 			setString.append(" en_apply_name='"+apply.getEnApplyName()+"', ");
 			setString.append(" ch_check_type='"+apply.getChConsigner()+"', ");

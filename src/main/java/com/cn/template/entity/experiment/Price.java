@@ -31,6 +31,9 @@ public class Price extends IdEntity {
 
 	/** 折旧费 */
 	private Double depreciation;
+	
+	/** 计算公式 */
+	private String formula;
 
 	/** 备注 */
 	private String description;
@@ -83,6 +86,14 @@ public class Price extends IdEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 }

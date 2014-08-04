@@ -13,6 +13,7 @@
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
 <c:set var="DOUBLE" value="<%=FieldType.DOUBLE %>" />
 <c:set var="INT" value="<%=FieldType.INT %>" />
+<c:set var="TEXT" value="<%=FieldType.TEXT %>" />
 
 <c:set var="REJECT" value="<%=PermissionType.REJECT %>" />
 <c:set var="READ_ONLY" value="<%=PermissionType.READ_ONLY %>" />
@@ -262,6 +263,26 @@
 									</div>
 								</div>
 								<hr>	
+								</c:when>
+								
+								<c:when test="${field.fieldType eq TEXT}">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">${field.chViewName}</label>
+									<div class="col-sm-10">
+										<textarea rows="5" cols="10" class="form-control" id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.chDefaultValue}</textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">${field.enViewName}</label>
+									<div class="col-sm-10">
+										<textarea rows="5" cols="10" class="form-control" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.enDefaultValue}</textarea>
+									</div>
+								</div>
+								<!-- 只读状态下，将默认值插入 -->
+								<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">
+									<input type="hidden" name="ch_${field.name}" value="${field.chDefaultValue}" />
+									<input type="hidden" name="en_${field.name}" value="${field.enDefaultValue}" />
+								</c:if>
 								</c:when>
 								
 								<c:otherwise>

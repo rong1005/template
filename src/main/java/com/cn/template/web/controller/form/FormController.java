@@ -96,7 +96,11 @@ public class FormController {
 	public String create(@Valid Form newForm, RedirectAttributes redirectAttributes) {
 		newForm.setCreateTime(new Date());
 		newForm.setUpdateTime(new Date());
+		try{
 		formService.saveForm(newForm);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		redirectAttributes.addFlashAttribute("message", "创建表单成功");
 		return "redirect:/form/";
 	}

@@ -85,6 +85,7 @@
 												<th>委托单位</th>
 												<th>检验项目</th>
 												<th>检验类别</th>
+												<th>审核</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -99,9 +100,14 @@
 												<td>${apply.chTestItems}<br/>${apply.enTestItems}</td>
 												<td>${apply.chCheckType}<br/>${apply.enCheckType}</td>
 												<td>
+													<c:if test="${empty apply.isPass }">未审核</c:if>
+													<c:if test="${not empty apply.isPass }">${apply.isPass.value}</c:if>
+												</td>
+												<td>
 													<a href="${ctx}/apply/update/${apply.id}">修改</a> / 
 													<a href="${ctx}/apply/delete/${apply.id}" onclick="return confirm('是否删除该委托申请记录？')" >删除</a> / 
-													<a href="${ctx}/sample/${apply.id}">样品管理</a>
+													<a href="${ctx}/sample/${apply.id}">样品管理</a> / 
+													<a href="${ctx}/apply/audit/${apply.id}">审核</a>
 												</td>
 											</tr>
 										</c:forEach>

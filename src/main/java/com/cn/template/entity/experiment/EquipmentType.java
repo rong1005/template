@@ -9,6 +9,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 /**
@@ -48,6 +49,7 @@ public class EquipmentType extends IdEntity{
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentType")
 	@OrderBy(value = "id ASC")
+	@JsonIgnore
 	public List<Equipment> getEquipments() {
 		return equipments;
 	}

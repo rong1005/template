@@ -21,6 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
+import com.cn.template.service.experiment.EquipmentService;
+import com.cn.template.service.experiment.EquipmentTypeService;
+import com.cn.template.service.experiment.PriceService;
 import com.cn.template.service.form.FieldService;
 import com.cn.template.service.form.NodeService;
 import com.cn.template.xutil.Constants;
@@ -57,6 +60,11 @@ public class ApplyController {
 	/** 节点权限信息的业务处理 */
 	@Autowired
 	private NodeService nodeService;
+	
+	/** 收费管理的业务逻辑. */
+	@Autowired
+	private PriceService priceService;
+	
 	
 	/**
 	 * 委托申请列表.
@@ -145,10 +153,47 @@ public class ApplyController {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("apply") Apply apply, ServletRequest request, RedirectAttributes redirectAttributes) {
 		apply.setUpdateTime(new Date());
+		apply.setApplyStatus(ApplyStatus.REQUEST);
 		applyService.updateApply(apply,request);
 		redirectAttributes.addFlashAttribute("message", "更新委托申请成功");
 		return "redirect:/apply/";
 	}
+	
+	
+	/**
+	 * 进入委托申请审核页面.
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "audit/{id}", method = RequestMethod.GET)
+	public String audit(@PathVariable("id") Long id, Model model) {
+		Apply apply = applyService.getApply(id);
+		
+		model.addAttribute("prices", priceService.getAllPrice());
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.AUDITING, apply.getForm().getId()));
+		model.addAttribute("apply", apply);
+		logger.info(applyService.getApplyCustomField(apply).toString());
+		model.addAttribute("customField", applyService.getApplyCustomField(apply));
+		model.addAttribute("action", "audit");
+		return "experiment/apply-audit";
+	}
+
+	/**
+	 * 审核委托申请.
+	 * @param apply
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "audit", method = RequestMethod.POST)
+	public String audit(@Valid @ModelAttribute("apply") Apply apply, ServletRequest request, RedirectAttributes redirectAttributes) {
+		apply.setUpdateTime(new Date());
+		apply.setApplyStatus(ApplyStatus.AUDITING);
+		applyService.updateApply(apply,request);
+		redirectAttributes.addFlashAttribute("message", "委托申请审核 '"+apply.getIsPass().getValue()+"' 通过");
+		return "redirect:/apply/";
+	}
+	
 
 	/**
 	 * 删除委托申请.
