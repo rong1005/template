@@ -390,15 +390,20 @@
 		}
 		
 		
-		/** */
 		function addSampleSchedule(){
 			var usedTime = Number($("#usedTime").val());
-			var startTime =new Date($("#startTime").val());
-			var endTime = new Date($("#startTime").val());
-			endTime.setHours(startTime.getHours()+usedTime);
-			
-			var startTimeFormat=startTime.getFullYear()+"-"+((startTime.getMonth()+1)>9?(startTime.getMonth()+1):"0"+(startTime.getMonth()+1))+"-"+(startTime.getDate()>9?startTime.getDate():"0"+startTime.getDate())+" "+(startTime.getHours()>9?startTime.getHours():"0"+startTime.getHours())+":"+(startTime.getMinutes()>9?startTime.getMinutes():"0"+startTime.getMinutes());
-			var endTimeFormat=endTime.getFullYear()+"-"+((endTime.getMonth()+1)>9?(endTime.getMonth()+1):"0"+(endTime.getMonth()+1))+"-"+(endTime.getDate()>9?endTime.getDate():"0"+endTime.getDate())+" "+(endTime.getHours()>9?endTime.getHours():"0"+endTime.getHours())+":"+(endTime.getMinutes()>9?endTime.getMinutes():"0"+endTime.getMinutes());
+			var startTime =$("#startTime").val();
+			var endTime = "";
+			jQuery.ajax({
+                url: "${ctx}/schedule/count/time",
+                data: {"datetime":startTime,"hour":usedTime},
+                async: false,
+                type: "get",
+                dataType: "json",
+                success: function(msg) {
+                	endTime=msg.endTime;
+                }
+			 });
 			
 			var str='';
 			$("#sampleTable :checkbox:checked").each(function (index, domEle) { 
@@ -406,15 +411,15 @@
 				str=str+'<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span>';
 				str=str+'<input type="hidden" name="equipmentId" value="'+$("#equipment option:selected").val()+'"/>';
 				str=str+'<input type="hidden" name="usedTime" value="'+usedTime+'"/>';
-				str=str+'<input type="hidden" name="startTime" value="'+startTimeFormat+'"/>';
-				str=str+'<input type="hidden" name="endTime" value="'+endTimeFormat+'"/>';
+				str=str+'<input type="hidden" name="startTime" value="'+startTime+'"/>';
+				str=str+'<input type="hidden" name="endTime" value="'+endTime+'"/>';
 				str=str+'<input type="hidden" name="sampleId" value="'+$(domEle).val()+'"/>';
 				str=str+'</td>';
 				str=str+'<td>'+$("#td_"+$(domEle).val()).html()+'</td>';
 				str=str+'<td>'+$("#equipmentType option:selected").text()+' -- '+$("#equipment option:selected").text()+'</td>';
 				str=str+'<td>'+usedTime+'</td>';
-				str=str+'<td>'+startTimeFormat+'</td>';
-				str=str+'<td>'+endTimeFormat+'</td>';
+				str=str+'<td>'+startTime+'</td>';
+				str=str+'<td>'+endTime+'</td>';
 				str=str+'</tr>';
 			});
 			

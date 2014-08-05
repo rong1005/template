@@ -15,10 +15,12 @@ public enum SampleStatus {
 	RESCHEDULING("已排期", 2),
 	/** 实验中 */
 	EXPERIMENT("实验中", 3),
+	/** 实验结束 */
+	EXPERIMENT_END("实验结束", 4),
 	/** 归还 */
-	SEND_BACK("归还", 4),
+	SEND_BACK("归还", 5),
 	/** 报废 */
-	USELESS("报废", 5);
+	USELESS("报废", 6);
 
 	private String value;
 	private int index;

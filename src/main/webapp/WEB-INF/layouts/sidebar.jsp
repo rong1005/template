@@ -59,6 +59,7 @@
 					<li id="applys-list"><a class="" href="${ctx}/apply"><span class="sub-menu-text">申请记录</span></a></li>
 					<li id="experiment-start"><a class="" href="${ctx}/experiment/start"><span class="sub-menu-text">实验开始</span></a></li>
 					<li id="inspections-list"><a class="" href="${ctx}/inspection"><span class="sub-menu-text">巡检记录</span></a></li>
+					<li id="experiment-end"><a class="" href="${ctx}/experiment/end"><span class="sub-menu-text">实验结束</span></a></li>
 				</ul>
 			</li>
 			<li id="weixin-manager" class="has-sub">

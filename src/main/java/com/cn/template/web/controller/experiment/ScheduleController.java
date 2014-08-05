@@ -1,5 +1,9 @@
 package com.cn.template.web.controller.experiment;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
 import javax.servlet.ServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.experiment.EquipmentTypeService;
 import com.cn.template.service.experiment.ScheduleService;
+import com.cn.template.xutil.Constants;
+import com.cn.template.xutil.Utils;
+import com.google.common.collect.Maps;
 
 /**
  * 实验排期的业务代理.
@@ -44,7 +53,7 @@ public class ScheduleController {
 	 * @return
 	 */
 	@RequestMapping(value="/add/{applyId}",method = RequestMethod.GET)
-	private String add(@PathVariable(value = "applyId") Long applyId,Model model){
+	public String add(@PathVariable(value = "applyId") Long applyId,Model model){
 		Apply apply = applyService.getApply(applyId);
 		model.addAttribute("apply", apply);
 		model.addAttribute("customField", applyService.getApplyCustomField(apply));
@@ -60,7 +69,7 @@ public class ScheduleController {
 	 * @return
 	 */
 	@RequestMapping(value="/add/{applyId}",method = RequestMethod.POST)
-	private String add(@PathVariable(value = "applyId") Long applyId,ServletRequest request,RedirectAttributes redirectAttributes){
+	public String add(@PathVariable(value = "applyId") Long applyId,ServletRequest request,RedirectAttributes redirectAttributes){
 		try{
 		scheduleService.saveSchedule(applyId,request);
 		}catch(Exception e){
@@ -68,6 +77,24 @@ public class ScheduleController {
 		}
 		redirectAttributes.addFlashAttribute("message", "已添加实验排期信息.");
 		return "redirect:/apply/";
+	}
+	
+	/**
+	 * 计算返回结束时间
+	 * @param datetime
+	 * @param hour
+	 * @return
+	 */
+	@RequestMapping(value="/count/time")
+	@ResponseBody
+	public Map<String,String> countTime(@RequestParam(value = "datetime") String datetime,@RequestParam(value = "hour") Integer hour ){
+		Date date=Utils.parseDate(datetime);
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.HOUR, hour);
+		Map<String,String> map= Maps.newHashMap();
+		map.put("endTime", Utils.datef(calendar.getTime(), Constants.DATETIME_MIN_FORMAT));
+		return map;
 	}
 	
 }

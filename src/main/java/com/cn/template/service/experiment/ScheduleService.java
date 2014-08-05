@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cn.template.entity.experiment.Apply;
 import com.cn.template.entity.experiment.Sample;
 import com.cn.template.entity.experiment.Schedule;
+import com.cn.template.repository.experiment.ApplyDao;
 import com.cn.template.repository.experiment.ScheduleDao;
 import com.cn.template.xutil.Utils;
+import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.SampleStatus;
 
 /**
@@ -27,12 +30,20 @@ public class ScheduleService {
 
 	/** 实验排期的数据访问接口 */
 	private ScheduleDao scheduleDao;
+	
+	/** 实验委托请求信息的数据访问接口 */
+	private ApplyDao applyDao;
 
 	@Autowired
 	public void setScheduleDao(ScheduleDao scheduleDao) {
 		this.scheduleDao = scheduleDao;
 	} 
 	
+	@Autowired
+	public void setApplyDao(ApplyDao applyDao) {
+		this.applyDao = applyDao;
+	}
+
 	/** 实验样品的业务逻辑 */
 	private SampleService sampleService;
 	
@@ -97,7 +108,7 @@ public class ScheduleService {
 	}
 	
 	/**
-	 * 更新排期信息
+	 * 实验开始
 	 * @param request
 	 */
 	public void experimentStart(ServletRequest request){
@@ -113,6 +124,10 @@ public class ScheduleService {
 					Sample sample=schedule.getSample();
 					sample.setStatus(SampleStatus.EXPERIMENT);
 					sampleService.saveSample(sample);
+					Apply apply = sample.getApply();
+					apply.setApplyStatus(ApplyStatus.BE_IN_PROGRESS);
+					applyDao.save(apply);
+					
 					Date date = new Date();
 					schedule.setUpdateTime(date);
 					schedule.setRealStartTime(date);
@@ -120,7 +135,36 @@ public class ScheduleService {
 				}
 			}
 		}
-		
+	}
+	
+	/**
+	 * 实验结束
+	 * @param request
+	 */
+	public void experimentEnd(ServletRequest request){
+		Map<String, String[]> map = request.getParameterMap();
+		if(map.containsKey("equipmentId")&&map.containsKey("sampleSerialNumber")){
+			String[] equipmentId=map.get("equipmentId");
+			String[] sampleSerialNumber=map.get("sampleSerialNumber");
+			for(int i=0;i<equipmentId.length;i++){
+				String[] serialNumbers = sampleSerialNumber[i].split(";");
+				
+				for(String serialNumber:serialNumbers){
+					Schedule schedule = scheduleDao.findByEquipment_IdAndSample_SerialNumber(Long.parseLong(equipmentId[i]), serialNumber);
+					Sample sample=schedule.getSample();
+					sample.setStatus(SampleStatus.EXPERIMENT_END);
+					sampleService.saveSample(sample);
+					Apply apply = sample.getApply();
+					apply.setApplyStatus(ApplyStatus.FINISH);
+					applyDao.save(apply);
+					
+					Date date = new Date();
+					schedule.setUpdateTime(date);
+					schedule.setRealEndTime(date);
+					scheduleDao.save(schedule);
+				}
+			}
+		}
 	}
 	
 	
