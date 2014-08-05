@@ -1,6 +1,7 @@
 package com.cn.template.web.controller.experiment;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -156,6 +158,34 @@ public class EquipmentController {
 		equipmentService.deleteEquipment(id);
 		redirectAttributes.addFlashAttribute("message", "删除实验设备成功");
 		return "redirect:/equipment/"+equipment.getEquipmentType().getId();
+	}
+	
+	
+	/**
+	 * JSon返回设备列表.
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "list/{id}")
+	@ResponseBody
+	public List<Equipment> jsonList(@PathVariable("id") Long id){
+		return equipmentService.getTypeEquipments(id);
+	}
+	
+	/**
+	 * JSon返回设备信息.
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "show/{code}")
+	@ResponseBody
+	public Equipment show(@PathVariable("code") String code){
+		Equipment equipment = equipmentService.getEquipment(code);
+		if(equipment!=null){
+			return equipment;
+		}else{
+			return null;
+		}
 	}
 
 	/**

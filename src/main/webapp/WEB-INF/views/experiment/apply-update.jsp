@@ -251,11 +251,6 @@
 										<textarea rows="10" cols="10" class="form-control" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
 									</div>
 								</div>
-								<!-- 只读状态下，将默认值插入 -->
-								<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">
-									<input type="hidden" name="ch_${field.name}" value="${field.chDefaultValue}" />
-									<input type="hidden" name="en_${field.name}" value="${field.enDefaultValue}" />
-								</c:if>
 								</c:when>
 								
 								<c:otherwise>

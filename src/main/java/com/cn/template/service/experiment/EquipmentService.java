@@ -45,6 +45,15 @@ public class EquipmentService {
 	public Equipment getEquipment(Long id) {
 		return equipmentDao.findOne(id);
 	}
+	
+	/**
+	 * 根据设备编号获得设备信息.
+	 * @param serialNumber
+	 * @return
+	 */
+	public Equipment getEquipment(String serialNumber) {
+		return equipmentDao.findBySerialNumber(serialNumber);
+	}
 
 	/**
 	 * 保存实验设备信息.
@@ -72,6 +81,15 @@ public class EquipmentService {
 	 */
 	public List<Equipment> getAllEquipment() {
 		return (List<Equipment>) equipmentDao.findAll();
+	}
+	
+	/**
+	 * 获得类型下的所有设备.
+	 * @param typeId
+	 * @return
+	 */
+	public List<Equipment> getTypeEquipments(Long typeId){
+		return equipmentDao.findByEquipmentType_Id(typeId);
 	}
 
 	/**

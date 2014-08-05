@@ -21,8 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
-import com.cn.template.service.experiment.EquipmentService;
-import com.cn.template.service.experiment.EquipmentTypeService;
 import com.cn.template.service.experiment.PriceService;
 import com.cn.template.service.form.FieldService;
 import com.cn.template.service.form.NodeService;

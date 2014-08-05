@@ -100,6 +100,9 @@ public class Apply extends IdEntity {
 	
 	/** 费用清单 */
 	private List<ApplyPrice> applyPrices;
+	
+	/** 样品信息. */
+	private List<Sample> samples;
 
 	@ManyToOne
 	@JoinColumn(name = "form_id")
@@ -324,5 +327,17 @@ public class Apply extends IdEntity {
 	public void setApplyPrices(List<ApplyPrice> applyPrices) {
 		this.applyPrices = applyPrices;
 	}
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="apply")
+	@OrderBy(value = "id ASC")
+	public List<Sample> getSamples() {
+		return samples;
+	}
+
+	public void setSamples(List<Sample> samples) {
+		this.samples = samples;
+	}
+	
+	
 	
 }

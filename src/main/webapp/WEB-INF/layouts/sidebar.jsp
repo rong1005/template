@@ -57,6 +57,7 @@
 					<li id="prices-list"><a class="" href="${ctx}/price"><span class="sub-menu-text">费用明细</span></a></li>
 					<li id="froms-list"><a class="" href="${ctx}/form"><span class="sub-menu-text">表单列表</span></a></li>
 					<li id="applys-list"><a class="" href="${ctx}/apply"><span class="sub-menu-text">申请记录</span></a></li>
+					<li id="experiment-start"><a class="" href="${ctx}/experiment/start"><span class="sub-menu-text">实验开始</span></a></li>
 				</ul>
 			</li>
 			<li id="weixin-manager" class="has-sub">

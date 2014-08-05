@@ -32,8 +32,17 @@ public class Schedule extends IdEntity {
 	/** 开始时间 */
 	private Date startTime;
 	
+	/** 实验用时 */
+	private Integer usedTime;
+	
 	/** 结束时间 */
 	private Date endTime;
+	
+	/** 实际开始时间 */
+	private Date realStartTime;
+	
+	/** 实际结束时间 */
+	private Date realEndTime;
 
 	
 	@ManyToOne
@@ -89,4 +98,36 @@ public class Schedule extends IdEntity {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+
+	public Integer getUsedTime() {
+		return usedTime;
+	}
+
+	public void setUsedTime(Integer usedTime) {
+		this.usedTime = usedTime;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+08:00")
+	public Date getRealStartTime() {
+		return realStartTime;
+	}
+
+	public void setRealStartTime(Date realStartTime) {
+		this.realStartTime = realStartTime;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+08:00")
+	public Date getRealEndTime() {
+		return realEndTime;
+	}
+
+	public void setRealEndTime(Date realEndTime) {
+		this.realEndTime = realEndTime;
+	}
+	
+	
 }
