@@ -3312,6 +3312,12 @@ var App = function () {
 			if (App.isPage("equipment_forms")) {
 				handleAutosize(); //Function to handle textarea autosize
 				handleCountable(); //Function to handle char count
+				handleUniform();
+			}
+			if (App.isPage("inspectionRecord_forms")) {
+				handleAutosize(); //Function to handle textarea autosize
+				handleCountable(); //Function to handle char count
+				handleUniform();
 			}
 			if (App.isPage("equipmentType_forms")) {
 				handleAutosize(); //Function to handle textarea autosize

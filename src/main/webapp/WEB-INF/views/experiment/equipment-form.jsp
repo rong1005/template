@@ -1,3 +1,4 @@
+<%@page import="com.cn.template.xutil.enums.RecordType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -6,6 +7,8 @@
 <html lang="zh">
 <head>
 	<title>实验设备管理</title>
+	<!-- UNIFORM -->
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
 </head>
 <body>
 
@@ -67,6 +70,18 @@
 									<label class="col-sm-2 control-label">设备型号</label>
 									<div class="col-sm-10">
 										<input type="text" id="equipment_modelNumber" name="modelNumber" value="${equipment.modelNumber}" class="form-control" placeholder="设备型号"/>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">巡检记录类型</label>
+									<div class="col-sm-10">
+										<c:forEach items="<%=RecordType.values() %>" var="recordType">
+										<label class="radio-inline">
+											<input type="radio" class="uniform" id="apply_recordType" name="recordType" <c:if test="${equipment.recordType eq recordType}">checked="checked"</c:if> value="${recordType}"> 
+											${recordType.value}
+										</label>
+										</c:forEach>
 									</div>
 								</div>
 								
@@ -137,6 +152,9 @@
 	
 	<!-- 日期插件 -->
 	<script type="text/javascript" src="${ctx}/static/js/datepicker97/WdatePicker.js"></script>
+	
+	<!-- UNIFORM -->
+	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
 
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>

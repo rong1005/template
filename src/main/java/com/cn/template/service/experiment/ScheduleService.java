@@ -88,6 +88,8 @@ public class ScheduleService {
 				schedule.setUsedTime(Integer.parseInt(usedTime[i]));
 				schedule.setStartTime(Utils.parseDate(startTime[i]));
 				schedule.setEndTime(Utils.parseDate(endTime[i]));
+				schedule.setRealStartTime(schedule.getStartTime());
+				schedule.setRealEndTime(schedule.getEndTime());
 				scheduleDao.save(schedule);
 			}
 		}

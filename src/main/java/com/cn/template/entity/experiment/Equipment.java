@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cn.template.entity.IdEntity;
+import com.cn.template.xutil.enums.RecordType;
 import com.cn.template.xutil.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -53,6 +54,9 @@ public class Equipment extends IdEntity {
 	
 	/** 设备状态 */
 	private Status status;
+	
+	/** 巡检记录类型 */
+	private RecordType recordType;
 
 	@ManyToOne
 	@JoinColumn(name="equipment_type_id")
@@ -146,4 +150,15 @@ public class Equipment extends IdEntity {
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
 	}
+
+	@Enumerated(EnumType.ORDINAL)
+	public RecordType getRecordType() {
+		return recordType;
+	}
+
+	public void setRecordType(RecordType recordType) {
+		this.recordType = recordType;
+	}
+	
+	
 }
