@@ -24,6 +24,9 @@
 	<title>委托申请</title>
 	<!-- UNIFORM -->
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
+	
+	<!-- 富文本编辑器 -->
+	<link href="${ctx}/static/js/ueditor/themes/default/css/ueditor.min.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 
@@ -112,6 +115,21 @@
 									</div>
 								</div>
 								<hr>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">委托人邮箱</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_clientMail" name="clientMail" class="form-control" value="${apply.clientMail}" placeholder="委托人邮箱"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">跟踪人邮箱</label>
+									<div class="col-sm-10">
+										<input type="text" id="apply_followMail" name="followMail" class="form-control" value="${apply.followMail}" placeholder="跟踪人邮箱"/>
+									</div>
+								</div>
+								<hr>
+								
 								<div class="form-group">
 									<label class="col-sm-2 control-label">检验项目(中文)</label>
 									<div class="col-sm-10">
@@ -269,15 +287,18 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<textarea rows="5" cols="10" class="form-control" id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.chDefaultValue}</textarea>
+										<textarea style="width: 100%;height: 260px;" id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.chDefaultValue}</textarea>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.enViewName}</label>
 									<div class="col-sm-10">
-										<textarea rows="5" cols="10" class="form-control" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.enDefaultValue}</textarea>
+										<textarea style="width: 100%;height: 260px;" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${field.enDefaultValue}</textarea>
 									</div>
 								</div>
+								
+								
+								
 								<!-- 只读状态下，将默认值插入 -->
 								<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">
 									<input type="hidden" name="ch_${field.name}" value="${field.chDefaultValue}" />
@@ -331,6 +352,12 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
+	
+	<!-- 富文本编辑器 -->
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.all.min.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${ctx}/static/js/ueditor/customize/addCustomizeDialog.js"></script>
 
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
@@ -343,6 +370,12 @@
 			App.setSubMenu("forms-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置表单路径
 			App.init(); //初始化元素以及插件
+			
+			
+			$("textarea").each(function (index, domEle) { 
+				UE.getEditor($(domEle).attr("id"));
+			});
+
 			
 		});
 	</script>

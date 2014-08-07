@@ -56,32 +56,45 @@
 						<div class="col-md-4 col-md-offset-4">
 							<div class="login-box-plain">
 								<h2 class="bigintro">Sign In</h2>
-								<div class="divide-40"></div>
-								<form role="form">
+								<div class="divide-40">
+								<%
+								String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+								if(error != null){
+								%>
+								<h5 class="text-danger" style="line-height: 40px;"><i class="fa fa-times"></i> 登录失败,帐号或密码错误</h5>
+								<%
+								}
+								%>
+								
+								<c:if test="${not empty message}">
+								<h5 class="text-success" style="line-height: 40px;"><i class="fa fa-check-square-o"></i> ${message}</h5>
+								</c:if>
+								</div>
+								<form role="form" id="loginForm" action="${ctx}/login" method="post">
 								  <div class="form-group">
-									<label for="exampleInputEmail1">Email address</label>
+									<label for="username">手机号 / 账号 / 邮箱</label>
 									<i class="fa fa-envelope"></i>
-									<input type="email" class="form-control" id="exampleInputEmail1" >
+									<input type="text" name="username" class="form-control" id="username" value="${username}" >
 								  </div>
 								  <div class="form-group"> 
-									<label for="exampleInputPassword1">Password</label>
+									<label for="password">登录密码</label>
 									<i class="fa fa-lock"></i>
-									<input type="password" class="form-control" id="exampleInputPassword1" >
+									<input type="password" name="password" class="form-control" id="password" >
 								  </div>
 								  <div class="form-actions">
-									<label class="checkbox"> <input type="checkbox" class="uniform" value=""> Remember me</label>
-									<button type="submit" class="btn btn-danger">Submit</button>
+									<label class="checkbox"> <input type="checkbox" class="uniform" value=""> 十天内免登录</label>
+									<button type="submit" class="btn btn-danger"> 登 录 </button>
 								  </div>
 								</form>
 								<!-- SOCIAL LOGIN -->
 								<div class="divide-20"></div>
 								<div class="center">
-									<strong>Or login using your social account</strong>
+									<strong>无需注册，直接使用社交账号登录</strong>
 								</div>
 								<div class="divide-20"></div>
 								<div class="social-login center">
 									<a class="btn btn-primary btn-lg">
-										<i class="fa fa-facebook"></i>
+										<i class="fa fa-weibo"></i>
 									</a>
 									<a class="btn btn-info btn-lg">
 										<i class="fa fa-twitter"></i>
@@ -92,9 +105,11 @@
 								</div>
 								<!-- /SOCIAL LOGIN -->
 								<div class="login-helpers">
-									<a href="#" onclick="swapScreen('forgot');return false;">Forgot Password?</a> <br>
-									Don't have an account with us? <a href="#" onclick="swapScreen('register');return false;">Register
-										now!</a>
+									<a href="#" onclick="swapScreen('forgot');return false;">忘记密码?</a> 
+									<br/>
+									&emsp;&emsp;(管理员: <b>admin/admin</b>, 普通用户: <b>user/user</b>)
+									<br/>
+									没有账号? <a href="#" onclick="swapScreen('register');return false;">马上注册!</a>
 								</div>
 							</div>
 						</div>
@@ -108,48 +123,48 @@
 					<div class="row">
 						<div class="col-md-4 col-md-offset-4">
 							<div class="login-box-plain">
-								<h2 class="bigintro">Register</h2>
+								<h2 class="bigintro"> 欢 迎 加 入 </h2>
 								<div class="divide-40"></div>
-								<form role="form">
+								<form role="form" id="registerForm" action="${ctx}/register" method="post">
 								  <div class="form-group">
-									<label for="exampleInputName">Full Name</label>
+									<label for="exampleInputName">登录账号</label>
 									<i class="fa fa-font"></i>
-									<input type="text" class="form-control" id="exampleInputName" >
+									<input type="text" name="loginName" class="form-control" id="loginName" >
 								  </div>
 								  <div class="form-group">
-									<label for="exampleInputUsername">Username</label>
+									<label for="exampleInputUsername">姓名</label>
 									<i class="fa fa-user"></i>
-									<input type="text" class="form-control" id="exampleInputUsername" >
+									<input type="text" name="name" class="form-control" id="name" >
 								  </div>
 								  <div class="form-group">
-									<label for="exampleInputEmail1">Email address</label>
+									<label for="exampleInputEmail1">邮箱地址</label>
 									<i class="fa fa-envelope"></i>
-									<input type="email" class="form-control" id="exampleInputEmail1" >
+									<input type="email" name="email" class="form-control" id="email" >
 								  </div>
 								  <div class="form-group"> 
-									<label for="exampleInputPassword1">Password</label>
+									<label for="exampleInputPassword1">创建密码</label>
 									<i class="fa fa-lock"></i>
-									<input type="password" class="form-control" id="exampleInputPassword1" >
+									<input type="password" name="plainPassword" class="form-control" id="plainPassword" >
 								  </div>
 								  <div class="form-group"> 
-									<label for="exampleInputPassword2">Repeat Password</label>
+									<label for="exampleInputPassword2">确认密码</label>
 									<i class="fa fa-check-square-o"></i>
-									<input type="password" class="form-control" id="exampleInputPassword2" >
+									<input type="password" name="confirmPassword" class="form-control" id="confirmPassword" >
 								  </div>
-								  <div class="form-actions">
-									<label class="checkbox"> <input type="checkbox" class="uniform" value=""> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
-									<button type="submit" class="btn btn-success">Sign Up</button>
+								  <div>
+									<label class="checkbox"> <input type="checkbox" class="uniform" value=""> 同意<a href="#">"服务条款"</a> 和 <a href="#">"用户须知"</a>、<a href="#">"隐私权相关政策"</a></label>
+									<button type="submit" class="btn btn-success"> 马 上 注 册 </button>
 								  </div>
 								</form>
 								<!-- SOCIAL REGISTER -->
 								<div class="divide-20"></div>
 								<div class="center">
-									<strong>Or register using your social account</strong>
+									<strong>无需注册，直接使用社交账号登录</strong>
 								</div>
 								<div class="divide-20"></div>
 								<div class="social-login center">
 									<a class="btn btn-primary btn-lg">
-										<i class="fa fa-facebook"></i>
+										<i class="fa fa-weibo"></i>
 									</a>
 									<a class="btn btn-info btn-lg">
 										<i class="fa fa-twitter"></i>
@@ -160,7 +175,7 @@
 								</div>
 								<!-- /SOCIAL REGISTER -->
 								<div class="login-helpers">
-									<a href="#" onclick="swapScreen('login');return false;"> Back to Login</a> <br>
+									<a href="#" onclick="swapScreen('login');return false;"> 回到登录页 </a> <br>
 								</div>
 							</div>
 						</div>
@@ -174,11 +189,11 @@
 					<div class="row">
 						<div class="col-md-4 col-md-offset-4">
 							<div class="login-box-plain">
-								<h2 class="bigintro">Reset Password</h2>
+								<h2 class="bigintro">找回密码</h2>
 								<div class="divide-40"></div>
 								<form role="form">
 								  <div class="form-group">
-									<label for="exampleInputEmail1">Enter your Email address</label>
+									<label for="exampleInputEmail1">输入您的邮箱地址</label>
 									<i class="fa fa-envelope"></i>
 									<input type="email" class="form-control" id="exampleInputEmail1" >
 								  </div>
@@ -187,7 +202,7 @@
 								  </div>
 								</form>
 								<div class="login-helpers">
-									<a href="#" onclick="swapScreen('login');return false;">Back to Login</a> <br>
+									<a href="#" onclick="swapScreen('login');return false;"> 回到登录页 </a> <br>
 								</div>
 							</div>
 						</div>
@@ -209,19 +224,46 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
-	<!-- CUSTOM SCRIPT -->
-	<script src="${ctx}/static/js/script.js"></script>
-	<script>
-		jQuery(document).ready(function() {		
-			App.setPage("login");  //Set current page
-			App.init(); //Initialise plugins and elements
-		});
-	</script>
+	
+	<!-- JQUERY-VALIDATE -->
+	<script type="text/javascript" src="${ctx}/static/js/jquery-validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/jquery-validate/additional-methods.min.js"></script>
+	
+	<!-- COOKIE -->
+	<script type="text/javascript" src="${ctx}/static/js/jQuery-Cookie/jquery.cookie.min.js"></script>
+	
 	<script type="text/javascript">
+	$(".uniform").uniform();
+		jQuery(document).ready(function() {		
+			$(".uniform").uniform();
+			
+			//登录校验.
+			$("#loginForm").validate({
+				errorPlacement: function(error, element) { 
+				    $(element).attr("data-content",$(error).html());
+				    $(element).popover({
+				    	placement : 'left',
+				    	trigger : 'focus'
+				    });
+				},
+				rules: {
+					username: "required",
+					password: "required"
+				},
+				messages: {
+					username: "请输入您的登录账号",
+					password: "请输入您的登录密码"
+				}
+			});
+		});
+
 		function swapScreen(id) {
 			jQuery('.visible').removeClass('visible animated fadeInUp');
 			jQuery('#'+id).addClass('visible animated fadeInUp');
 		}
+		
+		//清除侧边栏的历史样式Cookie.
+		$.cookie('mini_sidebar',null); 
 	</script>
 	<!-- /JAVASCRIPTS -->
 </body>

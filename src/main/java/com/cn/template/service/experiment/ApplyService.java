@@ -200,14 +200,14 @@ public class ApplyService {
 			fieldValues.append(newApply.getId());
 			fieldValues.append(",'"+newApply.getChApplyName()+"'");
 			fieldValues.append(",'"+newApply.getEnApplyName()+"'");
+			fieldValues.append(",'"+newApply.getChCheckType()+"'");
+			fieldValues.append(",'"+newApply.getEnCheckType()+"'");
 			fieldValues.append(",'"+newApply.getChConsigner()+"'");
 			fieldValues.append(",'"+newApply.getEnConsigner()+"'");
 			fieldValues.append(",'"+newApply.getChClient()+"'");
 			fieldValues.append(",'"+newApply.getEnClient()+"'");
 			fieldValues.append(",'"+newApply.getChTestItems()+"'");
 			fieldValues.append(",'"+newApply.getEnTestItems()+"'");
-			fieldValues.append(",'"+newApply.getChCheckType()+"'");
-			fieldValues.append(",'"+newApply.getEnCheckType()+"'");
 			fieldValues.append(",'"+newApply.getChSampleName()+"'");
 			fieldValues.append(",'"+newApply.getEnSampleName()+"'");
 			fieldValues.append(",'"+newApply.getSampleModel()+"'");
@@ -357,12 +357,21 @@ public class ApplyService {
 			setString.append(" serial_number='"+apply.getSerialNumber()+"', ");
 			setString.append(" ch_apply_name='"+apply.getChApplyName()+"', ");
 			setString.append(" en_apply_name='"+apply.getEnApplyName()+"', ");
-			setString.append(" ch_check_type='"+apply.getChConsigner()+"', ");
-			setString.append(" en_check_type='"+apply.getEnConsigner()+"', ");
-			setString.append(" ch_consigner='"+apply.getChTestItems()+"', ");
-			setString.append(" en_consigner='"+apply.getEnTestItems()+"', ");
-			setString.append(" ch_test_items='"+apply.getChCheckType()+"', ");
-			setString.append(" en_test_items='"+apply.getEnCheckType()+"', ");
+			setString.append(" ch_check_type='"+apply.getChCheckType()+"', ");
+			setString.append(" en_check_type='"+apply.getEnCheckType()+"', ");
+			setString.append(" ch_consigner='"+apply.getChConsigner()+"', ");
+			setString.append(" en_consigner='"+apply.getEnConsigner()+"', ");
+			setString.append(" ch_test_items='"+apply.getChTestItems()+"', ");
+			setString.append(" en_test_items='"+apply.getEnTestItems()+"', ");
+			setString.append(" ch_client='"+apply.getChClient()+"', ");
+			setString.append(" en_client='"+apply.getEnClient()+"', ");
+			
+			setString.append(" ch_sample_name='"+apply.getChSampleName()+"', ");
+			setString.append(" en_sample_name='"+apply.getEnSampleName()+"', ");
+			setString.append(" sample_model='"+apply.getSampleModel()+"', ");
+			setString.append(" sample_number='"+apply.getSampleNumber()+"', ");
+			setString.append(" ch_units='"+apply.getChUnits()+"', ");
+			setString.append(" en_units='"+apply.getEnUnits()+"', ");
 
 			for(Field field : form.getFields()){
 				

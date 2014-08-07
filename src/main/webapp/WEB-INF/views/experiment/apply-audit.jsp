@@ -116,6 +116,21 @@
 									</div>
 								</div>
 								<hr>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">委托人邮箱</label>
+									<div class="col-sm-10">
+										<input type="text" disabled="disabled" id="apply_clientMail" name="clientMail" class="form-control" value="${apply.clientMail}" placeholder="委托人邮箱"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">跟踪人邮箱</label>
+									<div class="col-sm-10">
+										<input type="text" disabled="disabled" id="apply_followMail" name="followMail" class="form-control" value="${apply.followMail}" placeholder="跟踪人邮箱"/>
+									</div>
+								</div>
+								<hr>
+								
 								<div class="form-group">
 									<label class="col-sm-2 control-label">检验项目(中文)</label>
 									<div class="col-sm-10">

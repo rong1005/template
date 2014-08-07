@@ -94,7 +94,13 @@ public class Apply extends IdEntity {
 	
 	/** 是否通过 */
 	private Whether isPass;
-
+	
+	/** 委托人邮件 */
+	private String clientMail;
+	
+	/** 跟踪人邮件 */
+	private String followMail;
+	
 	/** 申请的备注记录信息 */
 	private List<ApplyRemark> remarks;
 	
@@ -337,7 +343,21 @@ public class Apply extends IdEntity {
 	public void setSamples(List<Sample> samples) {
 		this.samples = samples;
 	}
-	
-	
+
+	public String getClientMail() {
+		return clientMail;
+	}
+
+	public void setClientMail(String clientMail) {
+		this.clientMail = clientMail;
+	}
+
+	public String getFollowMail() {
+		return followMail;
+	}
+
+	public void setFollowMail(String followMail) {
+		this.followMail = followMail;
+	}
 	
 }
