@@ -3309,6 +3309,12 @@ var App = function () {
 			if (App.isPage("apply_forms")) {
 				handleUniform();
 			}
+			if (App.isPage("sample_handle")) {
+				handleUniform();
+			}
+			if (App.isPage("experiment-end")) {
+				handleUniform();
+			}
 			if (App.isPage("equipment_forms")) {
 				handleAutosize(); //Function to handle textarea autosize
 				handleCountable(); //Function to handle char count

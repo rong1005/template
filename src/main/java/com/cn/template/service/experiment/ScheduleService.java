@@ -10,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cn.template.entity.authority.User;
 import com.cn.template.entity.experiment.Apply;
+import com.cn.template.entity.experiment.InspectionRecord;
 import com.cn.template.entity.experiment.Sample;
+import com.cn.template.entity.experiment.SampleDetail;
 import com.cn.template.entity.experiment.Schedule;
 import com.cn.template.repository.experiment.ApplyDao;
+import com.cn.template.repository.experiment.SampleDetailDao;
 import com.cn.template.repository.experiment.ScheduleDao;
 import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.ApplyStatus;
+import com.cn.template.xutil.enums.ExperimentResult;
 import com.cn.template.xutil.enums.SampleStatus;
 
 /**
@@ -33,6 +38,9 @@ public class ScheduleService {
 	
 	/** 实验委托请求信息的数据访问接口 */
 	private ApplyDao applyDao;
+	
+	/** 实验样品明细信息的数据访问接口 */
+	private SampleDetailDao sampleDetailDao;
 
 	@Autowired
 	public void setScheduleDao(ScheduleDao scheduleDao) {
@@ -43,6 +51,12 @@ public class ScheduleService {
 	public void setApplyDao(ApplyDao applyDao) {
 		this.applyDao = applyDao;
 	}
+	
+	@Autowired
+	public void setSampleDetailDao(SampleDetailDao sampleDetailDao) {
+		this.sampleDetailDao = sampleDetailDao;
+	}
+
 
 	/** 实验样品的业务逻辑 */
 	private SampleService sampleService;
@@ -91,6 +105,14 @@ public class ScheduleService {
 				Sample sample = sampleService.getSample(Long.parseLong(sampleId[i]));
 				sample.setStatus(SampleStatus.RESCHEDULING);
 				sampleService.saveSample(sample);
+				
+				SampleDetail sampleDetail=new SampleDetail();
+				sampleDetail.setContent("排期");
+				sampleDetail.setCreateTime(new Date());
+				sampleDetail.setUpdateTime(new Date());
+				sampleDetail.setUser(new User(Utils.getCurrentUserId()));
+				sampleDetailDao.save(sampleDetail);
+				
 				Schedule schedule = new Schedule();
 				schedule.setCreateTime(new Date());
 				schedule.setUpdateTime(new Date());
@@ -124,6 +146,14 @@ public class ScheduleService {
 					Sample sample=schedule.getSample();
 					sample.setStatus(SampleStatus.EXPERIMENT);
 					sampleService.saveSample(sample);
+					
+					SampleDetail sampleDetail=new SampleDetail();
+					sampleDetail.setContent("实验开始");
+					sampleDetail.setCreateTime(new Date());
+					sampleDetail.setUpdateTime(new Date());
+					sampleDetail.setUser(new User(Utils.getCurrentUserId()));
+					sampleDetailDao.save(sampleDetail);
+					
 					Apply apply = sample.getApply();
 					apply.setApplyStatus(ApplyStatus.BE_IN_PROGRESS);
 					applyDao.save(apply);
@@ -143,9 +173,10 @@ public class ScheduleService {
 	 */
 	public void experimentEnd(ServletRequest request){
 		Map<String, String[]> map = request.getParameterMap();
-		if(map.containsKey("equipmentId")&&map.containsKey("sampleSerialNumber")){
+		if(map.containsKey("equipmentId")&&map.containsKey("sampleSerialNumber")&&map.containsKey("experimentResult")){
 			String[] equipmentId=map.get("equipmentId");
 			String[] sampleSerialNumber=map.get("sampleSerialNumber");
+			String[] experimentResult=map.get("experimentResult");
 			for(int i=0;i<equipmentId.length;i++){
 				String[] serialNumbers = sampleSerialNumber[i].split(";");
 				
@@ -153,7 +184,16 @@ public class ScheduleService {
 					Schedule schedule = scheduleDao.findByEquipment_IdAndSample_SerialNumber(Long.parseLong(equipmentId[i]), serialNumber);
 					Sample sample=schedule.getSample();
 					sample.setStatus(SampleStatus.EXPERIMENT_END);
+					sample.setResult(ExperimentResult.valueOf(experimentResult[i]));
 					sampleService.saveSample(sample);
+					
+					SampleDetail sampleDetail=new SampleDetail();
+					sampleDetail.setContent("实验结束");
+					sampleDetail.setCreateTime(new Date());
+					sampleDetail.setUpdateTime(new Date());
+					sampleDetail.setUser(new User(Utils.getCurrentUserId()));
+					sampleDetailDao.save(sampleDetail);
+					
 					Apply apply = sample.getApply();
 					apply.setApplyStatus(ApplyStatus.FINISH);
 					applyDao.save(apply);
@@ -183,6 +223,15 @@ public class ScheduleService {
 	 */
 	public List<Schedule> findApplySchedule(Long applyId){
 		return scheduleDao.findBySample_Apply_Id(applyId);
+	}
+	
+	/**
+	 * 取得巡检异常
+	 * @param inspectionRecord
+	 * @return
+	 */
+	public List<Schedule> findExceptionSchedule(InspectionRecord inspectionRecord){
+		return scheduleDao.findByEquipmentAndRealStartTimeBeforeAndRealEndTimeAfter(inspectionRecord.getEquipment(), inspectionRecord.getCreateTime(), inspectionRecord.getCreateTime());
 	}
  
 }

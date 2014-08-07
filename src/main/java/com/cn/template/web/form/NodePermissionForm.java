@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.cn.template.entity.form.Node;
 import com.cn.template.xutil.enums.ApplyStatus;
-import com.cn.template.xutil.enums.PermissionType;
 
 /**
  * 节点授权信息（页面数据传递使用）.

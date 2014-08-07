@@ -1,10 +1,12 @@
 package com.cn.template.repository.experiment;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import com.cn.template.entity.experiment.Equipment;
 import com.cn.template.entity.experiment.Schedule;
 
 /**
@@ -28,4 +30,14 @@ public interface ScheduleDao extends PagingAndSortingRepository<Schedule, Long>,
 	 * @return
 	 */
 	public Schedule findByEquipment_IdAndSample_SerialNumber(Long equipmentId,String serialNumber);
+	
+	/**
+	 * 取得设备在指定时间内的排班记录.
+	 * @param equipment
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public List<Schedule> findByEquipmentAndRealStartTimeBeforeAndRealEndTimeAfter(Equipment equipment,Date startTime,Date endTime);
+	
 }

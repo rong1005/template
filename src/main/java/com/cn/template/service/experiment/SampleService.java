@@ -1,5 +1,6 @@
 package com.cn.template.service.experiment;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +13,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cn.template.entity.authority.User;
 import com.cn.template.entity.experiment.Sample;
+import com.cn.template.entity.experiment.SampleDetail;
 import com.cn.template.repository.experiment.SampleDao;
+import com.cn.template.repository.experiment.SampleDetailDao;
+import com.cn.template.xutil.Utils;
+import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.Operator;
+import com.cn.template.xutil.enums.SampleStatus;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
+import com.google.common.collect.Lists;
 
 /**
  * 实验样品的业务逻辑.
@@ -30,9 +38,17 @@ public class SampleService {
 	/** 实验样品的数据访问接口 */
 	private SampleDao sampleDao;
 	
+	/** 实验样品明细信息的数据访问接口 */
+	private SampleDetailDao sampleDetailDao;
+	
 	@Autowired
 	public void setSampleDao(SampleDao sampleDao) {
 		this.sampleDao = sampleDao;
+	}
+	
+	@Autowired
+	public void setSampleDetailDao(SampleDetailDao sampleDetailDao) {
+		this.sampleDetailDao = sampleDetailDao;
 	}
 
 	/**
@@ -50,6 +66,44 @@ public class SampleService {
 	 */
 	public void saveSample(Sample entity) {
 		sampleDao.save(entity);
+	}
+	
+	/**
+	 * 接收样品.
+	 * @param samples
+	 */
+	public void receiveSample(String samples){
+		for(String serialNumber : samples.split(";")){
+			Sample sample = sampleDao.findBySerialNumber(serialNumber);
+			sample.setStatus(SampleStatus.RECEIVED);
+			sampleDao.save(sample);
+			SampleDetail sampleDetail=new SampleDetail();
+			sampleDetail.setContent("接收");
+			sampleDetail.setCreateTime(new Date());
+			sampleDetail.setUpdateTime(new Date());
+			sampleDetail.setSample(sample);
+			sampleDetail.setUser(new User(Utils.getCurrentUserId()));
+			sampleDetailDao.save(sampleDetail);
+		}
+	}
+	
+	/**
+	 * 处理样品.
+	 * @param samples
+	 */
+	public void handleSample(String samples,SampleStatus status){
+		for(String serialNumber : samples.split(";")){
+			Sample sample = sampleDao.findBySerialNumber(serialNumber);
+			sample.setStatus(status);
+			sampleDao.save(sample);
+			SampleDetail sampleDetail=new SampleDetail();
+			sampleDetail.setContent("处理");
+			sampleDetail.setCreateTime(new Date());
+			sampleDetail.setUpdateTime(new Date());
+			sampleDetail.setSample(sample);
+			sampleDetail.setUser(new User(Utils.getCurrentUserId()));
+			sampleDetailDao.save(sampleDetail);
+		}
 	}
 
 	/**
@@ -100,6 +154,20 @@ public class SampleService {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<Sample> spec = buildSpecification(applyId,searchParams);
 		return sampleDao.findAll(spec, pageRequest);
+	}
+	
+	/**
+	 * 取得所有的样品明细信息.
+	 * @param sampleId
+	 * @return
+	 */
+	public List<SampleDetail> getSampleDetail(Long sampleId){
+		Sort sort = new Sort(Direction.ASC, "createTime");
+		List<SearchFilter> list=Lists.newArrayList();
+		SearchFilter searchFilter = new SearchFilter("sample", Operator.EQ, sampleId);
+		list.add(searchFilter);
+		Specification<SampleDetail> spec= DynamicSpecifications.bySearchFilter(list, SampleDetail.class);
+		return sampleDetailDao.findAll(spec, sort);
 	}
 
 	/**

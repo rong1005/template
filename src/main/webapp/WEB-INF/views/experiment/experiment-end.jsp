@@ -1,11 +1,17 @@
+<%@page import="com.cn.template.xutil.enums.ExperimentResult"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<c:set var="SUCCESS" value="<%=ExperimentResult.SUCCESS %>"/>
+<c:set var="FAIL" value="<%=ExperimentResult.FAIL %>"/>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
 	<title>实验管理</title>
+	<!-- UNIFORM -->
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
 </head>
 <body>
 
@@ -73,7 +79,18 @@
 									<textarea rows="5" cols="10" class="form-control" id="sample_serialNumber" placeholder="样品编号（格式：1403-0001-01;1403-0001-02;1403-0002-01;）"></textarea>
 								</div>
 							</div>
-							<br/>
+							<hr/>
+							<div class="row">
+								<div class="col-sm-12">
+									<label class="radio-inline">
+										<input type="radio" class="uniform" name="experiment_result" checked="checked" value="${SUCCESS}"> ${SUCCESS.value} 
+									</label>
+									<label class="radio-inline">
+										<input type="radio" class="uniform" name="experiment_result" value="${FAIL}"> ${FAIL.value}
+									</label>
+								</div>
+							</div>	
+							<hr/>
 							<input id="add_btn" class="btn btn-info" type="button" onclick="addExperimentDetail()" value="添加"/>&nbsp;
 							
 							<hr/>
@@ -84,6 +101,7 @@
 											<th>#</th>
 											<th>设备</th>
 											<th>样品</th>
+											<th>结果</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -105,17 +123,15 @@
 	<!-- 引入公共JS脚本 -->
 	<%@ include file="/WEB-INF/layouts/include_script.jsp"%>
 	
-	<!-- TextArea 自动调整SIZE -->
-	<script type="text/javascript" src="${ctx}/static/js/autosize/jquery.autosize.min.js"></script>
-	<!-- TextArea 计算剩余字数 -->
-	<script type="text/javascript" src="${ctx}/static/js/countable/jquery.simplyCountable.min.js"></script>
+	<!-- UNIFORM -->
+	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
 	
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
 		jQuery(document).ready(function() {
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
-			//App.setPage("price_forms");  //设置当前启动的页面
+			App.setPage("experiment-end");  //设置当前启动的页面
 			
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
 			App.setSubMenu("experiment-end");//设置二级菜单目录ID
@@ -143,9 +159,17 @@
 			var str=str+'<td><span style="color: red; cursor: pointer;" onclick="deleteExperimentDetail(this)">删除</span>';
 			var str=str+'<input type="hidden" name="equipmentId" value="'+$("#equipment_id").val()+'" />';
 			var str=str+'<input type="hidden" name="sampleSerialNumber" value="'+$("#sample_serialNumber").val()+'" />';
+			var str=str+'<input type="hidden" name="experimentResult" value="'+$(":radio:checked").val()+'" />';
 			var str=str+'</td>';
 			var str=str+'<td>'+$("#equipment_text").html()+'</td>';
 			var str=str+'<td>'+$("#sample_serialNumber").val()+'</td>';
+			
+			if($(":radio:checked").val()=="${SUCCESS}"){
+				var str=str+'<td>${SUCCESS.value}</td>';
+			}else{
+				var str=str+'<td>${FAIL.value}</td>';
+			}
+			
 			var str=str+'</tr>';
 			
 			$("#experimentTable tbody").append(str);

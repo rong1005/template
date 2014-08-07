@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="zh">
@@ -26,7 +27,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										实验样品列表
+										实验样品明细列表
 									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
@@ -36,14 +37,6 @@
 					</div>
 					<!-- /PAGE HEADER -->
 					
-					<!-- Alerts Message -->
-					<c:if test="${not empty message}">
-					<div class="alert alert-block alert-info fade in">
-						<a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
-						<h4 style="margin: 0;"><i class="fa fa-check-square-o"></i> ${message}</h4>
-					</div>
-					</c:if>
-					<!-- /Alerts Message -->
 
 					<!-- EXPORT TABLES -->
 					<div class="row">
@@ -51,7 +44,7 @@
 							<!-- BOX -->
 							<div class="box border primary">
 								<div class="box-title">
-									<h4><i class="fa fa-table"></i>实验样品列表</h4>
+									<h4><i class="fa fa-table"></i>实验样品明细列表</h4>
 									<div class="tools hidden-xs">
 										<a href="javascript:;" class="collapse">
 											<i class="fa fa-chevron-up"></i>
@@ -62,54 +55,29 @@
 									</div>
 								</div>
 								<div class="box-body">
-									<form class="form-inline" action="#">
-										<div class="form-group">
-											<input type="text" name="search_LIKE_name" class="form-control" value="${param.search_LIKE_name}" placeholder="实验样品名称" />
-										</div>
-										<button type="submit" class="btn btn-inverse" id="search_btn"> 查 询 </button>
-										<tags:sort/>
-									</form>
-									
-									<br/>
 									
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>流水号</th>
-												<th>状态</th>
-												<th>实验结果</th>
-												<th>管理</th>
+												<th>操作时间</th>
+												<th>操作人</th>
+												<th>内容</th>
 											</tr>
 										</thead>
 										<tbody>
-										<c:forEach items="${samples.content}" var="sample">
+										<c:forEach items="${sampleDetails}" var="details">
 											<tr>
-												<td>${sample.serialNumber}</td>
-												<td>${sample.status.value}</td>
-												<td>
-												<c:if test="${empty sample.result}">未完成</c:if>
-												<c:if test="${not empty sample.result}">${sample.result.value}</c:if>
-												</td>
-												<td>
-													<a href="${ctx}/sample/update/${sample.id}">修改</a> / 
-													<a href="${ctx}/sample/delete/${sample.id}" onclick="return confirm('是否删除该实验样品？')" >删除</a> / 
-													<a href="${ctx}/sample/detail/${sample.id}">明细</a>
-												</td>
+												<td><fmt:formatDate value="${details.createTime }" pattern="yyyy-MM-dd HH:mm" /></td>
+												<td>${details.user.name}</td>
+												<td>${details.content}</td>
 											</tr>
 										</c:forEach>
 										</tbody>
 									</table>
 									<div class="row">
 										<div class="col-sm-12">
-											<div class="pull-right">
-												<tags:pagination page="${samples}" paginationSize="5"/>
-											</div>
-											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/sample/create?applyId=${applyId}">添加实验样品</a> &emsp; 
-												<a class="btn btn-info" href="#">打印样品条码</a> &emsp; 
-												<a class="btn btn-info" href="${ctx}/sample/receive/${applyId}">样品接收</a> &emsp; 
-												<a class="btn btn-info" href="${ctx}/sample/handle/${applyId}">样品处理</a> &emsp; 
+												<button class="btn btn-default" onclick="history.back()">返回</button>
 											</div>
 										</div>
 									</div>

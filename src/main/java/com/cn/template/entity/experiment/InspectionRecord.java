@@ -29,8 +29,11 @@ public class InspectionRecord extends IdEntity {
 
 	/** 是否存在异常 */
 	private Whether isError;
+	
+	/** 异常是否处理 */
+	private Whether isHandle;
 
-	/** 设备描述 */
+	/** 描述 */
 	private String description;
 
 	/** 电压CH1 */
@@ -202,4 +205,14 @@ public class InspectionRecord extends IdEntity {
 		this.sampleStatus = sampleStatus;
 	}
 
+	@Enumerated(EnumType.ORDINAL)
+	public Whether getIsHandle() {
+		return isHandle;
+	}
+
+	public void setIsHandle(Whether isHandle) {
+		this.isHandle = isHandle;
+	}
+
+	
 }

@@ -1,7 +1,11 @@
+<%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<c:set var="YES" value="<%=Whether.YES %>"/>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -77,6 +81,8 @@
 											<tr>
 												<th>设备</th>
 												<th>是否异常</th>
+												<th>巡检时间</th>
+												<th>巡检人</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -84,7 +90,23 @@
 										<c:forEach items="${inspectionRecords.content}" var="inspectionRecord">
 											<tr>
 												<td>${inspectionRecord.equipment.equipmentType.name} -- ${inspectionRecord.equipment.name}</td>
-												<td>${inspectionRecord.isError.value}</td>
+												<td>
+												${inspectionRecord.isError.value}
+												<c:if test="${inspectionRecord.isError eq YES}">
+													 -- 
+													 <c:choose>
+													 <c:when test="${inspectionRecord.isHandle eq YES}">
+													 	<a href="${ctx}/ehandle/${inspectionRecord.id}" style="color: green;">已经处理</a>
+													 </c:when>
+													 <c:otherwise>
+													 	<a href="${ctx}/ehandle/${inspectionRecord.id}" style="color: red;">异常处理</a>
+													 </c:otherwise>
+													 </c:choose>
+													
+												</c:if>
+												</td>
+												<td><fmt:formatDate value="${inspectionRecord.createTime }" pattern="yyyy-MM-dd HH:mm" /></td>
+												<td>${inspectionRecord.user.name}</td>
 												<td>
 													<a href="${ctx}/inspection/update/${inspectionRecord.id}">修改</a> / 
 													<a href="${ctx}/inspection/delete/${inspectionRecord.id}" onclick="return confirm('是否删除该巡检记录？')" >删除</a>

@@ -20,4 +20,12 @@ public interface SampleDao extends PagingAndSortingRepository<Sample, Long>, Jpa
 	 * @return
 	 */
 	public List<Sample> findByApply_Id(Long applyId);
+	
+	
+	/**
+	 * 根据样品流水号取得样品信息.
+	 * @param serialNumber
+	 * @return
+	 */
+	public Sample findBySerialNumber(String serialNumber);
 }
