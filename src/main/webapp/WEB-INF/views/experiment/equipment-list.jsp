@@ -26,6 +26,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
+										<a href="${ctx}/equipment/type">类型列表</a>
+									</li>
+									<li>
 										实验设备类型列表
 									</li>
 								</ul>

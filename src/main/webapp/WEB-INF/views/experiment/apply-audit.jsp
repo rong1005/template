@@ -258,13 +258,13 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<textarea rows="5" cols="10" class="form-control" id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
+										<textarea id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.enViewName}</label>
 									<div class="col-sm-10">
-										<textarea rows="5" cols="10" class="form-control" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
+										<textarea id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
 									</div>
 								</div>
 								</c:when>
@@ -401,6 +401,12 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
+	
+	<!-- 富文本编辑器 -->
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.all.min.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${ctx}/static/js/ueditor/customize/addCustomizeDialog.js"></script>
 
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
@@ -413,6 +419,25 @@
 			App.setSubMenu("forms-list");//设置二级菜单目录ID
 			App.setPath("${ctx}/static");  //设置表单路径
 			App.init(); //初始化元素以及插件
+			
+			$("textarea").each(function (index, domEle) { 
+				if($(domEle).attr("id")!='apply_remark'){
+				if($(domEle).attr("disabled")=='disabled'){
+					UE.getEditor($(domEle).attr("id"),{
+						wordCount:false,
+						elementPathEnabled:false,
+						readonly:true,
+						initialFrameHeight:200
+					});
+				}else{
+					UE.getEditor($(domEle).attr("id"),{
+						wordCount:false,
+						elementPathEnabled:false,
+						initialFrameHeight:200
+					});
+				}
+				}
+			});
 			
 			$("#pass_btn").on("click", function(){
 				$("#apply_isPass").val("${YES}");

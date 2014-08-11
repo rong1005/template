@@ -134,6 +134,19 @@ public class ApplyService {
 		return applyDao.findOne(id);
 	}
 	
+	/** 更新申请的样品数量 */
+	public void updateSampleCount(Long applyId){
+		Apply apply=getApply(applyId);
+		apply.setSampleNumber(sampleService.getApplySample(applyId).size());
+		applyDao.save(apply);
+		Map<String, Object> parameters=Maps.newHashMap();
+		parameters.put("tableName", apply.getForm().getTableName());
+		parameters.put("setString", "sample_number = "+apply.getSampleNumber());
+		parameters.put("whereString", "apply_id = "+applyId);
+		baseMybatisDao.update(parameters);
+	}
+	
+	
 	/**
 	 * 取得委托申请中对应的自定义字段值.
 	 * @param apply
@@ -157,7 +170,6 @@ public class ApplyService {
 				}
 			}
 			parameters.put("customFields", customFields.toString());
-			logger.info("customFields : {}",customFields.toString());
 			return applyMybatisDao.findOne(parameters);
 		}else{
 			return null;

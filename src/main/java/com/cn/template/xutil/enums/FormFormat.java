@@ -9,10 +9,8 @@ package com.cn.template.xutil.enums;
 public enum FormFormat {
 	/** 中文 */
 	CHINESE("中文", 0),
-	/** 英文 */
-	ENGLISH("英文", 1),
-	/** 双语 */
-	DOUBLE("双语",2);
+	/** 双语(中英) */
+	DOUBLE("双语(中英)",1);
 
 	private String value;
 	private int index;

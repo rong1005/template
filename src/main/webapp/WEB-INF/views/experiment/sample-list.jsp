@@ -26,6 +26,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
+										<a href="${ctx}/apply">委托申请</a>
+									</li>
+									<li>
 										实验样品列表
 									</li>
 								</ul>
@@ -93,7 +96,7 @@
 												<td>
 													<a href="${ctx}/sample/update/${sample.id}">修改</a> / 
 													<a href="${ctx}/sample/delete/${sample.id}" onclick="return confirm('是否删除该实验样品？')" >删除</a> / 
-													<a href="${ctx}/sample/detail/${sample.id}">明细</a>
+													<a href="${ctx}/sample/detail/${sample.id}">操作明细</a>
 												</td>
 											</tr>
 										</c:forEach>

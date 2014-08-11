@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.entity.experiment.Sample;
+import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.experiment.SampleService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.enums.SampleStatus;
@@ -43,6 +44,10 @@ public class SampleController {
 	/** 实验样品的业务逻辑 */
 	@Autowired
 	private SampleService sampleService;
+	
+	/** 实验委托申请管理的业务逻辑. */
+	@Autowired
+	private ApplyService applyService;
 
 	/**
 	 * 实验样品列表.
@@ -102,6 +107,8 @@ public class SampleController {
 		newSample.setUpdateTime(new Date());
 		newSample.setStatus(SampleStatus.WAIT_RECEIVE);
 		sampleService.saveSample(newSample);
+		//添加样品后，对应更新申请中样品的数量.
+		applyService.updateSampleCount(newSample.getApply().getId());
 		redirectAttributes.addFlashAttribute("message", "创建实验样品成功");
 		return "redirect:/sample/"+newSample.getApply().getId();
 	}
@@ -143,6 +150,8 @@ public class SampleController {
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		Sample sample = sampleService.getSample(id);
 		sampleService.deleteSample(id);
+		//删除样品后，对应更新申请中样品的数量.
+		applyService.updateSampleCount(sample.getApply().getId());
 		redirectAttributes.addFlashAttribute("message", "删除实验样品成功");
 		return "redirect:/sample/"+sample.getApply().getId();
 	}

@@ -27,7 +27,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/sample">实验样品列表</a>
+										<a href="${ctx}/sample/${sample.apply.id}">实验样品列表</a>
 									</li>
 									<li>创建实验样品</li>
 								</ul>

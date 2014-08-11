@@ -37,7 +37,8 @@ public interface BaseMybatisDao {
 	
 	/**
 	 * 自定义组合更新.
-	 * @param parameters
+	 * @param parameters key:tableName、setString、whereString
+	 * 
 	 */
 	void update(Map<String, Object> parameters);
 	

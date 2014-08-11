@@ -29,7 +29,14 @@
 									<li>
 										<a href="${ctx}/equipmentType">实验设备类型列表</a>
 									</li>
-									<li>创建实验设备类型</li>
+									<li>
+									<c:if test="${action eq 'create' }">
+									  创建实验设备类型
+									</c:if>
+									<c:if test="${action eq 'update' }">
+									  修改实验设备类型
+									</c:if>
+									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								

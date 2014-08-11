@@ -261,13 +261,13 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.chViewName}</label>
 									<div class="col-sm-10">
-										<textarea style="width: 100%;height: 260px;" id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
+										<textarea id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">${field.enViewName}</label>
 									<div class="col-sm-10">
-										<textarea style="width: 100%;height: 260px;" id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
+										<textarea id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
 									</div>
 								</div>
 								</c:when>
@@ -333,7 +333,11 @@
 			App.init(); //初始化元素以及插件
 			
 			$("textarea").each(function (index, domEle) { 
-				UE.getEditor($(domEle).attr("id"));
+				UE.getEditor($(domEle).attr("id"),{
+					 wordCount:false,
+					 elementPathEnabled:false,
+					 initialFrameHeight:200
+				});
 			});
 
 			

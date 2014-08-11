@@ -106,7 +106,8 @@
 											</div>
 											
 											<div class="pull-left">
-												<a class="btn btn-info" href="${ctx}/field/create?formId=${form.id}">创建字段</a>
+												<a class="btn btn-info" href="${ctx}/field/create?formId=${form.id}">创建字段</a>&nbsp;
+												<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
 											</div>
 										</div>
 									</div>

@@ -18,6 +18,8 @@
 	    <!-- <task:scheduled ref="userCountScanner" method="executeBySpringTimerByXml" fixed-rate="600000"/> -->
 	    <!-- cron 
 	    <task:scheduled ref="userCountScanner" method="executeBySpringCronByXml" cron="0 15 9-17 * * MON-FRI"/>
+
+		参考：http://blog.csdn.net/liu414226580/article/details/6652686  Quartz 作业调度
 	    -->
 	</task:scheduled-tasks>
 	

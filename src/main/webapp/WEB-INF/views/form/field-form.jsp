@@ -6,6 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="INPUT" value="<%=FieldInputType.INPUT %>" />
 <c:set var="SELECT" value="<%=FieldType.SELECT %>" />
 <c:set var="CHECKBOX" value="<%=FieldType.CHECKBOX %>" />
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
@@ -42,7 +43,12 @@
 									<li>
 										<a href="${ctx}/field/${field.form.id}">字段列表</a>
 									</li>
-									<li>创建字段</li>
+									<c:if test="${action eq 'create'}">
+										<li>创建字段</li>
+									</c:if>
+									<c:if test="${action eq 'update'}">
+										<li>修改字段</li>
+									</c:if>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								
@@ -97,7 +103,7 @@
 									<label class="col-sm-2 control-label">输入类型</label> 
 									<div class="col-sm-10">
 										<c:forEach items="<%=FieldInputType.values() %>" var="fieldInputType">
-											<label class="radio-inline"> <input type="radio" name="fieldInputType" class="uniform" <c:if test="${field.fieldInputType eq fieldInputType}">checked="checked"</c:if> value="${fieldInputType }">${fieldInputType.value }</label>
+											<label class="radio-inline"> <input type="radio" name="fieldInputType" class="uniform" <c:if test="${(empty field.fieldInputType and fieldInputType eq INPUT) or field.fieldInputType eq fieldInputType}">checked="checked"</c:if> value="${fieldInputType }">${fieldInputType.value }</label>
 										</c:forEach> 
 									</div>
 								</div>

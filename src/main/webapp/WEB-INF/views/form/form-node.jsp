@@ -32,6 +32,9 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
+										<a href="${ctx}/form">表单列表</a>
+									</li>
+									<li>
 										表单节点列表
 									</li>
 								</ul>
@@ -99,6 +102,13 @@
 										</tbody>
 									</table>
 									
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="pull-left">
+												<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
+											</div>
+										</div>
+									</div>	
 								</div>
 							</div>
 							<!-- /BOX -->

@@ -30,9 +30,19 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/equipment">实验设备列表</a>
+										<a href="${ctx}/equipment/type">类型列表</a>
 									</li>
-									<li>创建实验设备</li>
+									<li>
+										<a href="${ctx}/equipment/${equipment.equipmentType.id}">实验设备列表</a>
+									</li>
+									<li>
+									<c:if test="${action eq 'create' }">
+									  创建实验设备
+									</c:if>
+									<c:if test="${action eq 'update' }">
+									  修改实验设备
+									</c:if>
+									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								

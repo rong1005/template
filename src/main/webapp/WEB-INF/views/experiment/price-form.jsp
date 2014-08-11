@@ -29,7 +29,14 @@
 									<li>
 										<a href="${ctx}/price">收费列表</a>
 									</li>
-									<li>创建收费</li>
+									<li>
+									<c:if test="${action eq 'create' }">
+									创建收费
+									</c:if>
+									<c:if test="${action eq 'update' }">
+									更新收费
+									</c:if>
+									</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								

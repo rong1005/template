@@ -190,6 +190,7 @@ public class ApplyController {
 		applyService.updateApply(apply,request);
 		redirectAttributes.addFlashAttribute("message", "委托申请审核 '"+apply.getIsPass().getValue()+"' 通过");
 		return "redirect:/apply/";
+		
 	}
 	
 

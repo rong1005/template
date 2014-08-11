@@ -119,7 +119,10 @@ public class SampleService {
 	 * @param id
 	 */
 	public void deleteApplySample(Long applyId) {
+		//删除样品，同时需要删除样品对应的sample_detail、schedule、excention_handle
 		List<Sample> sampleList = getApplySample(applyId);
+		
+		
 		if(!sampleList.isEmpty()){
 			sampleDao.delete(sampleList);
 		}

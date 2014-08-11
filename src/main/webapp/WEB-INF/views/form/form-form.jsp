@@ -4,7 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="CHINESE" value="<%=FormFormat.CHINESE %>" />
-<c:set var="ENGLISH" value="<%=FormFormat.ENGLISH %>" />
 <c:set var="DOUBLE" value="<%=FormFormat.DOUBLE %>" />
 <!DOCTYPE html>
 <html lang="zh">
@@ -35,7 +34,12 @@
 									<li>
 										<a href="${ctx}/form">表单列表</a>
 									</li>
-									<li>创建表单</li>
+									<c:if test="${action eq 'create'}">
+										<li>创建表单</li>
+									</c:if>
+									<c:if test="${action eq 'update'}">
+										<li>修改表单</li>
+									</c:if>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								
@@ -71,8 +75,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">报告格式要求</label> 
 									<div class="col-sm-10">
-										<label class="radio-inline"> <input type="radio" name="formFormat" class="uniform" <c:if test="${form.formFormat eq CHINESE}">checked="checked"</c:if> value="${CHINESE }">${CHINESE.value }</label> 
-										<label class="radio-inline"> <input type="radio" name="formFormat" class="uniform" <c:if test="${form.formFormat eq ENGLISH}">checked="checked"</c:if> value="${ENGLISH }">${ENGLISH.value }</label> 
+										<label class="radio-inline"> <input type="radio" name="formFormat" class="uniform" <c:if test="${empty form.formFormat or form.formFormat eq CHINESE}">checked="checked"</c:if> value="${CHINESE }">${CHINESE.value }</label> 
 										<label class="radio-inline"> <input type="radio" name="formFormat" class="uniform" <c:if test="${form.formFormat eq DOUBLE}">checked="checked"</c:if> value="${DOUBLE }">${DOUBLE.value }</label> 
 									</div>
 								</div>	

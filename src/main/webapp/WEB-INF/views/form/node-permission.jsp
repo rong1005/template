@@ -29,6 +29,12 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
+										<a href="${ctx}/form">表单列表</a>
+									</li>
+									<li>
+										<a href="${ctx}/node?formId=${formId}">表单节点列表</a>
+									</li>
+									<li>
 										字段授权列表
 									</li>
 								</ul>
