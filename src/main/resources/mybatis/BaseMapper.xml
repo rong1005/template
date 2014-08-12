@@ -26,6 +26,17 @@
 		`sample_number` int(10) DEFAULT NULL,
 		`ch_units` varchar(255) DEFAULT NULL,
 		`en_units` varchar(255) DEFAULT NULL,
+		`sample_status` varchar(255) DEFAULT NULL,
+		`sample_check` varchar(255) DEFAULT NULL,
+		`check_voltage` varchar(255) DEFAULT NULL,
+		`check_hz` varchar(255) DEFAULT NULL,
+		`store_require` varchar(255) DEFAULT NULL,
+		`sample_deal` varchar(255) DEFAULT NULL,
+		`ch_cause` varchar(255) DEFAULT NULL,
+		`en_cause` varchar(255) DEFAULT NULL,
+		`ch_test_reference` varchar(255) DEFAULT NULL,
+		`en_test_reference` varchar(255) DEFAULT NULL,
+		`client_model` varchar(255) DEFAULT NULL,
 		primary key (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 
 	</update>

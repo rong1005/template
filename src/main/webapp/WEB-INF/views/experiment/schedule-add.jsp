@@ -40,7 +40,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/form">表单列表</a>
+										<a href="${ctx}/apply">申请纪录</a>
 									</li>
 									<li>实验排期</li>
 								</ul>

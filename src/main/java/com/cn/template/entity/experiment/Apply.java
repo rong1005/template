@@ -53,11 +53,17 @@ public class Apply extends IdEntity {
 	/** 委托人 英文 */
 	private String enClient;
 
-	/** 检验项目 中文 */
+	/** 检测项目 中文 */
 	private String chTestItems;
 
-	/** 检验项目 英文 */
+	/** 检测项目 英文 */
 	private String enTestItems;
+	
+	/** 检测依据 中文 */
+	private String chTestReference;
+	
+	/** 检测依据 英文 */
+	private String enTestReference;
 
 	/** 检验类别 */
 	private ApplyCheckType checkType;
@@ -77,9 +83,30 @@ public class Apply extends IdEntity {
 	/** 样品型号 */
 	private String sampleModel;
 	
+	/** 客户型号 */
+	private String clientModel;
+	
 	/** 样品数量 */
 	private Integer sampleNumber;
 	
+	/** 样品状态 */
+	private String sampleStatus;
+	
+	/** 样品检查 */
+	private String sampleCheck;
+	
+	/** 电压 */
+	private String checkVoltage;
+	
+	/** 频率范围 */
+	private String checkHz;
+	
+	/** 存放要求 */
+	private String storeRequire;
+	
+	/** 样品处理 */
+	private String sampleDeal;
+
 	/** 数量单位 */
 	private Units units; 
 	
@@ -88,6 +115,12 @@ public class Apply extends IdEntity {
 	
 	/** 数量单位 英文 */
 	private String enUnits;
+	
+	/** 实验原因 中文 */
+	private String chCause;
+	
+	/** 实验原因 英文 */
+	private String enCause;
 
 	/** 申请的状态 */
 	private ApplyStatus applyStatus;
@@ -359,5 +392,95 @@ public class Apply extends IdEntity {
 	public void setFollowMail(String followMail) {
 		this.followMail = followMail;
 	}
+
+	public String getSampleStatus() {
+		return sampleStatus;
+	}
+
+	public void setSampleStatus(String sampleStatus) {
+		this.sampleStatus = sampleStatus;
+	}
+
+	public String getSampleCheck() {
+		return sampleCheck;
+	}
+
+	public void setSampleCheck(String sampleCheck) {
+		this.sampleCheck = sampleCheck;
+	}
+
+	public String getCheckVoltage() {
+		return checkVoltage;
+	}
+
+	public void setCheckVoltage(String checkVoltage) {
+		this.checkVoltage = checkVoltage;
+	}
+
+	public String getCheckHz() {
+		return checkHz;
+	}
+
+	public void setCheckHz(String checkHz) {
+		this.checkHz = checkHz;
+	}
+
+	public String getStoreRequire() {
+		return storeRequire;
+	}
+
+	public void setStoreRequire(String storeRequire) {
+		this.storeRequire = storeRequire;
+	}
+
+	public String getSampleDeal() {
+		return sampleDeal;
+	}
+
+	public void setSampleDeal(String sampleDeal) {
+		this.sampleDeal = sampleDeal;
+	}
+
+	public String getChCause() {
+		return chCause;
+	}
+
+	public void setChCause(String chCause) {
+		this.chCause = chCause;
+	}
+
+	public String getEnCause() {
+		return enCause;
+	}
+
+	public void setEnCause(String enCause) {
+		this.enCause = enCause;
+	}
+
+	public String getChTestReference() {
+		return chTestReference;
+	}
+
+	public void setChTestReference(String chTestReference) {
+		this.chTestReference = chTestReference;
+	}
+
+	public String getEnTestReference() {
+		return enTestReference;
+	}
+
+	public void setEnTestReference(String enTestReference) {
+		this.enTestReference = enTestReference;
+	}
+
+	public String getClientModel() {
+		return clientModel;
+	}
+
+	public void setClientModel(String clientModel) {
+		this.clientModel = clientModel;
+	}
+	
+	
 	
 }

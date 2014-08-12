@@ -208,7 +208,17 @@ public class ApplyService {
 			StringBuffer fieldNames=new StringBuffer();
 			StringBuffer fieldValues=new StringBuffer();
 			
-			fieldNames.append("apply_id,ch_apply_name,en_apply_name,ch_check_type,en_check_type,ch_consigner,en_consigner,ch_client,en_client,ch_test_items,en_test_items,ch_sample_name,en_sample_name,sample_model,sample_number,ch_units,en_units");
+			//预添加的字段
+			String fields="apply_id,ch_apply_name,en_apply_name";
+			fields=fields+",ch_check_type,en_check_type,ch_consigner";
+			fields=fields+",en_consigner,ch_client,en_client,ch_test_items";
+			fields=fields+",en_test_items,ch_sample_name,en_sample_name";
+			fields=fields+",sample_model,sample_number,ch_units,en_units";
+			fields=fields+",sample_status,sample_check,check_voltage,check_hz";
+			fields=fields+",store_require,sample_deal,ch_cause,en_cause";
+			fields=fields+",ch_test_reference,en_test_reference,client_model";
+			
+			fieldNames.append(fields);
 			fieldValues.append(newApply.getId());
 			fieldValues.append(",'"+newApply.getChApplyName()+"'");
 			fieldValues.append(",'"+newApply.getEnApplyName()+"'");
@@ -226,6 +236,17 @@ public class ApplyService {
 			fieldValues.append(",'"+newApply.getSampleNumber()+"'");
 			fieldValues.append(",'"+newApply.getChUnits()+"'");
 			fieldValues.append(",'"+newApply.getEnUnits()+"'");
+			fieldValues.append(",'"+newApply.getSampleStatus()+"'");
+			fieldValues.append(",'"+newApply.getSampleCheck()+"'");
+			fieldValues.append(",'"+newApply.getCheckVoltage()+"'");
+			fieldValues.append(",'"+newApply.getCheckHz()+"'");
+			fieldValues.append(",'"+newApply.getStoreRequire()+"'");
+			fieldValues.append(",'"+newApply.getSampleDeal()+"'");
+			fieldValues.append(",'"+newApply.getChCause()+"'");
+			fieldValues.append(",'"+newApply.getEnCause()+"'");
+			fieldValues.append(",'"+newApply.getChTestReference()+"'");
+			fieldValues.append(",'"+newApply.getEnTestReference()+"'");
+			fieldValues.append(",'"+newApply.getClientModel()+"'");
 			
 			for(Field field : form.getFields()){
 				if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
@@ -384,9 +405,20 @@ public class ApplyService {
 			setString.append(" sample_number='"+apply.getSampleNumber()+"', ");
 			setString.append(" ch_units='"+apply.getChUnits()+"', ");
 			setString.append(" en_units='"+apply.getEnUnits()+"', ");
+			
+			setString.append(" sample_status='"+apply.getSampleStatus()+"', ");
+			setString.append(" sample_check='"+apply.getSampleCheck()+"', ");
+			setString.append(" check_voltage='"+apply.getCheckVoltage()+"', ");
+			setString.append(" check_hz='"+apply.getCheckHz()+"', ");
+			setString.append(" store_require='"+apply.getStoreRequire()+"', ");
+			setString.append(" sample_deal='"+apply.getSampleDeal()+"', ");
+			setString.append(" ch_cause='"+apply.getChCause()+"', ");
+			setString.append(" en_cause='"+apply.getEnCause()+"', ");
+			setString.append(" ch_test_reference='"+apply.getChTestReference()+"', ");
+			setString.append(" en_test_reference='"+apply.getEnTestReference()+"', ");
+			setString.append(" client_model='"+apply.getClientModel()+"', ");
 
 			for(Field field : form.getFields()){
-				
 				
 				if(field.getFieldType().equals(FieldType.SELECT)||field.getFieldType().equals(FieldType.CHECKBOX)||field.getFieldType().equals(FieldType.RADIO)){
 					//选择框类型的.（除中英文外，还有对应的ID）

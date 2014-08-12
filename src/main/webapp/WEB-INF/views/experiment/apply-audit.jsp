@@ -47,7 +47,7 @@
 										<a href="${ctx}/workbench">主页</a>
 									</li>
 									<li>
-										<a href="${ctx}/form">表单列表</a>
+										<a href="${ctx}/apply">申请纪录</a>
 									</li>
 									<li>修改委托申请</li>
 								</ul>
@@ -57,10 +57,11 @@
 						</div>
 					</div>
 					<!-- /PAGE HEADER -->
+					<form id="inputForm" class="form-horizontal" action="${ctx}/apply/${action}" method="post">
 					
 					<div class="box border primary">
 						<div class="box-title">
-							<h4><i class="fa fa-table"></i>修改委托申请</h4>
+							<h4><i class="fa fa-table"></i>委托申请信息</h4>
 							<div class="tools hidden-xs">
 								<a href="javascript:;" class="collapse">
 									<i class="fa fa-chevron-up"></i>
@@ -72,82 +73,33 @@
 						</div>
 						
 						<div class="box-body">
-							<form id="inputForm" class="form-horizontal" action="${ctx}/apply/${action}" method="post">
-								<input type="hidden" name="id" value="${apply.id}"/>
-								<input type="hidden" name="form.id" value="${apply.form.id}"/>
-								<input type="hidden" id="apply_isPass" name="isPass" value="${NOT}"/>
+							<input type="hidden" name="id" value="${apply.id}"/>
+							<input type="hidden" name="form.id" value="${apply.form.id}"/>
+							<input type="hidden" id="apply_isPass" name="isPass" value="${NOT}"/>
 								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托名称(中文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_chApplyName" name="chApplyName" class="form-control" value="${apply.chApplyName}" placeholder="委托名称(中文)"/>
+							<div class="row">
+								<div class="col-md-8 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>项目名称</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chApplyName" name="chApplyName" class="form-control" value="${apply.chApplyName}" placeholder="委托名称(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enApplyName" name="enApplyName" class="form-control" value="${apply.enApplyName}" placeholder="委托名称(英文)"/>
+    									</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托名称(英文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_enApplyName" name="enApplyName" class="form-control" value="${apply.enApplyName}" placeholder="委托名称(英文)"/>
-									</div>
 								</div>
-								<hr>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托单位(中文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_chConsigner" name="chConsigner" class="form-control" value="${apply.chConsigner}" placeholder="委托单位(中文)"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托单位(英文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_enConsigner" name="enConsigner" class="form-control" value="${apply.enConsigner}" placeholder="委托单位(英文)"/>
-									</div>
-								</div>
-								<hr>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托人(中文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_chClient" name="chClient" class="form-control" value="${apply.chClient}" placeholder="委托人(中文)"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托人(英文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_enClient" name="enClient" class="form-control" value="${apply.enClient}" placeholder="委托人(英文)"/>
-									</div>
-								</div>
-								<hr>
 								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">委托人邮箱</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_clientMail" name="clientMail" class="form-control" value="${apply.clientMail}" placeholder="委托人邮箱"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">跟踪人邮箱</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_followMail" name="followMail" class="form-control" value="${apply.followMail}" placeholder="跟踪人邮箱"/>
-									</div>
-								</div>
-								<hr>
-								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">检验项目(中文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_chTestItems" name="chTestItems" class="form-control" value="${apply.chTestItems}" placeholder="检验项目(中文)"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">检验项目(英文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_enTestItems" name="enTestItems" class="form-control" value="${apply.enTestItems}" placeholder="检验项目(英文)"/>
-									</div>
-								</div>
-								<hr>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">检验类别(中文)</label>
-									<div class="col-sm-10">
-										<c:forEach items="<%=ApplyCheckType.values() %>" var="applyCheckType">
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>检验类别</h4></div>
+									<div class="box-body">
+    									<c:forEach items="<%=ApplyCheckType.values() %>" var="applyCheckType">
 										<label class="radio-inline">
 											<input type="radio" disabled="disabled" class="uniform" id="apply_checkType" name="checkType" <c:if test="${apply.checkType eq applyCheckType}">checked="checked"</c:if> value="${applyCheckType}"> 
 											${applyCheckType.value}(${applyCheckType.enValue}) 
@@ -155,66 +107,268 @@
 										</c:forEach>
 									</div>
 								</div>
-								<hr>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">样品名称(中文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_chSampleName" name="chSampleName" class="form-control" value="${apply.chSampleName}" placeholder="样品名称(中文)"/>
-									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">样品名称(英文)</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_enSampleName" name="enSampleName" class="form-control" value="${apply.enSampleName}" placeholder="样品名称(英文)"/>
-									</div>
-								</div>
-								<hr>
+							</div>
 								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">样品型号</label>
-									<div class="col-sm-10">
-										<input type="text" disabled="disabled" id="apply_sampleModel" name="sampleModel" class="form-control" value="${apply.sampleModel}" placeholder="样品型号"/>
+								
+							<div class="row">
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>委托单位</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chConsigner" name="chConsigner" class="form-control" value="${apply.chConsigner}" placeholder="委托单位(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enConsigner" name="enConsigner" class="form-control" value="${apply.enConsigner}" placeholder="委托单位(英文)"/>
+    									</div>
 									</div>
 								</div>
-								<hr>
+								</div>
 								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">样品数量</label>
-									<div class="col-sm-8">
-										<input type="text" disabled="disabled" id="apply_sampleNumber" name="sampleNumber" class="form-control" value="${apply.sampleNumber}" placeholder="样品数量"/>
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>委托人</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chClient" name="chClient" class="form-control" value="${apply.chClient}" placeholder="委托人(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enClient" name="enClient" class="form-control" value="${apply.enClient}" placeholder="委托人(英文)"/>
+    									</div>
 									</div>
-									<div class="col-sm-2">
-										<select id="apply_units" disabled="disabled" name="units" class="form-control">
+								</div>
+								</div>
+								
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>邮箱</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">委托人</div>
+      										<input type="text" disabled="disabled" id="apply_clientMail" name="clientMail" class="form-control" value="${apply.clientMail}" placeholder="委托人邮箱"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">跟踪人</div>
+      										<input type="text" disabled="disabled" id="apply_followMail" name="followMail" class="form-control" value="${apply.followMail}" placeholder="跟踪人邮箱"/>
+    									</div>
+									</div>
+								</div>
+								</div>
+							</div>
+								
+								
+							<div class="row">
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>样品名称</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chSampleName" name="chSampleName" class="form-control" value="${apply.chSampleName}" placeholder="样品名称(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enSampleName" name="enSampleName" class="form-control" value="${apply.enSampleName}" placeholder="样品名称(英文)"/>
+    									</div>
+									</div>
+								</div>
+								</div>
+								
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>型号</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">样品型号</div>
+      										<input type="text" disabled="disabled" id="apply_sampleModel" name="sampleModel" class="form-control" value="${apply.sampleModel}" placeholder="样品型号"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">客户型号</div>
+      										<input type="text" disabled="disabled" id="apply_clientModel" name="clientModel" class="form-control" value="${apply.clientModel}" placeholder="客户型号"/>
+    									</div>
+									</div>
+								</div>
+								</div>
+								
+								<div class="col-md-4 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>数量</h4></div>
+									<div class="box-body">
+									<input type="text" disabled="disabled" id="apply_sampleNumber" name="sampleNumber" class="form-control" value="${apply.sampleNumber}" placeholder="样品数量"/>
+									<br>
+									<select id="apply_units" disabled="disabled" name="units" class="form-control">
 										<c:forEach items="<%=Units.values() %>" var="unit">
 											<option value="${unit }" <c:if test="${unit eq apply.units }">selected="selected"</c:if>>${unit.value}(${unit.enValue})</option>
 										</c:forEach>
-										</select>
+									</select>
 									</div>
 								</div>
-								<hr>
+								</div>
+							</div>
 								
-								<c:forEach var="field" items="${apply.form.fields }">
-								<c:if test="${nodeMap[field.id].permissionType ne REJECT}">
-								<c:choose>
-								<c:when test="${field.fieldType eq SELECT}">
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<select disabled="disabled" class="form-control" name="${field.name}" id="apply_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>
+								
+							<div class="row">
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>检验项目</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chTestItems" name="chTestItems" class="form-control" value="${apply.chTestItems}" placeholder="检验项目(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enTestItems" name="enTestItems" class="form-control" value="${apply.enTestItems}" placeholder="检验项目(英文)"/>
+    									</div>
+									</div>
+								</div>
+								</div>
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>检测依据</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" disabled="disabled" id="apply_chTestReference" name="chTestReference" class="form-control" value="${apply.chTestReference}" placeholder="检测依据(中文)"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" disabled="disabled" id="apply_enTestReference" name="enTestReference" class="form-control" value="${apply.enTestReference}" placeholder="检测依据(英文)"/>
+    									</div>
+									</div>
+								</div>
+								</div>
+							</div>
+								
+								
+							<div class="row">
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>样品状态</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">状态</div>
+      										<input type="text" disabled="disabled" id="apply_sampleStatus" name="sampleStatus" class="form-control" value="${apply.sampleStatus}" placeholder="样品状态"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										&emsp;1、样品正常；2、外观不良；3、纯音不良；4、其它不良   
+    									</div>
+									</div>
+								</div>
+								</div>
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>存放要求</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">存放</div>
+      										<input type="text" disabled="disabled" id="apply_storeRequire" name="storeRequire" class="form-control" value="${apply.storeRequire}" placeholder="存放要求"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										&emsp;1、常温存放；2、保密存放；3、其它要求   
+    									</div>
+									</div>
+								</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-12 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>样品检查</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">检查</div>
+      										<input type="text" disabled="disabled" id="apply_sampleCheck" name="sampleCheck" class="form-control" value="${apply.sampleCheck}" placeholder="样品检查"/>
+      										<div class="input-group-addon">检听电压</div>
+      										<input type="text" disabled="disabled" id="apply_chCause" name="checkVoltage" class="form-control" value="${apply.checkVoltage}" placeholder="检听电压"/>
+      										<div class="input-group-addon">V； 频率范围</div>
+      										<input type="text" disabled="disabled" id="apply_checkHz" name="checkHz" class="form-control" value="${apply.checkHz}" placeholder="频率范围"/>
+      										<div class="input-group-addon">HZ</div>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										&emsp;1、例行试验；2、新产品开发；3、变更验证；4、其它   
+    									</div>
+									</div>
+								</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>试验原因</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">原因</div>
+      										<input type="text" disabled="disabled" id="apply_chCause" name="chCause" class="form-control" value="${apply.chCause}" placeholder="试验原因"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										&emsp;1、例行试验；2、新产品开发；3、变更验证；4、其它   
+    									</div>
+									</div>
+								</div>
+								</div>
+								<div class="col-md-6 box-container ui-sortable">
+								<div class="box border blue">
+  									<div class="box-title small"><h4>样品处理</h4></div>
+									<div class="box-body">
+    									<div class="input-group">
+      										<div class="input-group-addon">处理</div>
+      										<input type="text" disabled="disabled" id="apply_sampleDeal" name="sampleDeal" class="form-control" value="${apply.sampleDeal}" placeholder="样品处理"/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										&emsp;1、销毁；2、退还；3、保存(期限   )；4、其它   
+    									</div>
+									</div>
+								</div>
+								</div>
+							</div>
+								
+							<c:forEach var="field" items="${apply.form.fields }">
+							<c:if test="${nodeMap[field.id].permissionType ne REJECT}">
+							<c:choose>
+							<c:when test="${field.fieldType eq SELECT}">
+								<div class="row">
+								  <div class="col-md-12 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
+								      <div class="box-body">
+    							        <select disabled="disabled" class="form-control" name="${field.name}" id="apply_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>
 											<c:forEach items="${field.selectItems }" var="item">
 												<option value="${item.id }" <c:if test="${item.id eq customField[field.name]['id'] }">selected="selected"</c:if>>${item.chItemName}(${item.enItemName})</option>
 											</c:forEach>
 										</select>
-									</div>
-								</div>
-								<hr>							
-								</c:when>
+								      </div>
+								    </div>
+								  </div>
+								</div>							
+							</c:when>
 								
-								<c:when test="${field.fieldType eq CHECKBOX}">
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<c:forEach items="${field.selectItems }" var="item">
+							<c:when test="${field.fieldType eq CHECKBOX}">
+								<div class="row">
+								  <div class="col-md-12 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
+								      <div class="box-body">
+    							       <c:forEach items="${field.selectItems }" var="item">
 										<label class="checkbox-inline">
 											<input type="checkbox" class="uniform" name="${field.name}" id="apply_${field.name}" 
 											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
@@ -222,16 +376,19 @@
 											${item.chItemName}(${item.enItemName})
 										</label>
 										</c:forEach>
-									</div>
-								</div>
-								<hr>							
-								</c:when>
+								      </div>
+								    </div>
+								  </div>
+								</div>							
+							</c:when>
 								
-								<c:when test="${field.fieldType eq RADIO}">
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<c:forEach items="${field.selectItems }" var="item">
+							<c:when test="${field.fieldType eq RADIO}">
+								<div class="row">
+								  <div class="col-md-12 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
+								      <div class="box-body">
+    							       <c:forEach items="${field.selectItems }" var="item">
 										<label class="radio-inline">
 											<input type="radio" class="uniform" name="${field.name}" id="apply_${field.name}" 
 											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
@@ -239,161 +396,187 @@
 											${item.chItemName}(${item.enItemName})
 										</label>
 										</c:forEach>
-									</div>
-								</div>
-								<hr>							
-								</c:when>
+								      </div>
+								    </div>
+								  </div>
+								</div>							
+							</c:when>
 								
-								<c:when test="${field.fieldType eq DOUBLE or field.fieldType eq INT }">
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<input type="text" id="apply_${field.name}" name="${field.name}" class="form-control" value="${customField[field.name] }" placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
-									</div>
-								</div>
-								<hr>	
-								</c:when>
+							<c:when test="${field.fieldType eq DOUBLE or field.fieldType eq INT }">
+								<div class="row">
+								  <div class="col-md-12 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
+								      <div class="box-body">
+    							        <div class="input-group">
+      										<div class="input-group-addon">${field.fieldType.value }</div>
+      										<input type="text" id="apply_${field.name}" name="${field.name}" class="form-control" value="${customField[field.name] }" placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
+    									</div>
+								      </div>
+								    </div>
+								  </div>
+								</div>	
+							</c:when>
 								
-								<c:when test="${field.fieldType eq TEXT}">
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<textarea id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
-									</div>
+							<c:when test="${field.fieldType eq TEXT}">
+								<div class="row">
+								  <div class="col-md-6 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}</h4></div>
+								      <div class="box-body">
+    							        <textarea id="apply_ch_${field.name}" name="ch_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['ch'] }</textarea>
+								      </div>
+								    </div>
+								  </div>
+								  <div class="col-md-6 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.enViewName}</h4></div>
+								      <div class="box-body">
+    							        <textarea id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
+								      </div>
+								    </div>
+								  </div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.enViewName}</label>
-									<div class="col-sm-10">
-										<textarea id="apply_en_${field.name}" name="en_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>${customField[field.name]['en'] }</textarea>
-									</div>
-								</div>
-								</c:when>
+							</c:when>
 								
-								<c:otherwise>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.chViewName}</label>
-									<div class="col-sm-10">
-										<input type="text" id="apply_ch_${field.name}" name="ch_${field.name}" value="${customField[field.name]['ch'] }" class="form-control"  placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
-									</div>
+							<c:otherwise>
+								<div class="row">
+								  <div class="col-md-12 box-container ui-sortable">
+								    <div class="box border blue">
+								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
+								      <div class="box-body">
+    							        <div class="input-group">
+      										<div class="input-group-addon">中文</div>
+      										<input type="text" id="apply_ch_${field.name}" name="ch_${field.name}" value="${customField[field.name]['ch'] }" class="form-control"  placeholder="${field.chViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
+    									</div>
+    									<br>
+    									<div class="input-group">
+      										<div class="input-group-addon">英文</div>
+      										<input type="text" id="apply_en_${field.name}" name="en_${field.name}" value="${customField[field.name]['en'] }" class="form-control"   placeholder="${field.enViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
+    									</div>
+								      </div>
+								    </div>
+								  </div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">${field.enViewName}</label>
-									<div class="col-sm-10">
-										<input type="text" id="apply_en_${field.name}" name="en_${field.name}" value="${customField[field.name]['en'] }" class="form-control"   placeholder="${field.enViewName}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>/>
-									</div>
-								</div>
-								<hr>
-								</c:otherwise>
-								</c:choose>
-								</c:if>
-								</c:forEach>
-								
-								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">实验编号</label>
-									<div class="col-sm-10">
-										<input type="text" id="apply_serialNumber" name="serialNumber" class="form-control" value="${apply.serialNumber}" placeholder="实验编号"/>
-									</div>
-								</div>
-								<hr>
-								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">费用明细</label>
-									<div class="col-sm-10">
-										<table id="priceDetailTable" class="table table-striped table-bordered table-hover">
-											<thead>
-											<tr>
-												<td colspan="9">
-													<div class="row">
-													<div class="col-sm-4">
-													<select class="form-control" id="equipment">
-														<c:forEach items="${prices}" var="price">
-															<option value="${price.id}">${price.project}--${price.equipmentType.name}</option>
-														</c:forEach>
-													</select>
-													</div>
-													<div class="col-sm-2">
-													<input type="text" class="form-control" id="usedHour" placeholder="小时"/>
-													</div>
-													<div class="col-sm-2">
-													<input type="text" class="form-control" id="usedTimes" placeholder="次数"/>
-													</div>
-													<div class="col-sm-4">
-													<input class="btn btn-inverse" type="button" value="添加" onclick="addPrice()"/>
-													</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<th>#</th>
-												<th>试验项目</th>
-												<th>设备名称</th>
-												<th>开机费</th>
-												<th>电费/小时</th>
-												<th>设备折旧/小时</th>
-												<th>小时</th>
-												<th>次数/数量</th>
-												<th>费用</th>
-											</tr>
-											</thead>
-											<tbody>
-												<c:forEach items="${apply.applyPrices}" var="applyPrice" >
-												<tr>
-													<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span></td>
-													<td>
-													${applyPrice.price.project}
-													<input type="hidden" name="priceId" value="${applyPrice.price.id}" />
-													<input type="hidden" name="usedHour" value="${applyPrice.usedHour}" />
-													<input type="hidden" name="usedTimes" value="${applyPrice.usedTimes}" />
-													<input type="hidden" name="totalPrice" value="${applyPrice.totalPrice }" />
-													</td>
-													<td>${applyPrice.price.equipmentType.name}</td>
-													<td>${applyPrice.price.openPrice}</td>
-													<td>${applyPrice.price.electricPrice}</td>
-													<td>${applyPrice.price.depreciation}</td>
-													<td>${applyPrice.usedHour}</td>
-													<td>${applyPrice.usedTimes}</td>
-													<td>${applyPrice.totalPrice}</td>
-												</tr>
-												</c:forEach>
-											</tbody>
-											<tfoot>
-											<tr>
-												<th colspan="8">总费用</th>
-												<th style="color: red;">0</th>
-											</tr>
-											</tfoot>
-										</table>
-									</div>
-								</div>
-								<hr>
-								
-								<div class="form-group">
-									<label class="col-sm-2 control-label">备注</label>
-									<div class="col-sm-10">
-										<textarea rows="5" cols="10" class="form-control" id="apply_remark" name="apply_remark"></textarea>
-									</div>
-								</div>
-								<hr>
-								
-												  
-								<div class="form-group">
-									<div class="col-sm-offset-2 col-sm-10">
-										<input id="pass_btn" class="btn btn-info" type="submit" value="通过"/>&nbsp;
-										<input id="reject_btn" class="btn btn-warning" type="submit" value="否决"/>&nbsp;
-										<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
-									</div>
-								</div>
-												  
-							</form>
+							</c:otherwise>
+							</c:choose>
+							</c:if>
+							</c:forEach>
 						</div>
 					</div>
 					
-				</div>
-				
-			</div>
+								
+					<div class="box border primary">
+						<div class="box-title">
+							<h4><i class="fa fa-table"></i>审核委托申请</h4>
+							<div class="tools hidden-xs">
+								<a href="javascript:;" class="collapse">
+									<i class="fa fa-chevron-up"></i>
+								</a>
+								<a href="javascript:;" class="remove">
+									<i class="fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+						
+						<div class="box-body">
+						
+						<div class="input-group">
+      						<div class="input-group-addon">实验编号</div>
+      						<input type="text" id="apply_serialNumber" name="serialNumber" class="form-control" value="${apply.serialNumber}" placeholder="实验编号" />
+    					</div>
+    					<br>
+    					<div class="row">
+    					  <div class="col-md-12 box-container ui-sortable">
+    					    <div class="box border blue">
+						      <div class="box-title small"><h4>费用明细</h4></div>
+							  <div class="box-body">
+							  <table id="priceDetailTable" class="table table-striped table-bordered table-hover">
+							    <thead>
+							      <tr>
+							        <td colspan="9">
+							          <div class="row">
+							            <div class="col-sm-4">
+							              <select class="form-control" id="equipment">
+											<c:forEach items="${prices}" var="price">
+												<option value="${price.id}">${price.project}--${price.equipmentType.name}</option>
+											</c:forEach>
+										  </select>
+										</div>
+										<div class="col-sm-2">
+											<input type="text" class="form-control" id="usedHour" placeholder="小时" />
+										</div>
+										<div class="col-sm-2">
+											<input type="text" class="form-control" id="usedTimes" placeholder="次数" />
+										</div>
+										<div class="col-sm-4">
+											<input class="btn btn-inverse" type="button" value="添加" onclick="addPrice()" />
+										</div>
+									  </div>
+								    </td>
+								  </tr>
+								  <tr>
+									<th>#</th>
+									<th>试验项目</th>
+									<th>设备名称</th>
+									<th>开机费</th>
+									<th>电费/小时</th>
+									<th>设备折旧/小时</th>
+									<th>小时</th>
+									<th>次数/数量</th>
+									<th>费用</th>
+								  </tr>
+							</thead>
+						    <tbody>
+							<c:forEach items="${apply.applyPrices}" var="applyPrice">
+							<tr>
+								<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span></td>
+								<td>${applyPrice.price.project} 
+									<input type="hidden" name="priceId" value="${applyPrice.price.id}" /> 
+									<input type="hidden" name="usedHour" value="${applyPrice.usedHour}" /> 
+									<input type="hidden" name="usedTimes" value="${applyPrice.usedTimes}" /> 
+									<input type="hidden" name="totalPrice" value="${applyPrice.totalPrice }" />
+								</td>
+								<td>${applyPrice.price.equipmentType.name}</td>
+								<td>${applyPrice.price.openPrice}</td>
+								<td>${applyPrice.price.electricPrice}</td>
+								<td>${applyPrice.price.depreciation}</td>
+								<td>${applyPrice.usedHour}</td>
+								<td>${applyPrice.usedTimes}</td>
+								<td>${applyPrice.totalPrice}</td>
+							</tr>
+							</c:forEach>
+							</tbody>
+							<tfoot>
+							  <tr>
+								<th colspan="8">总费用</th>
+								<th style="color: red;">0</th>
+							  </tr>
+							</tfoot>
+						</table>
+							  </div>
+							</div>   
+    					  </div>
+    					</div>		
+						<div class="input-group">
+      						<div class="input-group-addon">备注</div>
+      						<textarea rows="5" cols="10" class="form-control" id="apply_remark" name="apply_remark"></textarea>
+    					</div>
+    					<br>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input id="pass_btn" class="btn btn-info" type="submit" value="通过" />&nbsp; 
+								<input id="reject_btn" class="btn btn-warning" type="submit" value="否决" />&nbsp; 
+								<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()" />
+							</div>
+						</div>
+					</div>
+				</div> 
+			</form>
 		</div>
-	</div>	
+	</div>
+	</div>
+</div>	
 	
 	<!-- JAVASCRIPTS -->
 	<!-- 引入公共JS脚本 -->
