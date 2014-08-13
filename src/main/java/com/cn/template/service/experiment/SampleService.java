@@ -19,7 +19,6 @@ import com.cn.template.entity.experiment.SampleDetail;
 import com.cn.template.repository.experiment.SampleDao;
 import com.cn.template.repository.experiment.SampleDetailDao;
 import com.cn.template.xutil.Utils;
-import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.Operator;
 import com.cn.template.xutil.enums.SampleStatus;
 import com.cn.template.xutil.persistence.DynamicSpecifications;

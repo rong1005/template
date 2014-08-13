@@ -2,6 +2,7 @@ package com.cn.template.service.experiment;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cn.template.entity.authority.User;
 import com.cn.template.entity.experiment.ExceptionHandle;
 import com.cn.template.entity.experiment.InspectionRecord;
+import com.cn.template.entity.experiment.Sample;
 import com.cn.template.entity.experiment.SampleDetail;
 import com.cn.template.entity.experiment.Schedule;
 import com.cn.template.repository.experiment.ExceptionHandleDao;
@@ -19,6 +21,7 @@ import com.cn.template.web.form.ExceptionHandleForm;
 import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.ExceptionHandleType;
 import com.cn.template.xutil.enums.Whether;
+import com.google.common.collect.Maps;
 
 
 /**
@@ -138,5 +141,17 @@ public class ExceptionHandleService {
 		}
 	}
 	
+	/**
+	 * 取得样品在巡检异常的处理信息.
+	 * @param sample
+	 * @return
+	 */
+	public Map<Long,ExceptionHandle> findExceptionHandleMap(Sample sample){
+		Map<Long,ExceptionHandle> map=Maps.newHashMap();
+		for(ExceptionHandle exceptionHandle:exceptionHandleDao.findBySchedule_Sample(sample)){
+			map.put(exceptionHandle.getInspectionRecord().getId(), exceptionHandle);
+		}
+		return map;
+	}
 	
 }

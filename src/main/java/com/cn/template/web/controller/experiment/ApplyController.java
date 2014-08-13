@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.experiment.PriceService;
+import com.cn.template.service.experiment.ScheduleService;
 import com.cn.template.service.form.FieldService;
 import com.cn.template.service.form.NodeService;
 import com.cn.template.xutil.Constants;
@@ -62,6 +63,10 @@ public class ApplyController {
 	/** 收费管理的业务逻辑. */
 	@Autowired
 	private PriceService priceService;
+	
+	/** 实验排期信息的业务处理类. */
+	@Autowired
+	private ScheduleService scheduleService;
 	
 	
 	/**
@@ -206,6 +211,30 @@ public class ApplyController {
 		redirectAttributes.addFlashAttribute("message", "删除委托申请成功");
 		return "redirect:/apply/";
 	}
+	
+	
+	/**
+	 * 查看实验信息.
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "browse/{id}")
+	public String browse(@PathVariable("id") Long id, Model model){
+		Apply apply = applyService.getApply(id);
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.BROWSE, apply.getForm().getId()));
+		model.addAttribute("apply", apply);
+		model.addAttribute("customField", applyService.getApplyCustomField(apply));
+		
+		//排期信息
+		model.addAttribute("schedules", scheduleService.findApplySchedule(id));
+		//巡检记录
+		
+		
+		//异常处理
+		
+		return "experiment/apply-browse";
+	} 
 
 	/**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现预处理部分绑定的效果,先根据form的id从数据库查出Form对象,再把Form提交的内容绑定到该对象上。

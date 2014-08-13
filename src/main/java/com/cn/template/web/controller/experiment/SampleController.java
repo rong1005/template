@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cn.template.entity.experiment.Apply;
 import com.cn.template.entity.experiment.Sample;
 import com.cn.template.service.experiment.ApplyService;
+import com.cn.template.service.experiment.ExceptionHandleService;
+import com.cn.template.service.experiment.InspectionRecordService;
 import com.cn.template.service.experiment.SampleService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.enums.SampleStatus;
@@ -48,6 +50,14 @@ public class SampleController {
 	/** 实验委托申请管理的业务逻辑. */
 	@Autowired
 	private ApplyService applyService;
+	
+	/** 巡检记录的业务逻辑 */
+	@Autowired
+	private InspectionRecordService inspectionRecordService;
+	
+	/** 异常处理的业务逻辑 */
+	@Autowired
+	private ExceptionHandleService exceptionHandleService;
 
 	/**
 	 * 实验样品列表.
@@ -220,6 +230,8 @@ public class SampleController {
 	@RequestMapping(value = "detail/{sampleId}")
 	public String detail(@PathVariable(value = "sampleId") Long sampleId, Model model){
 		model.addAttribute("sampleDetails", sampleService.getSampleDetail(sampleId));
+		model.addAttribute("sampleInspections", inspectionRecordService.findSampleInspection(sampleId));
+		model.addAttribute("exceptionHandleMap", exceptionHandleService.findExceptionHandleMap(sampleService.getSample(sampleId)));
 		return "experiment/sample-detail";
 	}
 	

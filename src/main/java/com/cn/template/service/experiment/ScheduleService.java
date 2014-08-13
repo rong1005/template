@@ -15,14 +15,18 @@ import com.cn.template.entity.experiment.Apply;
 import com.cn.template.entity.experiment.InspectionRecord;
 import com.cn.template.entity.experiment.Sample;
 import com.cn.template.entity.experiment.SampleDetail;
+import com.cn.template.entity.experiment.SampleInspection;
 import com.cn.template.entity.experiment.Schedule;
 import com.cn.template.repository.experiment.ApplyDao;
 import com.cn.template.repository.experiment.SampleDetailDao;
+import com.cn.template.repository.experiment.SampleInspectionDao;
 import com.cn.template.repository.experiment.ScheduleDao;
 import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.ExperimentResult;
 import com.cn.template.xutil.enums.SampleStatus;
+import com.cn.template.xutil.enums.Whether;
+import com.google.common.collect.Lists;
 
 /**
  * 实验排期信息的业务处理类.
@@ -41,6 +45,9 @@ public class ScheduleService {
 	
 	/** 实验样品明细信息的数据访问接口 */
 	private SampleDetailDao sampleDetailDao;
+	
+	/** 实验样品巡检信息的数据访问接口 */
+	private SampleInspectionDao sampleInspectionDao;
 
 	@Autowired
 	public void setScheduleDao(ScheduleDao scheduleDao) {
@@ -56,6 +63,13 @@ public class ScheduleService {
 	public void setSampleDetailDao(SampleDetailDao sampleDetailDao) {
 		this.sampleDetailDao = sampleDetailDao;
 	}
+
+	@Autowired
+	public void setSampleInspectionDao(SampleInspectionDao sampleInspectionDao) {
+		this.sampleInspectionDao = sampleInspectionDao;
+	}
+
+
 
 
 	/** 实验样品的业务逻辑 */
@@ -107,6 +121,7 @@ public class ScheduleService {
 				sampleService.saveSample(sample);
 				
 				SampleDetail sampleDetail=new SampleDetail();
+				sampleDetail.setSample(sample);
 				sampleDetail.setContent("排期");
 				sampleDetail.setCreateTime(new Date());
 				sampleDetail.setUpdateTime(new Date());
@@ -148,6 +163,7 @@ public class ScheduleService {
 					sampleService.saveSample(sample);
 					
 					SampleDetail sampleDetail=new SampleDetail();
+					sampleDetail.setSample(sample);
 					sampleDetail.setContent("实验开始");
 					sampleDetail.setCreateTime(new Date());
 					sampleDetail.setUpdateTime(new Date());
@@ -226,12 +242,20 @@ public class ScheduleService {
 	}
 	
 	/**
-	 * 取得巡检异常
+	 * 取得巡检记录对应的实验排期.
 	 * @param inspectionRecord
 	 * @return
 	 */
-	public List<Schedule> findExceptionSchedule(InspectionRecord inspectionRecord){
-		return scheduleDao.findByEquipmentAndRealStartTimeBeforeAndRealEndTimeAfter(inspectionRecord.getEquipment(), inspectionRecord.getCreateTime(), inspectionRecord.getCreateTime());
+	public List<Schedule> findInspectionSchedule(InspectionRecord inspectionRecord){
+		if(inspectionRecord.getIsHandle()!=null&&inspectionRecord.getIsHandle().equals(Whether.YES)){
+			List<Schedule> scheduleList=Lists.newArrayList();
+			for(SampleInspection sampleInspection : sampleInspectionDao.findByInspectionRecord_Id(inspectionRecord.getId())){
+				scheduleList.add(sampleInspection.getSchedule());
+			}
+			return scheduleList;
+		}else{
+			return scheduleDao.findByEquipmentAndRealStartTimeBeforeAndRealEndTimeAfter(inspectionRecord.getEquipment(), inspectionRecord.getCreateTime(), inspectionRecord.getCreateTime());
+		}
 	}
  
 }

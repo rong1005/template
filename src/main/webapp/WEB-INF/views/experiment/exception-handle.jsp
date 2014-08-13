@@ -138,6 +138,11 @@
 									</c:forEach>
 								</tbody>
 							</table>
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
+								</div>
+							</div>
 						</div>
 					</div>
 					

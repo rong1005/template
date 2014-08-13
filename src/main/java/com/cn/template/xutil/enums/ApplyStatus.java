@@ -13,14 +13,19 @@ public enum ApplyStatus {
 	AUDITING("实验室审核", 1),
 	/** 客户确认 */
 	CONFIRM("客户确认", 2),
+	/** 实验排期 */
+	SCHEDULE("实验排期", 3),
 	/** 实验进行 */
-	BE_IN_PROGRESS("实验进行",3),
+	BE_IN_PROGRESS("实验进行",4),
 	/** 实验完成 */
-	FINISH("实验完成",4),
+	FINISH("实验完成",5),
 	/** 实验取消 */
-	CANCEL("实验取消",5),
+	CANCEL("实验取消",6),
 	/** 实验终止 */
-	STOP("实验终止",6);
+	STOP("实验终止",7),
+	/** 实验查看 */
+	BROWSE("实验查看",8)
+	;
 
 	private String value;
 	private int index;

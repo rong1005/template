@@ -52,7 +52,7 @@ public class ExceptionHandleController {
 		InspectionRecord inspectionRecord = inspectionRecordService.getInspectionRecord(inspectionRecordId);
 		model.addAttribute("inspectionRecord", inspectionRecord);
 		//取得实验异常时的实验样品.
-		model.addAttribute("schedules", scheduleService.findExceptionSchedule(inspectionRecord));
+		model.addAttribute("schedules", scheduleService.findInspectionSchedule(inspectionRecord));
 		model.addAttribute("equipmentTypes", equipmentTypeService.getAllEquipmentType());
 		
 		model.addAttribute("exceptionHandles", exceptionHandleService.getExceptionHandle(inspectionRecord));

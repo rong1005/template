@@ -58,7 +58,6 @@
 					</div>
 					<!-- /PAGE HEADER -->
 					
-					<form id="inputForm" class="form-horizontal" action="${ctx}/schedule/add/${apply.id}" method="post">
 					<div class="box border primary">
 						<div class="box-title">
 							<h4><i class="fa fa-table"></i>实验资料</h4>
@@ -474,118 +473,41 @@
 							</div>
 						</div>
 
-							<div class="box-body">
-								<table id="priceDetailTable" class="table table-striped table-bordered table-hover">
-									<thead>
-										<tr>
-											<th>试验项目</th>
-											<th>设备名称</th>
-											<th>开机费</th>
-											<th>电费/小时</th>
-											<th>设备折旧/小时</th>
-											<th>小时</th>
-											<th>次数/数量</th>
-											<th>费用</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach items="${apply.applyPrices}" var="applyPrice">
-											<tr>
-												<td>${applyPrice.price.project}</td>
-												<td>${applyPrice.price.equipmentType.name}</td>
-												<td>${applyPrice.price.openPrice}</td>
-												<td>${applyPrice.price.electricPrice}</td>
-												<td>${applyPrice.price.depreciation}</td>
-												<td>${applyPrice.usedHour}</td>
-												<td>${applyPrice.usedTimes}</td>
-												<td>${applyPrice.totalPrice}</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-									<tfoot>
-										<tr>
-											<th colspan="7">总费用</th>
-											<th style="color: red;">0</th>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-						</div>
-					
-					<div class="box border primary">
-						<div class="box-title">
-							<h4><i class="fa fa-table"></i>实验排期</h4>
-							<div class="tools hidden-xs">
-								<a href="javascript:;" class="collapse">
-									<i class="fa fa-chevron-up"></i>
-								</a>
-								<a href="javascript:;" class="remove">
-									<i class="fa fa-times"></i>
-								</a>
-							</div>
-						</div>
-						
 						<div class="box-body">
-							<div class="form-group">
-								<label class="col-sm-1 control-label">样品名称</label>
-								<div class="col-sm-4">
-									<span class="form-control" >${apply.chSampleName}(${apply.enSampleName})</span>
-								</div>
-								<label class="col-sm-1 control-label">样品型号</label>
-								<div class="col-sm-3">
-									<span class="form-control" >${apply.sampleModel}</span>
-								</div>
-								<label class="col-sm-1 control-label">样品数量</label>
-								<div class="col-sm-2">
-									<span class="form-control" >${apply.sampleNumber} ${apply.units.value}</span>
-								</div>
-							</div>
-							<table id="sampleTable" class="table table-striped table-bordered table-hover">
+							<table id="priceDetailTable" class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th style="text-align: center;">#</th>
-										<th>流水号</th>
-										<th>状态</th>
+										<th>试验项目</th>
+										<th>设备名称</th>
+										<th>开机费</th>
+										<th>电费/小时</th>
+										<th>设备折旧/小时</th>
+										<th>小时</th>
+										<th>次数/数量</th>
+										<th>费用</th>
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${apply.samples }" var="sample">
-									<tr>
-										<td style="text-align: center;"><input type="checkbox" name="sample" value="${sample.id }" /> </td>
-										<td id="td_${sample.id }">${sample.serialNumber }</td>
-										<td>${sample.status.value }</td>
-									</tr>
+									<c:forEach items="${apply.applyPrices}" var="applyPrice">
+										<tr>
+											<td>${applyPrice.price.project}</td>
+											<td>${applyPrice.price.equipmentType.name}</td>
+											<td>${applyPrice.price.openPrice}</td>
+											<td>${applyPrice.price.electricPrice}</td>
+											<td>${applyPrice.price.depreciation}</td>
+											<td>${applyPrice.usedHour}</td>
+											<td>${applyPrice.usedTimes}</td>
+											<td>${applyPrice.totalPrice}</td>
+										</tr>
 									</c:forEach>
 								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="7">总费用</th>
+										<th style="color: red;">0</th>
+									</tr>
+								</tfoot>
 							</table>
-							
-							<div class="form-group">
-								<label class="col-sm-1 control-label">设备</label>
-								<div class="col-sm-5">
-									<select class="form-control" onchange="findEquipment(this)" id="equipmentType">
-										<option value="0">请选择</option>
-										<c:forEach items="${equipmentTypes}" var="equipmentType">
-											<option value="${equipmentType.id }">${equipmentType.name }</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col-sm-6">
-									<select class="form-control" id="equipment">
-										
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-1 control-label">用时</label>
-								<div class="col-sm-5">
-									<input type="text" id="usedTime" class="form-control" />
-								</div>
-								<label class="col-sm-1 control-label">开始时间</label>
-								<div class="col-sm-5">
-									<input type="text" id="startTime" class="form-control" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});" />
-								</div>
-							</div>
-							<input id="add_btn" class="btn btn-info" type="button" onclick="addSampleSchedule()" value="添加"/>&nbsp;
 						</div>
 					</div>
 					
@@ -604,30 +526,35 @@
 						</div>
 						
 						<div class="box-body">
+							<div class="input-group">
+								<div class="input-group-addon">样品名称</div>
+								<input type="text" class="form-control" value="${apply.chSampleName}(${apply.enSampleName})" disabled="disabled"/>
+								<div class="input-group-addon">样品型号</div>
+								<input type="text" class="form-control" value="${apply.sampleModel}" disabled="disabled"/>
+								<div class="input-group-addon">样品数量</div>
+								<input type="text" class="form-control" value="${apply.sampleNumber} ${apply.units.value}" disabled="disabled"/>
+							</div>
+							<hr/>
 							<table id="scheduleTable" class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th>管理</th>
 										<th>样品流水号</th>
 										<th>设备</th>
+										<th>状态</th>
 										<th>用时</th>
 										<th>预计开始时间</th>
 										<th>预计结束时间</th>
+										<th>实际开始时间</th>
+										<th>实际结束时间</th>
+										<th>明细</th>
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach items="${schedules}" var="schedule">
 										<tr>
-											<td>
-												<span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span>
-												<input type="hidden" name="equipmentId" value="${schedule.equipment.id}"/>
-												<input type="hidden" name="usedTime" value="${schedule.usedTime}"/>
-												<input type="hidden" name="startTime" value="<fmt:formatDate value='${schedule.startTime }' pattern='yyyy-MM-dd HH:mm' />"/>
-												<input type="hidden" name="endTime" value="<fmt:formatDate value='${schedule.endTime }' pattern='yyyy-MM-dd HH:mm' />"/>
-												<input type="hidden" name="sampleId" value="${schedule.sample.id}"/>
-											</td>
 											<td>${schedule.sample.serialNumber }</td>
 											<td>${schedule.equipment.equipmentType.name} -- ${schedule.equipment.name} </td>
+											<td>${schedule.sample.status.value }</td>
 											<td>${schedule.usedTime }</td>
 											<td>
 												<fmt:formatDate value="${schedule.startTime }" pattern="yyyy-MM-dd HH:mm" />
@@ -635,17 +562,42 @@
 											<td>
 												<fmt:formatDate value="${schedule.endTime }" pattern="yyyy-MM-dd HH:mm" />
 											</td>
+											<td>
+												<fmt:formatDate value="${schedule.realStartTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<fmt:formatDate value="${schedule.realEndTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<a href="${ctx}/sample/detail/${schedule.sample.id}">明细</a>
+											</td>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
 							
-							<input id="submit_btn" class="btn btn-info" type="submit" value="提交"/>&nbsp;
 							<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()"/>
 						</div>
 					</div>
-					</form>
 					
+					<!-- <div class="box border primary">
+						<div class="box-title">
+							<h4><i class="fa fa-table"></i>巡检记录</h4>
+							<div class="tools hidden-xs">
+								<a href="javascript:;" class="collapse">
+									<i class="fa fa-chevron-up"></i>
+								</a>
+								<a href="javascript:;" class="remove">
+									<i class="fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+						
+						<div class="box-body">
+							
+							
+						</div>
+					</div> -->
 					
 				</div>
 			</div>
@@ -699,63 +651,6 @@
 			
 			countTotalPrice();
 		});
-		
-		function findEquipment(e){
-			 jQuery.ajax({
-                 url: "${ctx}/equipment/list/"+$(e).val(),
-                 type: "post",
-                 dataType: "json",
-                 success: function(msg) {
-                	 var option="";
-                	 $.each( msg, function(i, n){
-                		  option=option+'<option value="'+n.id+'">'+n.name+'</option>'
-                	});
-                	 $("#equipment").html(option);
-                 }
-			 });
-		}
-		
-		
-		function addSampleSchedule(){
-			var usedTime = Number($("#usedTime").val());
-			var startTime =$("#startTime").val();
-			var endTime = "";
-			jQuery.ajax({
-                url: "${ctx}/schedule/count/time",
-                data: {"datetime":startTime,"hour":usedTime},
-                async: false,
-                type: "get",
-                dataType: "json",
-                success: function(msg) {
-                	endTime=msg.endTime;
-                }
-			 });
-			
-			var str='';
-			$("#sampleTable :checkbox:checked").each(function (index, domEle) { 
-				str=str+'<tr>';
-				str=str+'<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span>';
-				str=str+'<input type="hidden" name="equipmentId" value="'+$("#equipment option:selected").val()+'"/>';
-				str=str+'<input type="hidden" name="usedTime" value="'+usedTime+'"/>';
-				str=str+'<input type="hidden" name="startTime" value="'+startTime+'"/>';
-				str=str+'<input type="hidden" name="endTime" value="'+endTime+'"/>';
-				str=str+'<input type="hidden" name="sampleId" value="'+$(domEle).val()+'"/>';
-				str=str+'</td>';
-				str=str+'<td>'+$("#td_"+$(domEle).val()).html()+'</td>';
-				str=str+'<td>'+$("#equipmentType option:selected").text()+' -- '+$("#equipment option:selected").text()+'</td>';
-				str=str+'<td>'+usedTime+'</td>';
-				str=str+'<td>'+startTime+'</td>';
-				str=str+'<td>'+endTime+'</td>';
-				str=str+'</tr>';
-			});
-			
-			$("#scheduleTable tbody").append(str);
-		}
-		
-		/** 删除排期信息 */
-		function deleteApplyPrice(e){
-			$(e).parent().parent().remove();
-		}
 		
 		/** 计算总费用 */
 		function countTotalPrice(){

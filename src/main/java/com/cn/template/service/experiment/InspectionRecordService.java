@@ -1,5 +1,6 @@
 package com.cn.template.service.experiment;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cn.template.entity.experiment.InspectionRecord;
+import com.cn.template.entity.experiment.SampleInspection;
+import com.cn.template.entity.experiment.Schedule;
 import com.cn.template.repository.experiment.InspectionRecordDao;
+import com.cn.template.repository.experiment.SampleInspectionDao;
 import com.cn.template.xutil.persistence.DynamicSpecifications;
 import com.cn.template.xutil.persistence.SearchFilter;
 
@@ -28,12 +32,28 @@ public class InspectionRecordService {
 
 	/** 巡检记录的数据访问接口 */
 	private InspectionRecordDao inspectionRecordDao;
+	
+	/** 实验样品巡检信息的数据访问接口 */
+	private SampleInspectionDao sampleInspectionDao;
+	
+	/** 实验排期信息的业务处理类 */
+	private ScheduleService scheduleService;
 
 	@Autowired
 	public void setInspectionRecordDao(InspectionRecordDao inspectionRecordDao) {
 		this.inspectionRecordDao = inspectionRecordDao;
 	}
 	
+	@Autowired
+	public void setSampleInspectionDao(SampleInspectionDao sampleInspectionDao) {
+		this.sampleInspectionDao = sampleInspectionDao;
+	}
+	 
+	@Autowired
+	public void setScheduleService(ScheduleService scheduleService) {
+		this.scheduleService = scheduleService;
+	}
+
 	/**
 	 * 根据ID获得巡检记录记录.
 	 * @param id
@@ -48,6 +68,23 @@ public class InspectionRecordService {
 	 * @param entity
 	 */
 	public void saveInspectionRecord(InspectionRecord entity) {
+		//新增巡检记录
+		if(entity.getId()==null){
+			//保存巡检设备对应的样品记录信息.
+			//取得巡检记录对应的排期信息
+			List<Schedule> scheduleList = scheduleService.findInspectionSchedule(entity);
+			if(scheduleList!=null&&!scheduleList.isEmpty()){
+				//取得设备有哪些实验样品.
+				for(Schedule schedule : scheduleList){
+					SampleInspection sampleInspection=new SampleInspection();
+					sampleInspection.setCreateTime(new Date());
+					sampleInspection.setUpdateTime(new Date());
+					sampleInspection.setInspectionRecord(entity);
+					sampleInspection.setSchedule(schedule);
+					sampleInspectionDao.save(sampleInspection);
+				}
+			}
+		}
 		inspectionRecordDao.save(entity);
 	}
 
@@ -57,6 +94,10 @@ public class InspectionRecordService {
 	 */
 	public void deleteInspectionRecord(Long id) {
 		inspectionRecordDao.delete(id);
+		List<SampleInspection> sampleInspectionList = sampleInspectionDao.findByInspectionRecord_Id(id);
+		if(sampleInspectionList!=null&&!sampleInspectionList.isEmpty()){
+			sampleInspectionDao.delete(sampleInspectionList);
+		}
 	}
 
 	/**
@@ -109,5 +150,13 @@ public class InspectionRecordService {
 		return spec;
 	}
 	
+	/**
+	 * 取得样品对应的巡检记录信息.
+	 * @param sampleId
+	 * @return
+	 */
+	public List<SampleInspection> findSampleInspection(Long sampleId){
+		return sampleInspectionDao.findBySchedule_Sample_Id(sampleId);
+	}
 	
 }

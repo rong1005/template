@@ -100,7 +100,7 @@
   									<div class="box-title small"><h4>检验类别</h4></div>
 									<div class="box-body">
     									<c:forEach items="<%=ApplyCheckType.values() %>" var="applyCheckType">
-										<label class="radio-inline">
+										<label class="radio" style="font-size: 16px;font-weight: normal;">
 											<input type="radio" disabled="disabled" class="uniform" id="apply_checkType" name="checkType" <c:if test="${apply.checkType eq applyCheckType}">checked="checked"</c:if> value="${applyCheckType}"> 
 											${applyCheckType.value}(${applyCheckType.enValue}) 
 										</label>

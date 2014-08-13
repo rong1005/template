@@ -6,8 +6,10 @@
 
 <c:set var="APPLY_REQUEST" value="<%=ApplyStatus.REQUEST %>"/>
 <c:set var="AUDITING" value="<%=ApplyStatus.AUDITING %>"/>
+<c:set var="SCHEDULE" value="<%=ApplyStatus.SCHEDULE %>"/>
 <c:set var="BE_IN_PROGRESS" value="<%=ApplyStatus.BE_IN_PROGRESS %>"/>
 <c:set var="FINISH" value="<%=ApplyStatus.FINISH %>"/>
+<c:set var="BROWSE" value="<%=ApplyStatus.BROWSE %>"/>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -92,12 +94,20 @@
 												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${AUDITING}">授权设置</a></td>
 											</tr>
 											<tr>
+												<td>${SCHEDULE.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${SCHEDULE}">授权设置</a></td>
+											</tr>
+											<tr>
 												<td>${BE_IN_PROGRESS.value }</td>
 												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${BE_IN_PROGRESS}">授权设置</a></td>
 											</tr>
 											<tr>
 												<td>${FINISH.value }</td>
 												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${FINISH}">授权设置</a></td>
+											</tr>
+											<tr>
+												<td>${BROWSE.value }</td>
+												<td><a href="${ctx}/node/permission?formId=${formId}&applyStatus=${BROWSE}">授权设置</a></td>
 											</tr>
 										</tbody>
 									</table>

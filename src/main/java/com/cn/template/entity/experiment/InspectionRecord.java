@@ -71,7 +71,7 @@ public class InspectionRecord extends IdEntity {
 
 	/** 样品状态 */
 	private String sampleStatus;
-
+	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	public User getUser() {
@@ -214,5 +214,4 @@ public class InspectionRecord extends IdEntity {
 		this.isHandle = isHandle;
 	}
 
-	
 }

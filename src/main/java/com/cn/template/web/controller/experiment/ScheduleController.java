@@ -20,8 +20,10 @@ import com.cn.template.entity.experiment.Apply;
 import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.experiment.EquipmentTypeService;
 import com.cn.template.service.experiment.ScheduleService;
+import com.cn.template.service.form.NodeService;
 import com.cn.template.xutil.Constants;
 import com.cn.template.xutil.Utils;
+import com.cn.template.xutil.enums.ApplyStatus;
 import com.google.common.collect.Maps;
 
 /**
@@ -41,6 +43,10 @@ public class ScheduleController {
 	@Autowired
 	private ApplyService applyService;
 	
+	/** 节点权限信息的业务处理 */
+	@Autowired
+	private NodeService nodeService;
+	
 	/** 实验设备类型的业务逻辑. */
 	@Autowired
 	private EquipmentTypeService equipmentTypeService;
@@ -56,6 +62,7 @@ public class ScheduleController {
 	public String add(@PathVariable(value = "applyId") Long applyId,Model model){
 		Apply apply = applyService.getApply(applyId);
 		model.addAttribute("apply", apply);
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.SCHEDULE, apply.getForm().getId()));
 		model.addAttribute("customField", applyService.getApplyCustomField(apply));
 		model.addAttribute("schedules", scheduleService.findApplySchedule(applyId));
 		model.addAttribute("equipmentTypes", equipmentTypeService.getAllEquipmentType());

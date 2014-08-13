@@ -1,7 +1,10 @@
+<%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="YES" value="<%=Whether.YES %>"/>
+<c:set var="NOT" value="<%=Whether.NOT %>"/>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -100,15 +103,19 @@
 												<td>${apply.chTestItems}<br/>${apply.enTestItems}</td>
 												<td>${apply.chCheckType}<br/>${apply.enCheckType}</td>
 												<td>
-													<c:if test="${empty apply.isPass }">未审核</c:if>
-													<c:if test="${not empty apply.isPass }">${apply.isPass.value}</c:if>
+													<c:choose>
+														<c:when test="${apply.isPass eq YES }">通过</c:when>
+														<c:when test="${apply.isPass eq NOT }">否决</c:when>
+														<c:otherwise>未审核</c:otherwise>
+													</c:choose>
 												</td>
 												<td>
 													<a href="${ctx}/apply/update/${apply.id}">修改</a> / 
 													<a href="${ctx}/apply/delete/${apply.id}" onclick="return confirm('是否删除该委托申请记录？')" >删除</a> / 
 													<a href="${ctx}/sample/${apply.id}">样品管理</a> / 
 													<a href="${ctx}/apply/audit/${apply.id}">审核</a> / 
-													<a href="${ctx}/schedule/add/${apply.id}">排期</a> 
+													<a href="${ctx}/schedule/add/${apply.id}">排期</a> / 
+													<a href="${ctx}/apply/browse/${apply.id}">浏览</a> 
 												</td>
 											</tr>
 										</c:forEach>
