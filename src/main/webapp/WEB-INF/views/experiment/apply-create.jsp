@@ -317,7 +317,7 @@
 									<div class="box-body">
     									<div class="input-group">
       										<div class="input-group-addon">原因</div>
-      										<input type="text" id="apply_chCause" name="chCause" class="form-control" value="${apply.chCause}" placeholder="试验原因"/>
+      										<input type="text" id="apply_chCause" name="chCause" class="form-control" value="例行试验" placeholder="试验原因"/>
     									</div>
     									<br>
     									<div class="input-group">
@@ -332,7 +332,7 @@
 									<div class="box-body">
     									<div class="input-group">
       										<div class="input-group-addon">处理</div>
-      										<input type="text" id="apply_sampleDeal" name="sampleDeal" class="form-control" value="${apply.sampleDeal}" placeholder="样品处理"/>
+      										<input type="text" id="apply_sampleDeal" name="sampleDeal" class="form-control" value="销毁" placeholder="样品处理"/>
     									</div>
     									<br>
     									<div class="input-group">

@@ -184,6 +184,9 @@ public class ApplyController {
 	@RequestMapping(value = "audit/{id}", method = RequestMethod.GET)
 	public String audit(@PathVariable("id") Long id, Model model) {
 		Apply apply = applyService.getApply(id);
+		if(apply.getReceiptTime()==null){
+			apply.setReceiptTime(new Date());
+		}
 		
 		model.addAttribute("loginUser", Utils.getCurrentUserId());
 		model.addAttribute("users", userService.getAllUser());

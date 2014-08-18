@@ -329,6 +329,11 @@ public class ApplyService {
 			apply.setEnCheckType(apply.getCheckType().getEnValue());
 
 			apply.setUpdateTime(new Date());
+			
+			//如果申请被否决，则不添加接收时间
+			if(!apply.getIsPass().equals(Whether.YES)){
+				apply.setReceiptTime(null);
+			}
 			//保存委托申请信息.
 			apply=applyDao.save(apply);
 			if(apply.getApplyStatus().equals(ApplyStatus.AUDITING)){
@@ -418,6 +423,7 @@ public class ApplyService {
 			setString.append(" ch_test_reference='"+apply.getChTestReference()+"', ");
 			setString.append(" en_test_reference='"+apply.getEnTestReference()+"', ");
 			setString.append(" client_model='"+apply.getClientModel()+"', ");
+			setString.append(" receipt_time='"+apply.getReceiptTime()+"', ");
 
 			for(Field field : form.getFields()){
 				

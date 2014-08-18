@@ -1,5 +1,6 @@
 package com.cn.template.entity.experiment;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,6 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cn.template.entity.IdEntity;
 import com.cn.template.entity.authority.User;
@@ -19,6 +24,7 @@ import com.cn.template.xutil.enums.ApplyCheckType;
 import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.Units;
 import com.cn.template.xutil.enums.Whether;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 实验委托申请信息.
@@ -128,6 +134,9 @@ public class Apply extends IdEntity {
 	
 	/** 是否通过 */
 	private Whether isPass;
+	
+	/** 接收时间 */
+	private Date receiptTime;
 	
 	/** 委托人邮件 */
 	private String clientMail;
@@ -493,6 +502,24 @@ public class Apply extends IdEntity {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	
+	/**
+	 * 'Temporal' 定义时间保存的格式
+	 * 'DateTimeFormat' 普通输出格式
+	 * 'JsonFormat' JSON输出的格式
+	 * @return
+	 */
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+08:00")
+	public Date getReceiptTime() {
+		return receiptTime;
+	}
+
+	public void setReceiptTime(Date receiptTime) {
+		this.receiptTime = receiptTime;
 	}
 	
 }

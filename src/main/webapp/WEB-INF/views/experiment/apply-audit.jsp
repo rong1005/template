@@ -7,6 +7,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="YES" value="<%=Whether.YES %>" />
@@ -483,19 +484,20 @@
 						<div class="box-body">
 						
 						<div class="input-group">
-      						<div class="input-group-addon">实验编号</div>
+      						<div class="input-group-addon">实验编号:</div>
       						<input type="text" id="apply_serialNumber" name="serialNumber" class="form-control" value="${apply.serialNumber}" placeholder="实验编号" />
-    					</div>
-    					<br>
-    					
-    					<div class="input-group">
-      						<div class="input-group-addon">实验员</div>
+      						
+      						<div class="input-group-addon">实验员:</div>
       						<select class="form-control" id="apply_user" name="user.id">
       						<c:forEach items="${users}" var="user">
       							<option value="${user.id}" <c:if test="${(apply.user eq null and user.id eq loginUser) or apply.user.id eq user.id }">selected="selected"</c:if>>${user.name}</option>
       						</c:forEach>
       						</select>
+      						
+      						<div class="input-group-addon">处理时间:</div>
+      						<input type="text" id="receipt_time" name="receiptTime" class="form-control" value="<fmt:formatDate value="${apply.receiptTime}" pattern="yyyy-MM-dd"/>" placeholder="接收时间" onclick="WdatePicker();" />
     					</div>
+    					
     					<br>
     					<div class="row">
     					  <div class="col-md-12 box-container ui-sortable">
@@ -601,6 +603,9 @@
 	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.all.min.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/ueditor/lang/zh-cn/zh-cn.js"></script>
 	<script type="text/javascript" charset="utf-8" src="${ctx}/static/js/ueditor/customize/addCustomizeDialog.js"></script>
+
+	<!-- 日期插件 -->
+	<script type="text/javascript" src="${ctx}/static/js/datepicker97/WdatePicker.js"></script>
 
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
