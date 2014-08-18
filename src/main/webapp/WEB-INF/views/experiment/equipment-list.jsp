@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="zh">
@@ -79,6 +80,10 @@
 										<thead>
 											<tr>
 												<th>名称</th>
+												<th>型号</th>
+												<th>编号</th>
+												<th>实验类型</th>
+												<th>有效期</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -86,6 +91,13 @@
 										<c:forEach items="${equipments.content}" var="equipment">
 											<tr>
 												<td>${equipment.name}</td>
+												<td>${equipment.modelNumber}</td>
+												<td>${equipment.serialNumber}</td>
+												<td>${equipment.recordType.value}</td>
+												<td>
+												<fmt:formatDate value="${equipment.dateStart}" pattern="yyyy-MM-dd" /> -- 
+												<fmt:formatDate value="${equipment.dateEnd}" pattern="yyyy-MM-dd" />
+												</td>
 												<td><a href="${ctx}/equipment/update/${equipment.id}">修改</a> / <a href="${ctx}/equipment/delete/${equipment.id}" onclick="return confirm('是否删除该实验设备类型？')" >删除</a></td>
 											</tr>
 										</c:forEach>

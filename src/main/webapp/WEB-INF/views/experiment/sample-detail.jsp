@@ -12,6 +12,7 @@
 <c:set var="FOUR_POWER" value="<%=RecordType.FOUR_POWER %>"/>
 <c:set var="ENVIRONMENT" value="<%=RecordType.ENVIRONMENT %>"/>
 <c:set var="UV" value="<%=RecordType.UV %>"/>
+<c:set var="SALT_MIST" value="<%=RecordType.SALT_MIST %>"/>
 
 <c:set var="YES" value="<%=Whether.YES %>"/>
 <c:set var="NOT" value="<%=Whether.NOT %>"/>
@@ -160,6 +161,10 @@
 												<c:if test="${inspections.inspectionRecord.equipment.recordType eq UV}">
 												UV-1:${inspections.inspectionRecord.uv1}V/M2; UV-2:${inspections.inspectionRecord.uv2}V/M2; 
 												UV-3:${inspections.inspectionRecord.uv3}V/M2; UV-4:${inspections.inspectionRecord.uv4}V/M2; 
+												</c:if>
+												<c:if test="${inspections.inspectionRecord.equipment.recordType eq SALT_MIST}">
+												试验室温度:${inspections.inspectionRecord.LabTemp}℃; 饱和桶温度:${inspections.inspectionRecord.saturatedBarrelTemp}℃; 
+												气压:${inspections.inspectionRecord.pressure}kg/cm2;
 												</c:if>
 												<c:if test="${inspections.inspectionRecord.equipment.recordType eq OTHER}">
 												仪器:${inspections.inspectionRecord.equipmentStatus};样品:${inspections.inspectionRecord.sampleStatus};

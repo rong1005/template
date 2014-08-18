@@ -8,7 +8,7 @@ package com.cn.template.xutil.enums;
  */
 public enum PermissionType {
 	/** 拒绝 */
-	REJECT("拒绝", 0),
+	REJECT("隐藏", 0),
 	/** 只读 */
 	READ_ONLY("只读", 1),
 	/** 读写 */

@@ -10,7 +10,7 @@
 <c:set var="FOUR_POWER" value="<%=RecordType.FOUR_POWER %>"/>
 <c:set var="ENVIRONMENT" value="<%=RecordType.ENVIRONMENT %>"/>
 <c:set var="UV" value="<%=RecordType.UV %>"/>
-
+<c:set var="SALT_MIST" value="<%=RecordType.SALT_MIST %>"/>
 
 <!DOCTYPE html>
 <html lang="zh">
@@ -79,7 +79,12 @@
 									</div>
 									<label class="col-sm-2 control-label">设备</label>
 									<div class="col-sm-4">
-										<span class="form-control" id="equipment_name">${inspectionRecord.equipment.equipmentType.name} -- ${inspectionRecord.equipment.name}</span>
+										<span class="form-control" id="equipment_name">
+										<c:if test="${not empty inspectionRecord.equipment }">
+											${inspectionRecord.equipment.equipmentType.name} -- ${inspectionRecord.equipment.name}
+											(${inspectionRecord.equipment.modelNumber} -- ${inspectionRecord.equipment.serialNumber})
+										</c:if>
+										</span>
 										<input type="hidden" id="equipment_id" name="equipment.id" value="${inspectionRecord.equipment.id}" class="form-control"/>
 									</div>
 								</div>
@@ -140,6 +145,21 @@
 									</div>
 									<div class="col-sm-3">
 										<input type="text" id="uv4" name="uv4" value="${inspectionRecord.uv4}" class="form-control" placeholder="UV4"/>
+									</div>
+								</div>
+								
+								<div class="form-group" <c:if test="${inspectionRecord.equipment.recordType ne SALT_MIST}">style="display: none;"</c:if> id="SALT_MIST">
+									<label class="col-sm-2 control-label">试验室温度（°C）</label>
+									<div class="col-sm-2">
+										<input type="text" id="labTemp" name="labTemp" value="${inspectionRecord.labTemp}" class="form-control" placeholder="试验室温度（°C）"/>
+									</div>
+									<label class="col-sm-2 control-label">饱和桶温度（°C）</label>
+									<div class="col-sm-2">
+										<input type="text" id="saturatedBarrelTemp" name="saturatedBarrelTemp" value="${inspectionRecord.saturatedBarrelTemp}" class="form-control" placeholder="饱和桶温度（°C）"/>
+									</div>
+									<label class="col-sm-2 control-label">气压（kg/cm2）</label>
+									<div class="col-sm-2">
+										<input type="text" id="pressure" name="pressure" value="${inspectionRecord.pressure}" class="form-control" placeholder="气压（kg/cm2）"/>
 									</div>
 								</div>
 								
@@ -225,13 +245,14 @@
 				$("#FOUR_POWER").hide();
 				$("#ENVIRONMENT").hide();
 				$("#UV").hide();
+				$("#SALT_MIST").hide();
 				
 				jQuery.ajax({
 	                 url: "${ctx}/equipment/show/"+$(this).val(),
 	                 type: "post",
 	                 dataType: "json",
 	                 success: function(msg) {
-	                	 $("#equipment_name").html(msg.equipmentType.name+" -- "+msg.name);
+	                	 $("#equipment_name").html(msg.equipmentType.name+" -- "+msg.name+"("+msg.modelNumber+" -- "+msg.serialNumber+")");
 	                	 $("#equipment_id").val(msg.id);
 	                	 if(msg.recordType=='OTHER'){
 	                		 $("#OTHER").show();
@@ -244,6 +265,8 @@
 	                		 $("#ENVIRONMENT").show();
 	                	 }else if(msg.recordType=='UV'){
 	                		 $("#UV").show();
+	                	 }else if(msg.recordType=='SALT_MIST'){
+	                		 $("#SALT_MIST").show();
 	                	 }
 	                 }
 				 });

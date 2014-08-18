@@ -1,9 +1,17 @@
+<%@page import="com.cn.template.xutil.enums.RecordType"%>
 <%@page import="com.cn.template.xutil.enums.Whether"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<c:set var="OTHER" value="<%=RecordType.OTHER %>"/>
+<c:set var="TWO_POWER" value="<%=RecordType.TWO_POWER %>"/>
+<c:set var="FOUR_POWER" value="<%=RecordType.FOUR_POWER %>"/>
+<c:set var="ENVIRONMENT" value="<%=RecordType.ENVIRONMENT %>"/>
+<c:set var="UV" value="<%=RecordType.UV %>"/>
+<c:set var="SALT_MIST" value="<%=RecordType.SALT_MIST %>"/>
 
 <c:set var="YES" value="<%=Whether.YES %>"/>
 <!DOCTYPE html>
@@ -83,6 +91,7 @@
 												<th>是否异常</th>
 												<th>巡检时间</th>
 												<th>巡检人</th>
+												<th>巡检记录</th>
 												<th>管理</th>
 											</tr>
 										</thead>
@@ -107,6 +116,29 @@
 												</td>
 												<td><fmt:formatDate value="${inspectionRecord.createTime }" pattern="yyyy-MM-dd HH:mm" /></td>
 												<td>${inspectionRecord.user.name}</td>
+												<td>
+												<c:if test="${inspectionRecord.equipment.recordType eq TWO_POWER}">
+												CH1:${inspectionRecord.ch1}V; CH2:${inspectionRecord.ch2}V;
+												</c:if>
+												<c:if test="${inspectionRecord.equipment.recordType eq FOUR_POWER}">
+												CH1:${inspectionRecord.ch1}V; CH2:${inspectionRecord.ch2}V; 
+												CH3:${inspectionRecord.ch3}V; CH4:${inspectionRecord.ch4}V;
+												</c:if>
+												<c:if test="${inspectionRecord.equipment.recordType eq ENVIRONMENT}">
+												温度:${inspectionRecord.temperature}℃; 湿度:${inspectionRecord.humidity}%;
+												</c:if>
+												<c:if test="${inspectionRecord.equipment.recordType eq UV}">
+												UV-1:${inspectionRecord.uv1}V/M2; UV-2:${inspectionRecord.uv2}V/M2; 
+												UV-3:${inspectionRecord.uv3}V/M2; UV-4:${inspectionRecord.uv4}V/M2; 
+												</c:if>
+												<c:if test="${inspectionRecord.equipment.recordType eq SALT_MIST}">
+												试验室温度:${inspectionRecord.labTemp}℃; 饱和桶温度:${inspectionRecord.saturatedBarrelTemp}℃; 
+												气压:${inspectionRecord.pressure}kg/cm2;
+												</c:if>
+												<c:if test="${inspectionRecord.equipment.recordType eq OTHER}">
+												仪器:${inspectionRecord.equipmentStatus};样品:${inspectionRecord.sampleStatus};
+												</c:if>
+												</td>
 												<td>
 													<a href="${ctx}/inspection/update/${inspectionRecord.id}">修改</a> / 
 													<a href="${ctx}/inspection/delete/${inspectionRecord.id}" onclick="return confirm('是否删除该巡检记录？')" >删除</a>

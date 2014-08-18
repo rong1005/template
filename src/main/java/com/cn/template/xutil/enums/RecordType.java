@@ -13,10 +13,13 @@ public enum RecordType {
 	TWO_POWER("功率试验(双通道功放)", 1),
 	/** 功率试验(四通道功放) */
 	FOUR_POWER("功率试验(四通道功放)", 2),
-	/** 功率试验(四通道功放) */
+	/** 环境试验 */
 	ENVIRONMENT("环境试验", 3),
 	/** UV试验 */
-	UV("UV试验", 4);
+	UV("UV试验", 4),
+	/** UV试验 */
+	SALT_MIST("盐雾试验", 5)
+	;
 
 	private String value;
 	private int index;

@@ -72,6 +72,15 @@ public class InspectionRecord extends IdEntity {
 	/** 样品状态 */
 	private String sampleStatus;
 	
+	/** 试验室温度（°C） */
+	private String labTemp;
+	
+	/** 饱和桶温度（°C） */
+	private String saturatedBarrelTemp;
+	
+	/** 气压（kg/cm2） */
+	private String pressure;
+	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	public User getUser() {
@@ -212,6 +221,30 @@ public class InspectionRecord extends IdEntity {
 
 	public void setIsHandle(Whether isHandle) {
 		this.isHandle = isHandle;
+	}
+
+	public String getLabTemp() {
+		return labTemp;
+	}
+
+	public void setLabTemp(String labTemp) {
+		this.labTemp = labTemp;
+	}
+
+	public String getSaturatedBarrelTemp() {
+		return saturatedBarrelTemp;
+	}
+
+	public void setSaturatedBarrelTemp(String saturatedBarrelTemp) {
+		this.saturatedBarrelTemp = saturatedBarrelTemp;
+	}
+
+	public String getPressure() {
+		return pressure;
+	}
+
+	public void setPressure(String pressure) {
+		this.pressure = pressure;
 	}
 
 }
