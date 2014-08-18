@@ -45,8 +45,8 @@ public class PathFormat {
 	 * @return 格式化后的路径
 	 */
 	public static String format ( String input ) {
-		
-		return input.replace( "\\", "/" );
+		String url=input.replace( "\\", "/" );
+		return url.replaceAll( "//", "/" );
 		
 	}
 

@@ -70,8 +70,6 @@ public class ScheduleService {
 	}
 
 
-
-
 	/** 实验样品的业务逻辑 */
 	private SampleService sampleService;
 	

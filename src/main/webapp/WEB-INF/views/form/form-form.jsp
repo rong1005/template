@@ -66,6 +66,13 @@
 								<input type="hidden" name="id" value="${form.id}"/>
 								
 								<div class="form-group">
+									<label class="col-sm-2 control-label">编码前缀</label>
+									<div class="col-sm-10">
+										<input type="text" id="form_prefix" name="prefix" value="${form.prefix}" class="form-control" placeholder="编码前缀"/>
+									</div>
+								</div>
+								
+								<div class="form-group">
 									<label class="col-sm-2 control-label">表单名称</label>
 									<div class="col-sm-10">
 										<input type="text" id="form_name" name="name" value="${form.name}" class="form-control" placeholder="表单名称"/>

@@ -31,6 +31,7 @@ import com.cn.template.repository.experiment.ApplyPriceDao;
 import com.cn.template.repository.experiment.ApplyRemarkDao;
 import com.cn.template.repository.form.SelectItemDao;
 import com.cn.template.service.form.FormService;
+import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.ApplyStatus;
 import com.cn.template.xutil.enums.FieldType;
 import com.cn.template.xutil.enums.SampleStatus;
@@ -502,6 +503,27 @@ public class ApplyService {
 	 */
 	public List<Apply> getAllApply() {
 		return (List<Apply>) applyDao.findAll();
+	}
+	
+	/**
+	 * 根据实验编号或者申请编号查询申请记录.
+	 * @param applyCode
+	 * @param experimentCode
+	 * @return
+	 */
+	public Apply getApply(String applyCode,String experimentCode){
+		try{
+		if(Utils.isNotBlank(applyCode)){
+			return getApply(Long.parseLong(applyCode.trim()));
+		}else if(Utils.isBlank(applyCode)&&Utils.isNotBlank(experimentCode)){
+			return applyDao.findBySerialNumber(experimentCode);
+		}else{
+			return null;
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**

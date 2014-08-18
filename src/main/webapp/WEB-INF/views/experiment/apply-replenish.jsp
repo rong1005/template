@@ -1,16 +1,14 @@
-<%@page import="com.cn.template.xutil.enums.Units"%>
 <%@page import="com.cn.template.xutil.enums.PermissionType"%>
-<%@page import="com.cn.template.xutil.enums.Whether"%>
-<%@page import="com.cn.template.xutil.enums.FieldType"%>
+<%@page import="com.cn.template.xutil.enums.Units"%>
 <%@page import="com.cn.template.xutil.enums.ApplyCheckType"%>
+<%@page import="com.cn.template.xutil.enums.FieldType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<c:set var="YES" value="<%=Whether.YES %>" />
-<c:set var="NOT" value="<%=Whether.NOT %>" />
+
 <c:set var="SELECT" value="<%=FieldType.SELECT %>" />
 <c:set var="CHECKBOX" value="<%=FieldType.CHECKBOX %>" />
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
@@ -21,6 +19,7 @@
 <c:set var="REJECT" value="<%=PermissionType.REJECT %>" />
 <c:set var="READ_ONLY" value="<%=PermissionType.READ_ONLY %>" />
 <c:set var="READ_WRITE" value="<%=PermissionType.READ_WRITE %>" />
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -50,7 +49,7 @@
 									<li>
 										<a href="${ctx}/apply">申请纪录</a>
 									</li>
-									<li>修改委托申请</li>
+									<li>实验排期</li>
 								</ul>
 								<!-- /BREADCRUMBS -->
 								
@@ -58,11 +57,15 @@
 						</div>
 					</div>
 					<!-- /PAGE HEADER -->
+					
 					<form id="inputForm" class="form-horizontal" action="${ctx}/apply/${action}" method="post">
+					<input type="hidden" name="id" value="${apply.id}"/>
+					<input type="hidden" name="form.id" value="${apply.form.id}"/>
+								
 					
 					<div class="box border primary">
 						<div class="box-title">
-							<h4><i class="fa fa-table"></i>委托申请信息</h4>
+							<h4><i class="fa fa-table"></i>实验资料</h4>
 							<div class="tools hidden-xs">
 								<a href="javascript:;" class="collapse">
 									<i class="fa fa-chevron-up"></i>
@@ -74,10 +77,6 @@
 						</div>
 						
 						<div class="box-body">
-							<input type="hidden" name="id" value="${apply.id}"/>
-							<input type="hidden" name="form.id" value="${apply.form.id}"/>
-							<input type="hidden" id="apply_isPass" name="isPass" value="${NOT}"/>
-								
 							<div class="row">
 								<div class="col-md-8 box-container ui-sortable">
 								<div class="box border blue">
@@ -110,8 +109,7 @@
 								</div>
 								</div>
 							</div>
-								
-								
+							
 							<div class="row">
 								<div class="col-md-4 box-container ui-sortable">
 								<div class="box border blue">
@@ -342,17 +340,17 @@
 								</div>
 								</div>
 							</div>
-								
+							
 							<c:forEach var="field" items="${apply.form.fields }">
-							<c:if test="${nodeMap[field.id].permissionType ne REJECT}">
-							<c:choose>
-							<c:when test="${field.fieldType eq SELECT}">
+								<c:if test="${nodeMap[field.id].permissionType ne REJECT}">
+								<c:choose>
+								<c:when test="${field.fieldType eq SELECT}">
 								<div class="row">
 								  <div class="col-md-12 box-container ui-sortable">
 								    <div class="box border blue">
 								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
 								      <div class="box-body">
-    							        <select disabled="disabled" class="form-control" name="${field.name}" id="apply_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>
+    							       <select class="form-control" name="${field.name}" id="apply_${field.name}" <c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if>>
 											<c:forEach items="${field.selectItems }" var="item">
 												<option value="${item.id }" <c:if test="${item.id eq customField[field.name]['id'] }">selected="selected"</c:if>>${item.chItemName}(${item.enItemName})</option>
 											</c:forEach>
@@ -361,15 +359,15 @@
 								    </div>
 								  </div>
 								</div>							
-							</c:when>
+								</c:when>
 								
-							<c:when test="${field.fieldType eq CHECKBOX}">
+								<c:when test="${field.fieldType eq CHECKBOX}">
 								<div class="row">
 								  <div class="col-md-12 box-container ui-sortable">
 								    <div class="box border blue">
 								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
 								      <div class="box-body">
-    							       <c:forEach items="${field.selectItems }" var="item">
+    							        <c:forEach items="${field.selectItems }" var="item">
 										<label class="checkbox-inline">
 											<input type="checkbox" class="uniform" name="${field.name}" id="apply_${field.name}" 
 											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
@@ -381,15 +379,15 @@
 								    </div>
 								  </div>
 								</div>							
-							</c:when>
+								</c:when>
 								
-							<c:when test="${field.fieldType eq RADIO}">
+								<c:when test="${field.fieldType eq RADIO}">
 								<div class="row">
 								  <div class="col-md-12 box-container ui-sortable">
 								    <div class="box border blue">
 								      <div class="box-title small"><h4>${field.chViewName}(${field.enViewName})</h4></div>
 								      <div class="box-body">
-    							       <c:forEach items="${field.selectItems }" var="item">
+    							        <c:forEach items="${field.selectItems }" var="item">
 										<label class="radio-inline">
 											<input type="radio" class="uniform" name="${field.name}" id="apply_${field.name}" 
 											<c:if test="${nodeMap[field.id].permissionType eq READ_ONLY}">disabled="disabled"</c:if> 
@@ -401,9 +399,9 @@
 								    </div>
 								  </div>
 								</div>							
-							</c:when>
+								</c:when>
 								
-							<c:when test="${field.fieldType eq DOUBLE or field.fieldType eq INT }">
+								<c:when test="${field.fieldType eq DOUBLE or field.fieldType eq INT }">
 								<div class="row">
 								  <div class="col-md-12 box-container ui-sortable">
 								    <div class="box border blue">
@@ -417,9 +415,9 @@
 								    </div>
 								  </div>
 								</div>	
-							</c:when>
+								</c:when>
 								
-							<c:when test="${field.fieldType eq TEXT}">
+								<c:when test="${field.fieldType eq TEXT}">
 								<div class="row">
 								  <div class="col-md-6 box-container ui-sortable">
 								    <div class="box border blue">
@@ -438,9 +436,9 @@
 								    </div>
 								  </div>
 								</div>
-							</c:when>
+								</c:when>
 								
-							<c:otherwise>
+								<c:otherwise>
 								<div class="row">
 								  <div class="col-md-12 box-container ui-sortable">
 								    <div class="box border blue">
@@ -459,17 +457,69 @@
 								    </div>
 								  </div>
 								</div>
-							</c:otherwise>
-							</c:choose>
-							</c:if>
+								</c:otherwise>
+								</c:choose>
+								</c:if>
 							</c:forEach>
+															
 						</div>
 					</div>
 					
-								
 					<div class="box border primary">
 						<div class="box-title">
-							<h4><i class="fa fa-table"></i>审核委托申请</h4>
+							<h4><i class="fa fa-table"></i>费用清单</h4>
+							<div class="tools hidden-xs">
+								<a href="javascript:;" class="collapse">
+									<i class="fa fa-chevron-up"></i>
+								</a>
+								<a href="javascript:;" class="remove">
+									<i class="fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="box-body">
+							<table id="priceDetailTable" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>试验项目</th>
+										<th>设备名称</th>
+										<th>开机费</th>
+										<th>电费/小时</th>
+										<th>设备折旧/小时</th>
+										<th>小时</th>
+										<th>次数/数量</th>
+										<th>费用</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${apply.applyPrices}" var="applyPrice">
+										<tr>
+											<td>${applyPrice.price.project}</td>
+											<td>${applyPrice.price.equipmentType.name}</td>
+											<td>${applyPrice.price.openPrice}</td>
+											<td>${applyPrice.price.electricPrice}</td>
+											<td>${applyPrice.price.depreciation}</td>
+											<td>${applyPrice.usedHour}</td>
+											<td>${applyPrice.usedTimes}</td>
+											<td>${applyPrice.totalPrice}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="7">总费用</th>
+										<th style="color: red;">0</th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+					
+					
+					<div class="box border primary">
+						<div class="box-title">
+							<h4><i class="fa fa-table"></i>样品排期</h4>
 							<div class="tools hidden-xs">
 								<a href="javascript:;" class="collapse">
 									<i class="fa fa-chevron-up"></i>
@@ -481,113 +531,70 @@
 						</div>
 						
 						<div class="box-body">
-						
-						<div class="input-group">
-      						<div class="input-group-addon">实验编号</div>
-      						<input type="text" id="apply_serialNumber" name="serialNumber" class="form-control" value="${apply.serialNumber}" placeholder="实验编号" />
-    					</div>
-    					<br>
-    					
-    					<div class="input-group">
-      						<div class="input-group-addon">实验员</div>
-      						<select class="form-control" id="apply_user" name="user.id">
-      						<c:forEach items="${users}" var="user">
-      							<option value="${user.id}" <c:if test="${(apply.user eq null and user.id eq loginUser) or apply.user.id eq user.id }">selected="selected"</c:if>>${user.name}</option>
-      						</c:forEach>
-      						</select>
-    					</div>
-    					<br>
-    					<div class="row">
-    					  <div class="col-md-12 box-container ui-sortable">
-    					    <div class="box border blue">
-						      <div class="box-title small"><h4>费用明细</h4></div>
-							  <div class="box-body">
-							  <table id="priceDetailTable" class="table table-striped table-bordered table-hover">
-							    <thead>
-							      <tr>
-							        <td colspan="9">
-							          <div class="row">
-							            <div class="col-sm-4">
-							              <select class="form-control" id="equipment">
-											<c:forEach items="${prices}" var="price">
-												<option value="${price.id}">${price.project}--${price.equipmentType.name}</option>
-											</c:forEach>
-										  </select>
-										</div>
-										<div class="col-sm-2">
-											<input type="text" class="form-control" id="usedHour" placeholder="小时" />
-										</div>
-										<div class="col-sm-2">
-											<input type="text" class="form-control" id="usedTimes" placeholder="次数" />
-										</div>
-										<div class="col-sm-4">
-											<input class="btn btn-inverse" type="button" value="添加" onclick="addPrice()" />
-										</div>
-									  </div>
-								    </td>
-								  </tr>
-								  <tr>
-									<th>#</th>
-									<th>试验项目</th>
-									<th>设备名称</th>
-									<th>开机费</th>
-									<th>电费/小时</th>
-									<th>设备折旧/小时</th>
-									<th>小时</th>
-									<th>次数/数量</th>
-									<th>费用</th>
-								  </tr>
-							</thead>
-						    <tbody>
-							<c:forEach items="${apply.applyPrices}" var="applyPrice">
-							<tr>
-								<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span></td>
-								<td>${applyPrice.price.project} 
-									<input type="hidden" name="priceId" value="${applyPrice.price.id}" /> 
-									<input type="hidden" name="usedHour" value="${applyPrice.usedHour}" /> 
-									<input type="hidden" name="usedTimes" value="${applyPrice.usedTimes}" /> 
-									<input type="hidden" name="totalPrice" value="${applyPrice.totalPrice }" />
-								</td>
-								<td>${applyPrice.price.equipmentType.name}</td>
-								<td>${applyPrice.price.openPrice}</td>
-								<td>${applyPrice.price.electricPrice}</td>
-								<td>${applyPrice.price.depreciation}</td>
-								<td>${applyPrice.usedHour}</td>
-								<td>${applyPrice.usedTimes}</td>
-								<td>${applyPrice.totalPrice}</td>
-							</tr>
-							</c:forEach>
-							</tbody>
-							<tfoot>
-							  <tr>
-								<th colspan="8">总费用</th>
-								<th style="color: red;">0</th>
-							  </tr>
-							</tfoot>
-						</table>
-							  </div>
-							</div>   
-    					  </div>
-    					</div>		
-						<div class="input-group">
-      						<div class="input-group-addon">备注</div>
-      						<textarea rows="5" cols="10" class="form-control" id="apply_remark" name="apply_remark"></textarea>
-    					</div>
-    					<br>
-						<div class="form-group">
-							<div class="col-sm-12">
-								<input id="pass_btn" class="btn btn-info" type="submit" value="通过" />&nbsp; 
-								<input id="reject_btn" class="btn btn-warning" type="submit" value="否决" />&nbsp; 
-								<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()" />
+							<div class="input-group">
+								<div class="input-group-addon">样品名称</div>
+								<input type="text" class="form-control" value="${apply.chSampleName}(${apply.enSampleName})" disabled="disabled"/>
+								<div class="input-group-addon">样品型号</div>
+								<input type="text" class="form-control" value="${apply.sampleModel}" disabled="disabled"/>
+								<div class="input-group-addon">样品数量</div>
+								<input type="text" class="form-control" value="${apply.sampleNumber} ${apply.units.value}" disabled="disabled"/>
 							</div>
+							<hr/>
+							<table id="scheduleTable" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>样品流水号</th>
+										<th>设备</th>
+										<th>状态</th>
+										<th>用时</th>
+										<th>预计开始时间</th>
+										<th>预计结束时间</th>
+										<th>实际开始时间</th>
+										<th>实际结束时间</th>
+										<th>明细</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${schedules}" var="schedule">
+										<tr>
+											<td>${schedule.sample.serialNumber }</td>
+											<td>${schedule.equipment.equipmentType.name} -- ${schedule.equipment.name} </td>
+											<td>${schedule.sample.status.value }</td>
+											<td>${schedule.usedTime }</td>
+											<td>
+												<fmt:formatDate value="${schedule.startTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<fmt:formatDate value="${schedule.endTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<fmt:formatDate value="${schedule.realStartTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<fmt:formatDate value="${schedule.realEndTime }" pattern="yyyy-MM-dd HH:mm" />
+											</td>
+											<td>
+												<a href="${ctx}/sample/detail/${schedule.sample.id}">明细</a>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
 						</div>
 					</div>
-				</div> 
-			</form>
+					
+					<div class="form-group">
+						<div class="col-sm-12">
+							<input id="pass_btn" class="btn btn-info" type="submit" value="提交" />&nbsp; 
+							<input id="cancel_btn" class="btn btn-default" type="button" value="返回" onclick="history.back()" />
+						</div>
+					</div>
+					</form>
+					
+				</div>
+			</div>
 		</div>
-	</div>
-	</div>
-</div>	
+	</div>	
 	
 	<!-- JAVASCRIPTS -->
 	<!-- 引入公共JS脚本 -->
@@ -595,6 +602,9 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
+	
+	<!-- 日期插件 -->
+	<script type="text/javascript" src="${ctx}/static/js/datepicker97/WdatePicker.js"></script>
 	
 	<!-- 富文本编辑器 -->
 	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.config.js"></script>
@@ -607,7 +617,7 @@
 	<script>
 		jQuery(document).ready(function() {
 			//如果页面无需设置效果，可以不设置 App.setPage ，如设置 App.setPage 而页面缺少对应的元素，会导致JS错误.
-			App.setPage("apply_forms");  //设置当前启动的页面
+			//App.setPage("apply_forms");  //设置当前启动的页面
 			
 			App.setHasSub("forms-manager");//设置一级菜单目录ID
 			App.setSubMenu("forms-list");//设置二级菜单目录ID
@@ -615,7 +625,6 @@
 			App.init(); //初始化元素以及插件
 			
 			$("textarea").each(function (index, domEle) { 
-				if($(domEle).attr("id")!='apply_remark'){
 				if($(domEle).attr("disabled")=='disabled'){
 					UE.getEditor($(domEle).attr("id"),{
 						wordCount:false,
@@ -630,73 +639,21 @@
 						initialFrameHeight:200
 					});
 				}
-				}
-			});
-			
-			$("#pass_btn").on("click", function(){
-				$("#apply_isPass").val("${YES}");
-			});
-			
-			$("#reject_btn").on("click", function(){
-				$("#apply_isPass").val("${NOT}");
 			});
 			
 			countTotalPrice();
-
 		});
 		
-		//添加费用明细.
-		function addPrice(){
-			var usedTimes = $("#usedTimes").val();
-			var usedHour = $("#usedHour").val();
-			
-			 jQuery.ajax({
-                 url: "${ctx}/price/show/"+$("#equipment").val(),
-                 type: "post",
-                 dataType: "json",
-                 success: function(msg) {
-                	 var formula=msg.formula;
-                	 formula = formula.replace('开机费',msg.openPrice);
-                	 formula = formula.replace('小时数',usedHour);
-                	 formula = formula.replace('小时',usedHour);
-			 		 formula = formula.replace('次数',usedTimes);
-			 		 formula = formula.replace('数量',usedTimes);
-                	 
-                	 var str='<tr>';
-                	 str=str+'<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span></td>';
-                	 str=str+'<td>'+msg.project;
-                	 str=str+'<input type="hidden" name="priceId" value="'+msg.id+'" />';
-                	 str=str+'<input type="hidden" name="usedHour" value="'+usedHour+'" />';
-                	 str=str+'<input type="hidden" name="usedTimes" value="'+usedTimes+'" />';
-                	 str=str+'<input type="hidden" name="totalPrice" value="'+eval(formula)+'" />';
-                	 str=str+'</td>';
-                	 str=str+'<td>'+msg.equipmentType.name+'</td>';
-                	 str=str+'<td>'+msg.openPrice+'</td>';
-                	 str=str+'<td>'+msg.electricPrice+'</td>';
-                	 str=str+'<td>'+msg.depreciation+'</td>';
-                	 str=str+'<td>'+usedHour+'</td>';
-                	 str=str+'<td>'+usedTimes+'</td>';
-                	 str=str+'<td>'+eval(formula)+'</td>';
-                	 str=str+'</tr>';
-					 $("#priceDetailTable tbody").append(str); 
-					 countTotalPrice();
-                 }
-             }); 
-		}
-		
-		function deleteApplyPrice(e){
-			$(e).parent().parent().remove();
-			countTotalPrice();
-		}
-		
+		/** 计算总费用 */
 		function countTotalPrice(){
 			var total=0;
-			 $("tbody tr td:last-child").each(function (index, domEle) { 
+			 $("#priceDetailTable tbody tr td:last-child").each(function (index, domEle) { 
 				 total=total+Number($(domEle).text());
 			 });
 			
-			 $("tfoot tr th").last().text(total);
+			 $("#priceDetailTable tfoot tr th").last().text(total);
 		}
+
 	</script>
 	<!-- /JAVASCRIPTS -->
 </body>

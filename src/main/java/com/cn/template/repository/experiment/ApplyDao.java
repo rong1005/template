@@ -12,4 +12,10 @@ import com.cn.template.entity.experiment.Apply;
  */
 public interface ApplyDao extends PagingAndSortingRepository<Apply, Long>, JpaSpecificationExecutor<Apply> {
 
+	/**
+	 * 根据实验流水号取得实验申请信息.
+	 * @param serialNumber
+	 * @return
+	 */
+	public Apply findBySerialNumber(String serialNumber);
 }

@@ -35,6 +35,9 @@ public class Form extends IdEntity {
 	/** 中文表名 */
 	private String tableName;
 	
+	/** 编码前缀 */
+	private String prefix;
+	
 	/** 表单中包含的字段 */
 	private List<Field> fields;
 
@@ -80,4 +83,13 @@ public class Form extends IdEntity {
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
 	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
 }

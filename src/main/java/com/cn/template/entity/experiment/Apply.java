@@ -13,6 +13,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.cn.template.entity.IdEntity;
+import com.cn.template.entity.authority.User;
 import com.cn.template.entity.form.Form;
 import com.cn.template.xutil.enums.ApplyCheckType;
 import com.cn.template.xutil.enums.ApplyStatus;
@@ -133,6 +134,9 @@ public class Apply extends IdEntity {
 	
 	/** 跟踪人邮件 */
 	private String followMail;
+	
+	/** 实验员 */
+	private User user;
 	
 	/** 申请的备注记录信息 */
 	private List<ApplyRemark> remarks;
@@ -480,7 +484,15 @@ public class Apply extends IdEntity {
 	public void setClientModel(String clientModel) {
 		this.clientModel = clientModel;
 	}
-	
-	
+
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
 }

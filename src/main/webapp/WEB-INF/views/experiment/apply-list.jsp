@@ -115,7 +115,8 @@
 													<a href="${ctx}/sample/${apply.id}">样品管理</a> / 
 													<a href="${ctx}/apply/audit/${apply.id}">审核</a> / 
 													<a href="${ctx}/schedule/add/${apply.id}">排期</a> / 
-													<a href="${ctx}/apply/browse/${apply.id}">浏览</a> 
+													<a href="${ctx}/apply/browse/${apply.id}">浏览</a> /
+													<a href="${ctx}/apply/replenish/${apply.id}">补充</a>  
 												</td>
 											</tr>
 										</c:forEach>

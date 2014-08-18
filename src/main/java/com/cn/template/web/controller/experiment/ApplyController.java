@@ -20,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cn.template.entity.experiment.Apply;
+import com.cn.template.service.authority.UserService;
 import com.cn.template.service.experiment.ApplyService;
 import com.cn.template.service.experiment.PriceService;
 import com.cn.template.service.experiment.ScheduleService;
 import com.cn.template.service.form.FieldService;
+import com.cn.template.service.form.FormService;
 import com.cn.template.service.form.NodeService;
 import com.cn.template.xutil.Constants;
+import com.cn.template.xutil.Utils;
 import com.cn.template.xutil.enums.ApplyStatus;
+import com.cn.template.xutil.enums.Whether;
 import com.cn.template.xutil.web.Servlets;
 import com.google.common.collect.Maps;
 
@@ -67,6 +71,14 @@ public class ApplyController {
 	/** 实验排期信息的业务处理类. */
 	@Autowired
 	private ScheduleService scheduleService;
+	
+	/** 用户管理的业务逻辑 */
+	@Autowired
+	private UserService userService;
+	
+	/** 表单信息的业务处理 */
+	@Autowired
+	private FormService formService;
 	
 	
 	/**
@@ -173,6 +185,8 @@ public class ApplyController {
 	public String audit(@PathVariable("id") Long id, Model model) {
 		Apply apply = applyService.getApply(id);
 		
+		model.addAttribute("loginUser", Utils.getCurrentUserId());
+		model.addAttribute("users", userService.getAllUser());
 		model.addAttribute("prices", priceService.getAllPrice());
 		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.AUDITING, apply.getForm().getId()));
 		model.addAttribute("apply", apply);
@@ -225,25 +239,93 @@ public class ApplyController {
 		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.BROWSE, apply.getForm().getId()));
 		model.addAttribute("apply", apply);
 		model.addAttribute("customField", applyService.getApplyCustomField(apply));
-		
 		//排期信息
 		model.addAttribute("schedules", scheduleService.findApplySchedule(id));
-		//巡检记录
-		
-		
-		//异常处理
-		
 		return "experiment/apply-browse";
-	} 
+	}
+	
+	/**
+	 * 补充实验信息.
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "replenish/{id}", method = RequestMethod.GET)
+	public String replenish(@PathVariable("id") Long id, Model model){
+		Apply apply = applyService.getApply(id);
+		model.addAttribute("nodeMap",nodeService.nodeMap(ApplyStatus.BE_IN_PROGRESS, apply.getForm().getId()));
+		model.addAttribute("apply", apply);
+		model.addAttribute("customField", applyService.getApplyCustomField(apply));
+		//排期信息
+		model.addAttribute("schedules", scheduleService.findApplySchedule(id));
+		model.addAttribute("action", "replenish");
+		return "experiment/apply-replenish";
+	}
+	
+	/**
+	 * 审核委托申请.
+	 * @param apply
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "replenish", method = RequestMethod.POST)
+	public String replenish(@Valid @ModelAttribute("apply") Apply apply, ServletRequest request, RedirectAttributes redirectAttributes) {
+		apply.setUpdateTime(new Date());
+		apply.setApplyStatus(ApplyStatus.BE_IN_PROGRESS);
+		applyService.updateApply(apply,request);
+		redirectAttributes.addFlashAttribute("message", "实验资料补充提交成功!");
+		return "redirect:/apply/";
+		
+	}
+	
+	/**
+	 * 实验委托申请界面.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "entrust")
+	public String entrust(Model model){
+		//取得所有的委托申请表单
+		model.addAttribute("forms",formService.getAllForm());
+		return "experiment/experiment-entrust";
+	}
+	
+	/**
+	 * 实验委托信息查询.
+	 * @param applyCode
+	 * @param experimentCode
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "search")
+	public String search(@RequestParam(value = "applyCode",defaultValue="") String applyCode,
+			@RequestParam(value = "experimentCode",defaultValue="") String experimentCode,
+			RedirectAttributes redirectAttributes){
+		Apply apply = applyService.getApply(applyCode,experimentCode);
+		if(apply==null){
+			redirectAttributes.addFlashAttribute("message", "无法找到匹配的委托信息，请确认您输入的编号是否正确!");
+			redirectAttributes.addFlashAttribute("applyCode", applyCode);
+			redirectAttributes.addFlashAttribute("experimentCode", experimentCode);
+			return "redirect:/apply/entrust";
+		}
+		if(apply.getIsPass()!=null&&apply.getIsPass().equals(Whether.YES)){
+			return "redirect:/apply/browse/"+apply.getId();
+		}
+		return "redirect:/apply/update/"+apply.getId();
+	}
 
 	/**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现预处理部分绑定的效果,先根据form的id从数据库查出Form对象,再把Form提交的内容绑定到该对象上。
 	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
 	 */
 	@ModelAttribute
-	public void getApply(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+	public void getApply(@RequestParam(value = "id", defaultValue = "-1") Long id,@RequestParam(value = "userid", defaultValue = "-1") Long userid, Model model) {
 		if (id != -1) {
-			model.addAttribute("apply", applyService.getApply(id));
+			Apply apply=applyService.getApply(id);
+			if(userid!=-1){
+				apply.setUser(userService.getUser(userid));
+			}
+			model.addAttribute("apply", apply);
 		}
 	}
 	
