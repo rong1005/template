@@ -259,12 +259,13 @@
 									<div class="box-body">
     									<div class="input-group">
       										<div class="input-group-addon">状态</div>
-      										<input type="text" id="apply_sampleStatus" name="sampleStatus" class="form-control" value="${apply.sampleStatus}" placeholder="样品状态"/>
+      										<input type="text" id="apply_sampleStatus" name="sampleStatus" class="form-control" value="样品正常" placeholder="样品状态"/>
     									</div>
     									<br>
-    									<div class="input-group">
-      										&emsp;1、样品正常；2、外观不良；3、纯音不良；4、其它不良   
-    									</div>
+      									<div class="input-group">
+      									&emsp;说明：状态默认为<span style="color: blue;">‘样品正常’</span>,如有不良请描述（EX:外观不良,纯音不良等）
+										</div>
+    									
 									</div>
 								</div>
 								</div>
@@ -274,12 +275,12 @@
 									<div class="box-body">
     									<div class="input-group">
       										<div class="input-group-addon">存放</div>
-      										<input type="text" id="apply_storeRequire" name="storeRequire" class="form-control" value="${apply.storeRequire}" placeholder="存放要求"/>
+      										<input type="text" id="apply_storeRequire" name="storeRequire" class="form-control" value="常温存放" placeholder="存放要求"/>
     									</div>
     									<br>
     									<div class="input-group">
-      										&emsp;1、常温存放；2、保密存放；3、其它要求   
-    									</div>
+      									&emsp;说明：存放要求默认为<span style="color: blue;">‘常温存放’</span>,如有其它要求请描述（EX:保密存放等）
+										</div>
 									</div>
 								</div>
 								</div>
@@ -301,8 +302,8 @@
     									</div>
     									<br>
     									<div class="input-group">
-      										&emsp;1、例行试验；2、新产品开发；3、变更验证；4、其它   
-    									</div>
+      									&emsp;说明：请描述样品检查要求(EX:纯音、外观等)。<small style="color: blue;">纯音检查请填写‘电压’与‘频率’，如无需‘电压’与‘频率’该两项可以留空</small>
+										</div>
 									</div>
 								</div>
 								</div>
@@ -320,8 +321,8 @@
     									</div>
     									<br>
     									<div class="input-group">
-      										&emsp;1、例行试验；2、新产品开发；3、变更验证；4、其它   
-    									</div>
+      									&emsp;说明：试验原因默认为<span style="color: blue;">‘例行试验’</span>,如有其它要求请描述（EX:新产品开发、变更验证等）
+										</div>
 									</div>
 								</div>
 								</div>
@@ -335,8 +336,8 @@
     									</div>
     									<br>
     									<div class="input-group">
-      										&emsp;1、销毁；2、退还；3、保存(期限   )；4、其它   
-    									</div>
+      									&emsp;说明：样品处理默认为<span style="color: blue;">‘销毁’</span>,如有其它要求请描述（EX:退还、保存(期限10天)等）
+										</div>
 									</div>
 								</div>
 								</div>
