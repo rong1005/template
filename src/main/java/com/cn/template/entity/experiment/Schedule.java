@@ -32,8 +32,8 @@ public class Schedule extends IdEntity {
 	/** 开始时间 */
 	private Date startTime;
 	
-	/** 实验用时 */
-	private Integer usedTime;
+	/** 总用时 */
+	private Double usedTime;
 	
 	/** 结束时间 */
 	private Date endTime;
@@ -43,7 +43,12 @@ public class Schedule extends IdEntity {
 	
 	/** 实际结束时间 */
 	private Date realEndTime;
+	
+	/** 实验用时 */
+	private Double experimentTime;
 
+	/** 过渡时 */
+	private Double transitionTime;
 	
 	@ManyToOne
 	@JoinColumn(name="equipment_zone_id")
@@ -99,12 +104,28 @@ public class Schedule extends IdEntity {
 		this.endTime = endTime;
 	}
 
-	public Integer getUsedTime() {
+	public Double getUsedTime() {
 		return usedTime;
 	}
 
-	public void setUsedTime(Integer usedTime) {
+	public void setUsedTime(Double usedTime) {
 		this.usedTime = usedTime;
+	}
+
+	public Double getExperimentTime() {
+		return experimentTime;
+	}
+
+	public void setExperimentTime(Double experimentTime) {
+		this.experimentTime = experimentTime;
+	}
+
+	public Double getTransitionTime() {
+		return transitionTime;
+	}
+
+	public void setTransitionTime(Double transitionTime) {
+		this.transitionTime = transitionTime;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

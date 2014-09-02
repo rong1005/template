@@ -266,17 +266,21 @@ public class ApplyController {
 	}
 	
 	/**
-	 * 审核委托申请.
+	 * 提交补充实验信息.
 	 * @param apply
 	 * @param redirectAttributes
 	 * @return
 	 */
 	@RequestMapping(value = "replenish", method = RequestMethod.POST)
 	public String replenish(@Valid @ModelAttribute("apply") Apply apply, ServletRequest request, RedirectAttributes redirectAttributes) {
+		try{
 		apply.setUpdateTime(new Date());
 		apply.setApplyStatus(ApplyStatus.BE_IN_PROGRESS);
 		applyService.updateApply(apply,request);
 		redirectAttributes.addFlashAttribute("message", "实验资料补充提交成功!");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return "redirect:/apply/";
 		
 	}

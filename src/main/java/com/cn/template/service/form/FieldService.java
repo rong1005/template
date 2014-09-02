@@ -85,7 +85,7 @@ public class FieldService {
 			attr.append(entity.getFieldType().getType());
 			if(entity.getFieldType().equals(FieldType.DOUBLE)){
 				attr.append(" ("+entity.getFieldLength()+","+entity.getFieldPrecision()+") ");
-			}else{
+			}else if(!entity.getFieldType().equals(FieldType.TEXT)){
 				attr.append(" ("+entity.getFieldLength()+") ");
 			}
 			attr.append(" NULL");

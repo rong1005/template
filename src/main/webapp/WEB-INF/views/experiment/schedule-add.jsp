@@ -575,10 +575,32 @@
 									</select>
 								</div>
 							</div>
+							
 							<div class="form-group">
-								<label class="col-sm-1 control-label">用时</label>
+								<label class="col-sm-1 control-label">实验用时</label>
 								<div class="col-sm-5">
-									<input type="text" id="usedTime" class="form-control" />
+									<div class="input-group">
+										<input type="text" id="experiment-time" class="form-control" value="0"/>
+										<div class="input-group-addon">小时</div>
+									</div>
+								</div>
+								
+								<label class="col-sm-1 control-label">过渡用时</label>
+								<div class="col-sm-5">
+									<div class="input-group">
+										<input type="text" id="transition-time" class="form-control" value="0"/>
+										<div class="input-group-addon">小时</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-1 control-label">总用时</label>
+								<div class="col-sm-5">
+									<div class="input-group">
+										<input type="text" id="usedTime" class="form-control" value="0" readonly="readonly" />
+										<div class="input-group-addon">小时</div>
+									</div>
 								</div>
 								<label class="col-sm-1 control-label">开始时间</label>
 								<div class="col-sm-5">
@@ -610,7 +632,9 @@
 										<th>管理</th>
 										<th>样品流水号</th>
 										<th>设备</th>
-										<th>用时</th>
+										<th>实验用时</th>
+										<th>过渡用时</th>
+										<th>总用时</th>
 										<th>预计开始时间</th>
 										<th>预计结束时间</th>
 									</tr>
@@ -621,6 +645,8 @@
 											<td>
 												<span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span>
 												<input type="hidden" name="equipmentId" value="${schedule.equipment.id}"/>
+												<input type="hidden" name="experimentTime" value="${schedule.experimentTime}"/>
+												<input type="hidden" name="transitionTime" value="${schedule.transitionTime}"/>
 												<input type="hidden" name="usedTime" value="${schedule.usedTime}"/>
 												<input type="hidden" name="startTime" value="<fmt:formatDate value='${schedule.startTime }' pattern='yyyy-MM-dd HH:mm' />"/>
 												<input type="hidden" name="endTime" value="<fmt:formatDate value='${schedule.endTime }' pattern='yyyy-MM-dd HH:mm' />"/>
@@ -628,6 +654,8 @@
 											</td>
 											<td>${schedule.sample.serialNumber }</td>
 											<td>${schedule.equipment.equipmentType.name} -- ${schedule.equipment.name} </td>
+											<td>${schedule.experimentTime }</td>
+											<td>${schedule.transitionTime }</td>
 											<td>${schedule.usedTime }</td>
 											<td>
 												<fmt:formatDate value="${schedule.startTime }" pattern="yyyy-MM-dd HH:mm" />
@@ -698,6 +726,19 @@
 			});
 			
 			countTotalPrice();
+			
+			
+			$("#experiment-time").on("change",function(){
+				var experimentTime = Number($("#experiment-time").val());
+				var transitionTime = Number($("#transition-time").val());
+				$("#usedTime").val(Number(experimentTime+transitionTime).toFixed(2));
+			});
+			
+			$("#transition-time").on("change",function(){
+				var experimentTime = Number($("#experiment-time").val());
+				var transitionTime = Number($("#transition-time").val());
+				$("#usedTime").val(Number(experimentTime+transitionTime).toFixed(2));
+			});
 		});
 		
 		function findEquipment(e){
@@ -717,7 +758,9 @@
 		
 		
 		function addSampleSchedule(){
-			var usedTime = Number($("#usedTime").val());
+			var experimentTime = Number($("#experiment-time").val());
+			var transitionTime = Number($("#transition-time").val());
+			var usedTime = experimentTime+transitionTime;
 			var startTime =$("#startTime").val();
 			var endTime = "";
 			jQuery.ajax({
@@ -736,14 +779,18 @@
 				str=str+'<tr>';
 				str=str+'<td><span style="color: red; cursor: pointer;" onclick="deleteApplyPrice(this)">删除</span>';
 				str=str+'<input type="hidden" name="equipmentId" value="'+$("#equipment option:selected").val()+'"/>';
-				str=str+'<input type="hidden" name="usedTime" value="'+usedTime+'"/>';
+				str=str+'<input type="hidden" name="experimentTime" value="'+experimentTime+'"/>';
+				str=str+'<input type="hidden" name="transitionTime" value="'+transitionTime+'"/>';
+				str=str+'<input type="hidden" name="usedTime" value="'+Number(usedTime).toFixed(2)+'"/>';
 				str=str+'<input type="hidden" name="startTime" value="'+startTime+'"/>';
 				str=str+'<input type="hidden" name="endTime" value="'+endTime+'"/>';
 				str=str+'<input type="hidden" name="sampleId" value="'+$(domEle).val()+'"/>';
 				str=str+'</td>';
 				str=str+'<td>'+$("#td_"+$(domEle).val()).html()+'</td>';
 				str=str+'<td>'+$("#equipmentType option:selected").text()+' -- '+$("#equipment option:selected").text()+'</td>';
-				str=str+'<td>'+usedTime+'</td>';
+				str=str+'<td>'+experimentTime+'</td>';
+				str=str+'<td>'+transitionTime+'</td>';
+				str=str+'<td>'+Number(usedTime).toFixed(2)+'</td>';
 				str=str+'<td>'+startTime+'</td>';
 				str=str+'<td>'+endTime+'</td>';
 				str=str+'</tr>';

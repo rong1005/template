@@ -59,6 +59,9 @@ public class Field extends IdEntity {
 	/** 英文默认值 */
 	private String enDefaultValue;
 	
+	/** 文本格式 */
+	private String testPattern;
+	
 	/** 字段对应的选择项内容 */
 	private List<SelectItem> selectItems; 
 	
@@ -153,6 +156,14 @@ public class Field extends IdEntity {
 
 	public void setEnDefaultValue(String enDefaultValue) {
 		this.enDefaultValue = enDefaultValue;
+	}
+
+	public String getTestPattern() {
+		return testPattern;
+	}
+
+	public void setTestPattern(String testPattern) {
+		this.testPattern = testPattern;
 	}
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="field")

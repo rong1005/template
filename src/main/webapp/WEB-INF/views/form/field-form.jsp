@@ -11,6 +11,7 @@
 <c:set var="CHECKBOX" value="<%=FieldType.CHECKBOX %>" />
 <c:set var="RADIO" value="<%=FieldType.RADIO %>" />
 <c:set var="DOUBLE" value="<%=FieldType.DOUBLE %>" />
+<c:set var="TEXT" value="<%=FieldType.TEXT %>" />
 <c:set var="YES" value="<%=Whether.YES%>" />
 <c:set var="NOT" value="<%=Whether.NOT%>" />
 <!DOCTYPE html>
@@ -19,6 +20,9 @@
 	<title>字段管理</title>
 	<!-- UNIFORM -->
 	<link rel="stylesheet" type="text/css" href="${ctx}/static/js/uniform/css/uniform.default.min.css" />
+	
+	<!-- 富文本编辑器 -->
+	<link href="${ctx}/static/js/ueditor/themes/default/css/ueditor.min.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 
@@ -168,7 +172,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="div_fieldLength" <c:if test="${TEXT eq field.fieldType or SELECT eq field.fieldType or CHECKBOX eq field.fieldType or RADIO eq field.fieldType}">style="display: none;"</c:if>>
 									<label class="col-sm-2 control-label">长度</label>
 									<div class="col-sm-10">
 										<input type="text" id="field_fieldLength" name="fieldLength" value="${field.fieldLength}" class="form-control" placeholder="长度"/>
@@ -178,6 +182,12 @@
 									<label class="col-sm-2 control-label">精度</label>
 									<div class="col-sm-10">
 										<input type="text" id="field_fieldPrecision" name="fieldPrecision" value="${field.fieldPrecision}" class="form-control" placeholder="精度"/>
+									</div>
+								</div>
+								<div id="div_testPattern" class="form-group" <c:if test="${TEXT ne field.fieldType}">style="display: none;"</c:if>>
+									<label class="col-sm-2 control-label">文本格式</label>
+									<div class="col-sm-10">
+										<textarea style="width: 100%;height: 260px;" id="test_pattern" name="testPattern" >${field.testPattern}</textarea>
 									</div>
 								</div>
 								<div class="form-group" id="div_chDefaultValue" <c:if test="${SELECT eq field.fieldType or CHECKBOX eq field.fieldType or RADIO eq field.fieldType }">
@@ -220,6 +230,12 @@
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="${ctx}/static/js/uniform/jquery.uniform.min.js"></script>
 	
+	<!-- 富文本编辑器 -->
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/ueditor.all.min.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${ctx}/static/js/ueditor/customize/addCustomizeDialog.js"></script>
+	
 	<!-- 自定义JS脚本 -->
 	<script src="${ctx}/static/js/script.js"></script>
 	<script>
@@ -233,6 +249,8 @@
 			App.setPath("${ctx}/static");  //设置字段路径
 			App.init(); //初始化元素以及插件
 			
+			UE.getEditor("test_pattern");
+			
 			$("#field_name").focus();
 			
 			$("#field_fieldType").change( function() {
@@ -242,17 +260,28 @@
 					$("#selectItems").hide();
 					$("#div_chDefaultValue").show();
 					$("#div_enDefaultValue").show();
+					$("#div_fieldLength").show();
 				}else if(fieldType=="${SELECT}"||fieldType=="${CHECKBOX}"||fieldType=="${RADIO}"){
 					$("#selectItems").show();
 					$("#div_fieldPrecision").hide();
 					$("#div_chDefaultValue").hide();
 					$("#div_enDefaultValue").hide();
+					$("#div_fieldLength").hide();
 				}else{
 					$("#div_fieldPrecision").hide();
 					$("#selectItems").hide();
 					$("#div_chDefaultValue").show();
 					$("#div_enDefaultValue").show();
+					$("#div_fieldLength").show();
 				}
+				
+				if(fieldType=="${TEXT}"){
+					$("#div_fieldLength").hide();
+					$("#div_testPattern").show();
+				}else{
+					$("#div_testPattern").hide();
+				}
+				
 			});
 			
 			$("#addSelectItem").click( function() {

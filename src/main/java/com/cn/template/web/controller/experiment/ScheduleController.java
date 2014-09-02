@@ -94,11 +94,15 @@ public class ScheduleController {
 	 */
 	@RequestMapping(value="/count/time")
 	@ResponseBody
-	public Map<String,String> countTime(@RequestParam(value = "datetime") String datetime,@RequestParam(value = "hour") Integer hour ){
+	public Map<String,String> countTime(@RequestParam(value = "datetime") String datetime,@RequestParam(value = "hour") Double hour ){
+		Double minute =(hour%1)*60;
+		Double second =(minute%1)*60;
 		Date date=Utils.parseDate(datetime);
 		Calendar calendar=Calendar.getInstance();
 		calendar.setTime(date);
-		calendar.add(Calendar.HOUR, hour);
+		calendar.add(Calendar.HOUR, hour.intValue());
+		calendar.add(Calendar.MINUTE, minute.intValue());
+		calendar.add(Calendar.SECOND, second.intValue());
 		Map<String,String> map= Maps.newHashMap();
 		map.put("endTime", Utils.datef(calendar.getTime(), Constants.DATETIME_MIN_FORMAT));
 		return map;

@@ -423,7 +423,9 @@ public class ApplyService {
 			setString.append(" ch_test_reference='"+apply.getChTestReference()+"', ");
 			setString.append(" en_test_reference='"+apply.getEnTestReference()+"', ");
 			setString.append(" client_model='"+apply.getClientModel()+"', ");
-			setString.append(" receipt_time='"+apply.getReceiptTime()+"', ");
+			if(apply.getReceiptTime()!=null){
+				setString.append(" receipt_time='"+apply.getReceiptTime()+"', ");
+			}
 
 			for(Field field : form.getFields()){
 				

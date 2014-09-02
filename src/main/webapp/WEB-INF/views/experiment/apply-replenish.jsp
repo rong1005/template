@@ -479,6 +479,19 @@
 						</div>
 
 						<div class="box-body">
+						
+							<div class="input-group">
+      							<div class="input-group-addon">实验编号:</div>
+      							<input type="text" class="form-control" value="${apply.serialNumber}" readonly="readonly" />
+      						
+      							<div class="input-group-addon">实验员:</div>
+      							<input type="text" class="form-control" value="${apply.user.name}" readonly="readonly" />
+      						
+      							<div class="input-group-addon">处理时间:</div>
+      							<input type="text" class="form-control" value="<fmt:formatDate value="${apply.receiptTime}" pattern="yyyy-MM-dd"/>" readonly="readonly" />
+    						</div>
+						
+							<br/>
 							<table id="priceDetailTable" class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>

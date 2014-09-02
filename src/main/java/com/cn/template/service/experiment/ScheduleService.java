@@ -108,6 +108,8 @@ public class ScheduleService {
 				deleteSchedule(scheduleList);
 			}
 			String[] equipmentId=map.get("equipmentId");
+			String[] experimentTime=map.get("experimentTime");
+			String[] transitionTime=map.get("transitionTime");
 			String[] usedTime=map.get("usedTime");
 			String[] startTime=map.get("startTime");
 			String[] endTime=map.get("endTime");
@@ -131,7 +133,9 @@ public class ScheduleService {
 				schedule.setUpdateTime(new Date());
 				schedule.setEquipment(equipmentService.getEquipment(Long.parseLong(equipmentId[i])));
 				schedule.setSample(sample);
-				schedule.setUsedTime(Integer.parseInt(usedTime[i]));
+				schedule.setExperimentTime(Double.parseDouble(experimentTime[i]));
+				schedule.setTransitionTime(Double.parseDouble(transitionTime[i]));
+				schedule.setUsedTime(Double.parseDouble(usedTime[i]));
 				schedule.setStartTime(Utils.parseDate(startTime[i]));
 				schedule.setEndTime(Utils.parseDate(endTime[i]));
 				schedule.setRealStartTime(schedule.getStartTime());
