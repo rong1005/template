@@ -65,7 +65,7 @@ public class Constants {
 	
 	
 	/** UEditor配置文件位置 */
-	public static final String UEDITOR_CONFIG_PATH = "\\static\\js\\ueditor\\jsp\\config.json";
+	public static final String UEDITOR_CONFIG_PATH = "/static/js/ueditor/jsp/config.json";
 
 	
 

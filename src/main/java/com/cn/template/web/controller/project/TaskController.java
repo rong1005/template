@@ -54,7 +54,7 @@ public class TaskController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");

@@ -52,6 +52,9 @@ public class SidebarService {
 	 * @param entity
 	 */
 	public void saveSidebar(Sidebar entity){
+		if(entity.getPreSidebar()!=null&&entity.getPreSidebar().getId()<1){
+			entity.setPreSidebar(null);
+		}
 		sidebarDao.save(entity);
 	}
 	

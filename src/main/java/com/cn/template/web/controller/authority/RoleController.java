@@ -64,7 +64,7 @@ public class RoleController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
-			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_3) int pageSize,
+			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE_10) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
@@ -168,14 +168,16 @@ public class RoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "sidebar", method = RequestMethod.POST)
-	public String sidebar(@Valid @ModelAttribute("role") Role role, @RequestParam("sidebars.id") List<Long> sidebarIds, RedirectAttributes redirectAttributes) {
+	public String sidebar(@Valid @ModelAttribute("role") Role role, @RequestParam(value="sidebars.id",required=false) List<Long> sidebarIds, RedirectAttributes redirectAttributes) {
+		if(sidebarIds!=null&&sidebarIds.isEmpty()){
 		role.setSidebars(new ArrayList<Sidebar>());
 		for(Long sidebarId : sidebarIds){
 			role.getSidebars().add(sidebarService.getSidebar(sidebarId));
 		}
+		}
 		logger.info(role.toString());
 		roleService.saveRole(role);
-		redirectAttributes.addFlashAttribute("message", "更新角色‘" + role.getName() + "’成功");
+		redirectAttributes.addFlashAttribute("message", "角色‘" + role.getName() + "’的菜单配置成功");
 		return "redirect:/role";
 	}
 	

@@ -7,9 +7,9 @@
 	</appender>
 
 	<appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/ggec-line/logs/template.log</file>
+		<file>/Users/Libra/Documents/logs/template.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>/ggec-line/logs/template.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>/Users/Libra/Documents/logs/template.%d{yyyy-MM-dd}.log</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
