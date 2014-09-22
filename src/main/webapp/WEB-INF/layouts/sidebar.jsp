@@ -87,7 +87,7 @@
 				</a>
 				<ul class="sub">
 					<li id="echart-bars"><a class="" href="${ctx}/echart?type=bars"><span class="sub-menu-text">柱状图</span></a></li>
-					<li id="echart-bars"><a class="" href="${ctx}/echart?type=bars"><span class="sub-menu-text">病图</span></a></li>
+					<li id="echart-bars"><a class="" href="${ctx}/echart?type=bars"><span class="sub-menu-text">饼图</span></a></li>
 					<li id="echart-lines"><a class="" href="${ctx}/echart?type=lines"><span class="sub-menu-text">折线图</span></a></li>
 				</ul>
 			</li>
