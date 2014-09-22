@@ -81,16 +81,16 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">角色类型</label>
 									<div class="col-sm-10">
-										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_admin}">${roleType_admin.value}</label> 
-										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_user}" checked="checked">${roleType_user.value}</label> 
+										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_admin}" <c:if test="${role.roleType eq roleType_admin }">checked="checked"</c:if>>${roleType_admin.value}</label> 
+										<label class="radio-inline"> <input type="radio" name="roleType" class="uniform" value="${roleType_user}" <c:if test="${empty role.roleType or role.roleType eq roleType_user }">checked="checked"</c:if>>${roleType_user.value}</label> 
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-sm-2 control-label">是否默认角色</label>
 									<div class="col-sm-10">
-										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_yes}">${default_yes.value}</label> 
-										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_not}" checked="checked">${default_not.value}</label> 
+										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_yes}" <c:if test="${role.defaultRole eq default_yes }">checked="checked"</c:if>>${default_yes.value}</label> 
+										<label class="radio-inline"> <input type="radio" name="defaultRole" class="uniform" value="${default_not}" <c:if test="${empty role.defaultRole or role.defaultRole eq default_not }">checked="checked"</c:if>>${default_not.value}</label> 
 									</div>
 								</div>
 												  
